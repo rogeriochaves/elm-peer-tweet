@@ -1,7 +1,8 @@
 module Main (main) where
 
-import Html exposing (Html, span, text)
+import View exposing (view)
+import Html exposing (Html)
 
 main : Html
 main =
-  span [ ] [ text "Hello World!" ]
+  view

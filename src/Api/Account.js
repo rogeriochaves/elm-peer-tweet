@@ -4,21 +4,23 @@ import crypto from 'crypto';
 const getLocalStorage = () =>
   (typeof window !== 'undefined' && window.localStorage) || global.localStorage;
 
-const createKeysIfMissing = () => {
+export const getKeys = () => {
   if (!localStorage.publicKey || !localStorage.secretKey) {
     const keypair = ed.createKeyPair(ed.createSeed());
 
     getLocalStorage().publicKey = keypair.publicKey.toString('hex');
     getLocalStorage().secretKey = keypair.secretKey.toString('hex');
   }
-}
 
-export const initializeAccount = () => {
-  createKeysIfMissing();
-}
+  const { publicKey, secretKey } = getLocalStorage();
 
-export const accountHash = () => {
-  const k = Buffer(localStorage.publicKey, 'hex');
+  return { publicKey, secretKey };
+};
+
+export const hash = () => {
+  const k = Buffer(getKeys().publicKey, 'hex');
 
   return crypto.createHash('sha1').update(k).digest('hex');
-}
+};
+
+export default { getKeys, hash };

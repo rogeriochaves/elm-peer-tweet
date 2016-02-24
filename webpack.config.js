@@ -8,11 +8,22 @@ module.exports = {
 
   resolve: {
     modulesDirectories: ['node_modules'],
-    extensions: ['', '.js', '.elm']
+    extensions: ['', '.js', '.elm'],
+    alias: {
+      'Api': __dirname + '/src/Api'
+    }
   },
 
   module: {
     loaders: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel',
+        query: {
+          presets: ['es2015']
+        }
+      },
       {
         test: /\.html$/,
         exclude: /node_modules/,

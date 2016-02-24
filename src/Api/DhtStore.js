@@ -17,4 +17,8 @@ export const initializeAccount = () => {
   createKeysIfMissing();
 }
 
-export default { initializeAccount };
+export const accountHash = () => {
+  const k = Buffer(localStorage.publicKey, 'hex');
+
+  return crypto.createHash('sha1').update(k).digest('hex');
+}

@@ -31,7 +31,9 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
+    "bittorrent-dht": "^6.4.1",
     "crypto": "0.0.3",
-    "ed25519-supercop": "^1.0.2"
+    "ed25519-supercop": "^1.0.2",
+    "json-buffer": "^2.0.11"
   }
 }

@@ -1,8 +1,6 @@
 import ed from 'ed25519-supercop';
 import crypto from 'crypto';
-
-const getLocalStorage = () =>
-  (typeof window !== 'undefined' && window.localStorage) || global.localStorage;
+import { getLocalStorage } from './Utils';
 
 export const getKeys = () => {
   if (!localStorage.publicKey || !localStorage.secretKey) {

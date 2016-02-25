@@ -31,6 +31,23 @@ describe('Tweet', () => {
     Tweet.publish(currentData.foo, currentData)('Hello World!', callback);
   });
 
+  it('triggers the callback with the new tweet', () => {
+    let expectedTweet = {v: {t: 'Hello World!', next: ['bar', 'baz', 'uno', 'qui']}};
+
+    expect(callback.getCall(0).args[1]).to.deep.equal(expectedTweet);
+  });
+
+  it('triggers the callback with an error when the dht gives an error', () => {
+    callback.reset();
+
+    Tweet.__Rewire__('dht', {
+      put: (_, fn) => fn('404 DOGE NOT FOUND')
+    });
+    Tweet.publish(currentData.foo, currentData)('Hello World!', callback);
+
+    expect(callback.getCall(0).args[0]).to.equal('404 DOGE NOT FOUND');
+  });
+
   it('publishes the tweet with right text to dht', () => {
     let text = JSONB.parse(dhtPutData).v.t.toString();
 

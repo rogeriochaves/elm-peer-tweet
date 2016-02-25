@@ -4,7 +4,9 @@ import JSONB from 'json-buffer';
 export const publish = (head, data) => (text, callback) => {
   const tweet = buildTweet(head, data)(text);
 
-  dht.put(encodeTweet(tweet), callback);
+  dht.put(encodeTweet(tweet), (err) => {
+    callback(err, tweet);
+  });
 };
 
 const buildTweet = (head, data) => (text) => ({

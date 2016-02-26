@@ -32,9 +32,7 @@ export const publish = (data, callback, current = head()) => {
   const item = getItem(data, current);
 
   dht.put(encodeItem(item), (err) => {
-    if (err) callback(err);
-
-    callback(current);
+    callback(err, current);
     if (item.v.next) publish(data, callback, item.v.next[0]);
   });
 };

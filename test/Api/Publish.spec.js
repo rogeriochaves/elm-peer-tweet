@@ -32,6 +32,18 @@ describe('Publish', () => {
     Publish.publish(currentData, callback);
   });
 
+  it('calls the callback for each item', () => {
+    expect(callback.getCall(0).args[1]).to.equal('head');
+    expect(callback.getCall(1).args[1]).to.equal('foo');
+    expect(callback.getCall(2).args[1]).to.equal('bar');
+  });
+
+  it('calls the callback without errors', () => {
+    expect(callback.getCall(0).args[0]).to.equal(undefined);
+    expect(callback.getCall(1).args[0]).to.equal(undefined);
+    expect(callback.getCall(2).args[0]).to.equal(undefined);
+  });
+
   it('triggers the callback with an error when the dht gives an error', () => {
     callback.reset();
 

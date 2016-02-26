@@ -1,17 +1,26 @@
 import bencode from 'bencode';
 import crypto from 'crypto';
 
-export const push = (head, data) => (text, callback) => {
+export const push = (hash, data) => (text, callback) => {
+  const head = data[hash];
   const tweet = buildTweet(head, data)(text);
-  const hash = hashTweet(tweet);
+  const newItemHash = hashTweet(tweet);
 
-  return { ...data, [hash]: tweet };
+  return { ...data, [hash]: buildHead(head, data, newItemHash), [newItemHash]: tweet };
 };
+
+const buildHead = (head, data, newItemHash) =>
+  head ?
+    { ...head, next: selectHops(findNext([], head, data)) } :
+    { next: [newItemHash] };
 
 const buildTweet = (head, data) => (text) => ({
   t: text,
-  next: selectHops(findNext([], head, data))
+  ...nextItems(head, data)
 });
+
+const nextItems = (head, data) =>
+  head ? { next: selectHops(findNext([], head, data)) } : {}
 
 const findNext = (accumulated, current, data) => {
   let next = current.next && current.next[0];

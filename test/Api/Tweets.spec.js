@@ -16,8 +16,17 @@ describe('Tweets', () => {
       'qua': {next: ['qui']},
       'qui': {}
     };
-    result = Tweets.push(currentData.foo, currentData)('Hello World!');
+    result = Tweets.push('foo', currentData)('Hello World!');
     tweet = result['98010244c9fa394acd4058b1a5437869b8b16492'];
+  });
+
+  it('creates a head if there is none and add the first tweet', () => {
+    result = Tweets.push('foo', {})('Hello World!');
+
+    expect(result).to.deep.equal({
+      'foo': {next: ['1fadfa9216197df18bad4b254d30da93413dfba7']},
+      '1fadfa9216197df18bad4b254d30da93413dfba7': {t: 'Hello World!'}
+    });
   });
 
   it('has the new tweet on the results with the right key', () => {

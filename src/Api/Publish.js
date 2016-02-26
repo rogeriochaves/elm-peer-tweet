@@ -6,7 +6,7 @@ const optionsFor = (item) =>
   item === head() ? {opts: { k: getKeys().publicKey, sign }} : {};
 
 const sign = (buf) =>
-  ed.sign(buf, getKeys().publicKey, getKeys().secretKey)
+  ed.sign(buf, getKeys().publicKey, getKeys().secretKey);
 
 const encodeKey = (key, value) => {
   switch (key) {
@@ -14,7 +14,7 @@ const encodeKey = (key, value) => {
     case 'next': return Buffer.concat(value.map(x => new Buffer(x)));
     default: return value;
   }
-}
+};
 
 const encodeKeys = (item) =>
   Object.keys(item).reduce((accumulated, key) => {

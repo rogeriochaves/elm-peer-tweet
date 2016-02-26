@@ -37,20 +37,4 @@ export const publish = (data, callback, current = head()) => {
   });
 };
 
-//
-// const encodeTweet = (rawTweet) => JSONB.stringify({
-//   v: {
-//     t: new Buffer(rawTweet.v.t),
-//     next: Buffer.concat(rawTweet.v.next.map(x => new Buffer(x)))
-//   }
-// })
-//
-// export const publish = (head, data) => (text, callback) => {
-//   const tweet = buildTweet(head, data)(text);
-//
-//   dht.put(encodeTweet(tweet), (err) => {
-//     callback(err, tweet);
-//   });
-// };
-
 export default { publish };

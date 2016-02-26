@@ -19,11 +19,13 @@ describe('Ports', () => {
       }
     });
 
-    requestAddTweet({ data: {}, text: 'hello world' });
+    requestAddTweet({ data: { head: null, tweets: [] }, text: 'hello world' });
 
     expect(receivedData).to.deep.equal({
-      'myhash': { next: ['7521867f54e7c67eff0b44294bec0f8628ae0086'] },
-      '7521867f54e7c67eff0b44294bec0f8628ae0086': { t: 'hello world' }
+      head: { hash: 'myhash', next: ['65131bd315f30324b0c0d6cbf2ccc058ea7523ec'] },
+      tweets: [
+        { hash: '65131bd315f30324b0c0d6cbf2ccc058ea7523ec', t: 'hello world', next: [] }
+      ]
     });
   });
 });

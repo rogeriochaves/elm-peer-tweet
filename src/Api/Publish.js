@@ -26,7 +26,7 @@ const encodeItem = (hash, item) =>
 
 export const publish = (data, callback, current = head()) => {
   const item = data[current];
-  console.log(`Publishing ${current}`, item);
+  console.log(`Publishing ${current}: `, item);
 
   dht.put(encodeItem(current, item), (err) => {
     callback(err, current);

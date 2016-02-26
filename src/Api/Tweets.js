@@ -1,40 +1,36 @@
 import bencode from 'bencode';
 import crypto from 'crypto';
 
-export const push = (hash, data) => (text) => {
-  const head = data[hash];
-  const tweet = buildTweet(head, data)(text);
-  const newItemHash = hashTweet(tweet);
+export const add = (hash, data) => (text) => {
+  const tweet = hashItem(buildTweet(data)(text));
 
-  return { ...data, [hash]: buildHead(head, data, newItemHash), [newItemHash]: tweet };
+  return { ...data, head: buildHead(hash, data)(tweet), tweets: [...data.tweets, tweet] };
 };
 
-const buildHead = (head, data, newItemHash) =>
-  head ?
-    { ...head, next: selectHops(findNext([], head, data)) } :
-    { next: [newItemHash] };
+const buildHead = (hash, data) => (tweet) =>
+  data.head ?
+    { ...data.head, next: selectHops(findNext([], { next: [tweet.hash] }, data)) } :
+    { hash, next: [tweet.hash] };
 
-const buildTweet = (head, data) => (text) => ({
+const buildTweet = (data) => (text) => ({
   t: text,
-  ...nextItems(head, data)
+  next: selectHops(findNext([], data.head, data))
 });
 
-const nextItems = (head, data) =>
-  head ? { next: selectHops(findNext([], head, data)) } : {}
-
 const findNext = (accumulated, current, data) => {
-  let next = current.next && current.next[0];
+  let next = current && current.next && current.next[0];
+  let nextTweet = data.tweets.find(x => x.hash === next);
 
-  return next ? findNext([...accumulated, next], data[next], data) : accumulated;
+  return next ? findNext([...accumulated, next], nextTweet, data) : accumulated;
 };
 
 const selectHops = (nexts) =>
   [nexts[0], nexts[1], nexts[3], nexts[7]].filter(a => a)
 
-const hashTweet = (data) =>
-  sha1(bencode.encode(data)).toString('hex');
+const hashItem = (item) =>
+  ({ hash: sha1(bencode.encode(item)).toString('hex'), ...item });
 
 const sha1 = (buf) =>
   crypto.createHash('sha1').update(buf).digest();
 
-export default { push };
+export default { add };

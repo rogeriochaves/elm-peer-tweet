@@ -1,10 +1,7 @@
-import { getLocalStorage, dht } from './Utils';
-import JSONB from 'json-buffer';
-
 export const push = (head, data) => (text, callback) => {
   const tweet = buildTweet(head, data)(text);
 
-  return Object.assign(data, { blabla: tweet });
+  return { ...data, blabla: tweet };
 };
 
 const buildTweet = (head, data) => (text) => ({

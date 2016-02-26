@@ -16,7 +16,7 @@ describe('Publish', () => {
       }
     };
     Publish.__Rewire__('dht', dht);
-    Publish.__Rewire__('head', () => 'head');
+    Publish.__Rewire__('head', () => 'myhead');
     Publish.__Rewire__('getKeys', () => ({
       publicKey: '1b5a526a05953cff95dbf6c160cc3c621a4c12f360c111c5c44b01c925d24167',
       secretKey: 'b80cb5444cd32ca171381244bc34fe0950740cbbd4c9c7eee7730822071382588cb57de6a8d71a1d48e7290061eb667be454986ca0b8553599abaa43761fb9a4'
@@ -25,15 +25,17 @@ describe('Publish', () => {
     callback = spy();
 
     currentData = {
-      'head': {next: ['foo', 'bar']},
-      'foo': {t: 'you are looking for?', next: ['bar']},
-      'bar': {t: "hello it's me"}
+      'head': { hash: 'myhead', next: ['foo', 'bar'] },
+      'tweets': [
+        { hash: 'foo', t: 'you are looking for?', next: ['bar'] },
+        { hash: 'bar', t: "hello it's me", next: [] }
+      ]
     };
     Publish.publish(currentData, callback);
   });
 
   it('calls the callback for each item', () => {
-    expect(callback.getCall(0).args[1]).to.equal('head');
+    expect(callback.getCall(0).args[1]).to.equal('myhead');
     expect(callback.getCall(1).args[1]).to.equal('foo');
     expect(callback.getCall(2).args[1]).to.equal('bar');
   });
@@ -60,6 +62,11 @@ describe('Publish', () => {
 
     expect(opts.k).to.equal('1b5a526a05953cff95dbf6c160cc3c621a4c12f360c111c5c44b01c925d24167');
     expect(opts.sign('foo').toString('hex')).to.equal('1805a5a2f4246eedba3655a66e0dbe52e43d749cfe819bab7788e6c4e4d40f486604b7b2b275385050bbbeb1062cf7b234216d3c7144a8a6f57f502b56535c0b');
+  });
+
+  it('publishes all the tweets recursively removing the hash key', () => {
+    expect(dhtPutData[1].v.hash).to.be.undefined;
+    expect(dhtPutData[2].v.hash).to.be.undefined;
   });
 
   it('publishes all the tweets recursively with the right text', () => {

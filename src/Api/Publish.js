@@ -17,20 +17,22 @@ const encodeKey = (key, value) => {
 };
 
 const encodeKeys = (item) =>
-  Object.keys(item).reduce((accumulated, key) => {
-    return { ...accumulated, [key]: encodeKey(key, item[key]) };
-  }, { ...item });
+  Object.keys(item)
+    .filter(x => x !== 'hash')
+    .reduce((accumulated, key) => (
+      { ...accumulated, [key]: encodeKey(key, item[key]) }
+    ), {});
 
 const encodeItem = (hash, item) =>
   ({ v: encodeKeys(item), ...optionsFor(hash) });
 
-export const publish = (data, callback, current = head()) => {
-  const item = data[current];
-  console.log(`Publishing ${current}: `, item);
+export const publish = (data, callback, item = data.head) => {
+  const next = data.tweets.find(x => x.hash === item.next[0]);
+  console.log(`Publishing`, item);
 
-  dht.put(encodeItem(current, item), (err) => {
-    callback(err, current);
-    if (item.next) publish(data, callback, item.next[0]);
+  dht.put(encodeItem(item.hash, item), (err) => {
+    callback(err, item.hash);
+    if (next) publish(data, callback, next);
   });
 };
 

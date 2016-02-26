@@ -6,15 +6,15 @@ describe('Tweets', () => {
 
   beforeEach(() => {
     currentData = {
-      'foo': {v: {next: ['bar', 'baz', 'uno', 'qui']}},
-      'bar': {v: {next: ['baz', 'qux', 'duo']}},
-      'baz': {v: {next: ['qux', 'uno', 'tre']}},
-      'qux': {v: {next: ['uno', 'duo', 'qua']}},
-      'uno': {v: {next: ['duo', 'tre', 'qui']}},
-      'duo': {v: {next: ['tre', 'qua']}},
-      'tre': {v: {next: ['qua', 'qui']}},
-      'qua': {v: {next: ['qui']}},
-      'qui': {v: {}}
+      'foo': {next: ['bar', 'baz', 'uno', 'qui']},
+      'bar': {next: ['baz', 'qux', 'duo']},
+      'baz': {next: ['qux', 'uno', 'tre']},
+      'qux': {next: ['uno', 'duo', 'qua']},
+      'uno': {next: ['duo', 'tre', 'qui']},
+      'duo': {next: ['tre', 'qua']},
+      'tre': {next: ['qua', 'qui']},
+      'qua': {next: ['qui']},
+      'qui': {}
     };
     result = Tweets.push(currentData.foo, currentData)('Hello World!');
     tweet = result['98010244c9fa394acd4058b1a5437869b8b16492'];
@@ -25,10 +25,10 @@ describe('Tweets', () => {
   });
 
   it('has the right text', () => {
-    expect(tweet.v.t).to.equal('Hello World!');
+    expect(tweet.t).to.equal('Hello World!');
   });
 
   it('has the right next hashes, with 1, 2, 4 and 8 hops', () => {
-    expect(tweet.v.next).to.deep.equal(['bar', 'baz', 'uno', 'qui']);
+    expect(tweet.next).to.deep.equal(['bar', 'baz', 'uno', 'qui']);
   });
 });

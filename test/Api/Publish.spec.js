@@ -25,9 +25,9 @@ describe('Publish', () => {
     callback = spy();
 
     currentData = {
-      'head': {v: {next: ['foo', 'bar']}},
-      'foo': {v: {t: 'you are looking for?', next: ['bar']}},
-      'bar': {v: {t: "hello it's me"}}
+      'head': {next: ['foo', 'bar']},
+      'foo': {t: 'you are looking for?', next: ['bar']},
+      'bar': {t: "hello it's me"}
     };
     Publish.publish(currentData, callback);
   });

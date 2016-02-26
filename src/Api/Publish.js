@@ -8,9 +8,6 @@ const optionsFor = (item) =>
 const sign = (buf) =>
   ed.sign(buf, getKeys().publicKey, getKeys().secretKey)
 
-const getItem = (data, hash) =>
-  ({ ...data[hash], ...optionsFor(hash) });
-
 const encodeKey = (key, value) => {
   switch (key) {
     case 't': return new Buffer(value);
@@ -19,20 +16,20 @@ const encodeKey = (key, value) => {
   }
 }
 
-const encodeItemV = (v) =>
-  Object.keys(v).reduce((accumulated, key) => {
-    return { ...accumulated, [key]: encodeKey(key, v[key]) };
-  }, { ...v });
+const encodeKeys = (item) =>
+  Object.keys(item).reduce((accumulated, key) => {
+    return { ...accumulated, [key]: encodeKey(key, item[key]) };
+  }, { ...item });
 
-const encodeItem = (rawTweet) =>
-  ({ ...rawTweet, v: encodeItemV(rawTweet.v) });
+const encodeItem = (hash, item) =>
+  ({ v: encodeKeys(item), ...optionsFor(hash) });
 
 export const publish = (data, callback, current = head()) => {
-  const item = getItem(data, current);
+  const item = data[current];
 
-  dht.put(encodeItem(item), (err) => {
+  dht.put(encodeItem(current, item), (err) => {
     callback(err, current);
-    if (item.v.next) publish(data, callback, item.v.next[0]);
+    if (item.next) publish(data, callback, item.next[0]);
   });
 };
 

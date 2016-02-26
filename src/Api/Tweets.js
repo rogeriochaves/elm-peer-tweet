@@ -1,7 +1,7 @@
 import bencode from 'bencode';
 import crypto from 'crypto';
 
-export const push = (hash, data) => (text, callback) => {
+export const push = (hash, data) => (text) => {
   const head = data[hash];
   const tweet = buildTweet(head, data)(text);
   const newItemHash = hashTweet(tweet);

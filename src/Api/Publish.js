@@ -1,7 +1,6 @@
 import { dht } from './Utils';
 import { getKeys, hash as head } from './Account';
 import ed from 'ed25519-supercop';
-import JSONB from 'json-buffer';
 
 const optionsFor = (item) =>
   item === head() ? {opts: { k: getKeys().publicKey, sign }} : {};

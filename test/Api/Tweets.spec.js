@@ -17,11 +17,11 @@ describe('Tweets', () => {
       'qui': {v: {}}
     };
     result = Tweets.push(currentData.foo, currentData)('Hello World!');
-    tweet = result['blabla'];
+    tweet = result['98010244c9fa394acd4058b1a5437869b8b16492'];
   });
 
   it('has the new tweet on the results with the right key', () => {
-    expect(result['blabla']).to.be.an('object');
+    expect(result['98010244c9fa394acd4058b1a5437869b8b16492']).to.be.an('object');
   });
 
   it('has the right text', () => {

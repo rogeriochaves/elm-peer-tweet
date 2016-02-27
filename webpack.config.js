@@ -6,6 +6,7 @@ var options = {
   output: {
     path: './',
     filename: 'bundle.js',
+    libraryTarget: 'commonjs2'
   },
 
   resolve: {

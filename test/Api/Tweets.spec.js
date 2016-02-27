@@ -34,8 +34,8 @@ describe('Tweets', () => {
     expect(tweet.next).to.deep.equal(['bar', 'baz', 'uno', 'qui']);
   });
 
-  it('creates a head if there is none and add the first tweet', () => {
-    result = Tweets.add('foo', { head: null, tweets: [] })('Hello World!');
+  it('returns the right result for the first tweet', () => {
+    result = Tweets.add('foo', { head: { hash: 'foo', next: [] }, tweets: [] })('Hello World!');
 
     expect(result).to.deep.equal({
       head: { hash: 'foo', next: ['e99efbee7f6affc92c20bc2bdef3eddd8b611728'] },

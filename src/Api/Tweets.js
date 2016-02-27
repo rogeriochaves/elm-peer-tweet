@@ -8,9 +8,7 @@ export const add = (hash, data) => (text) => {
 };
 
 const buildHead = (hash, data) => (tweet) =>
-  data.head ?
-    { ...data.head, next: selectHops(findNext([], { next: [tweet.hash] }, data)) } :
-    { hash, next: [tweet.hash] };
+  ({ ...data.head, next: selectHops(findNext([], { next: [tweet.hash] }, data)) })
 
 const buildTweet = (data) => (text) => ({
   t: text,

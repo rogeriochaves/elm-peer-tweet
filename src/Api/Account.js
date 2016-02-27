@@ -21,4 +21,12 @@ export const hash = () => {
   return crypto.createHash('sha1').update(k).digest('hex');
 };
 
-export default { getKeys, hash };
+export const initialData = () => ({
+  head: {
+    hash: hash(),
+    next: []
+  },
+  tweets: []
+});
+
+export default { getKeys, hash, initialData };

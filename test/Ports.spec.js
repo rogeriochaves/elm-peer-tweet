@@ -19,7 +19,7 @@ describe('Ports', () => {
       }
     });
 
-    requestAddTweet({ data: { head: null, tweets: [] }, text: 'hello world' });
+    requestAddTweet({ data: { head: { hash: 'myhash', next: [] }, tweets: [] }, text: 'hello world' });
 
     expect(receivedData).to.deep.equal({
       head: { hash: 'myhash', next: ['65131bd315f30324b0c0d6cbf2ccc058ea7523ec'] },

@@ -1,4 +1,4 @@
-module Data.Model (Model, model) where
+module Data.Model (Model) where
 
 type alias Hash = String
 
@@ -14,9 +14,6 @@ type alias Tweet =
   }
 
 type alias Model =
-  { head: Maybe Head
+  { head: Head
   , tweets: List Tweet
   }
-
-model : Model
-model = { head = Nothing, tweets = [] }

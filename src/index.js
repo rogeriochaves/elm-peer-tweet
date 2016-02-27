@@ -1,6 +1,7 @@
 'use strict';
 
-require("./Stylesheets/Main.scss");
-var Elm = require('./Main');
+import './Stylesheets/Main.scss';
+import Elm from './Main';
+import { initialData } from './Api/Account';
 
-Elm.embed(Elm.Main, document.getElementById('main'));
+let App = Elm.embed(Elm.Main, document.getElementById('main'), { data: initialData() });

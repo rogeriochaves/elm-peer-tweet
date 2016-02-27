@@ -1,17 +1,19 @@
-module.exports = {
+var webpackTargetElectronRenderer = require('webpack-target-electron-renderer');
+
+var options = {
   entry: './src/index.js',
 
   output: {
     path: './',
-    filename: 'bundle.js'
+    filename: 'bundle.js',
   },
 
   resolve: {
-    modulesDirectories: ['node_modules'],
     extensions: ['', '.js', '.elm'],
     alias: {
       'Api': __dirname + '/src/Api'
-    }
+    },
+    packageMains: ['webpack', 'browser', 'web', 'browserify', ['jam', 'main'], 'main']
   },
 
   module: {
@@ -51,8 +53,17 @@ module.exports = {
     noParse: /\.elm$/
   },
 
+  externals: [
+    // put your node 3rd party libraries which can't be built with webpack here (mysql, mongodb, and so on..)
+    'ed25519-supercop'
+  ],
+
   devServer: {
     inline: true,
     stats: 'errors-only'
   }
 };
+
+options.target = webpackTargetElectronRenderer(options)
+
+module.exports = options;

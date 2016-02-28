@@ -3,21 +3,30 @@ import { spy } from 'sinon';
 import Ports from '../src/Ports';
 
 describe('Ports', () => {
+  let ports, requestAddTweet, receivedData;
+
   beforeEach(() => {
     Ports.__Rewire__('hash', () => 'myhash');
-  });
+    Ports.__Rewire__('initialData', () => 'initialData');
 
-  it('adds a tweet, sending the data back to the setData port', () => {
-    let requestAddTweet, receivedData;
-
-    Ports.setup({
+    ports = {
       requestAddTweet: {
         subscribe: (fn) => { requestAddTweet = fn }
       },
       setData: {
         send: (data) => { receivedData = data }
       }
-    });
+    };
+  });
+
+  it('sets data as initial data on setup', () => {
+    Ports.setup(ports);
+
+    expect(receivedData).to.equal('initialData');
+  });
+
+  it('adds a tweet, sending the data back to the setData port', () => {
+    Ports.setup(ports);
 
     requestAddTweet({ data: { head: { hash: 'myhash', next: [] }, tweets: [] }, text: 'hello world' });
 

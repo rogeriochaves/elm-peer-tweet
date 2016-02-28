@@ -4,4 +4,6 @@ import './Stylesheets/Main.scss';
 import Elm from './Main';
 import { initialData } from './Api/Account';
 
-let App = Elm.embed(Elm.Main, document.getElementById('main'), { data: initialData() });
+let App = Elm.embed(Elm.Main, document.getElementById('main'), { setData: initialData() });
+
+App.ports.setData.send(initialData());

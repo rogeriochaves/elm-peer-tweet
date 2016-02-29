@@ -2,16 +2,18 @@ module NewTweet.View.NewTweet where
 
 import Html exposing (Html, div, textarea, text, button)
 import Html.Attributes exposing (class)
-import Action exposing (Action)
-import NewTweet.Model exposing (Model)
+import Html.Events exposing (onClick)
+import Action as RootAction exposing (..)
+import Data.Action exposing (..)
+import Model exposing (Model)
 
-view : Signal.Address Action -> Model -> Html
-view address newTweet =
+view : Signal.Address RootAction.Action -> Model -> Html
+view address model =
   div [] [
     textarea [class "new-tweet"] [
-      text newTweet.text
+      text model.newTweet.text
     ],
-    button [] [
+    button [onClick address (ActionForData <| AddTweetRequest { data = model.data, text = "new tweet" } )] [
       text "Tweet"
     ]
   ]

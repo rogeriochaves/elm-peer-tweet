@@ -1,4 +1,4 @@
-module Data.Model (Model, initialModel) where
+module Data.Model where
 
 type alias Hash = String
 

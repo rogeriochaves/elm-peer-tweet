@@ -1,13 +1,10 @@
 module Timeline.View.Timeline where
 
 import Html exposing (Html, div, text)
-import Timeline.View.Tweet
+import Data.Model exposing (Model)
+import Timeline.View.Tweet as Tweet
 
-view : Html
-view =
-  div [] [
-    Timeline.View.Tweet.view,
-    Timeline.View.Tweet.view,
-    Timeline.View.Tweet.view,
-    Timeline.View.Tweet.view
-  ]
+view : Model -> Html
+view model =
+  div []
+    (List.map Tweet.view model.tweets)

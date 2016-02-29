@@ -17,6 +17,6 @@ view address model =
     div [class "flexbox-content"] [
       text model.data.head.hash,
       Topbar.view address model,
-      Timeline.view
+      Timeline.view model.data
     ]
   ]

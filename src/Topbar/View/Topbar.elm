@@ -13,6 +13,6 @@ view address model =
       text "Timeline"
     ],
     div [] [
-      NewTweet.view address model.newTweet
+      NewTweet.view address model
     ]
   ]

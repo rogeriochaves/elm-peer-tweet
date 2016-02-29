@@ -8,6 +8,8 @@ import Html exposing (Html)
 import Action exposing (..)
 import Data.Action exposing (..)
 import Update exposing (update)
+import Task exposing (Task)
+import Effects exposing (Never)
 
 -- JS interop
 
@@ -16,7 +18,7 @@ jsMailbox = Signal.mailbox NoOp
 
 port setData : Signal Data.Model
 
-port requestAddTweet : Signal (Maybe { data : Data.Model, text : String })
+port requestAddTweet : Signal (Maybe AddTweetRequestData)
 port requestAddTweet =
   let isTweetRequest action =
         case action of
@@ -42,10 +44,14 @@ incommingData =
 app : StartApp.App Model
 app = StartApp.start
   { init = initialModel
-  , update = update
+  , update = update jsMailbox.address
   , view = view
   , inputs = [incommingData] }
 
 main : Signal Html
 main =
   app.html
+
+port tasks : Signal (Task.Task Never ())
+port tasks =
+  app.tasks

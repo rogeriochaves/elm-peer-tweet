@@ -10,6 +10,24 @@ import Data.Action exposing (..)
 import Update exposing (update)
 import Task exposing (Task)
 import Effects exposing (Never)
+import Time exposing (every, second)
+
+-- App starting
+
+app : StartApp.App Model
+app = StartApp.start
+  { init = initialModel
+  , update = update jsMailbox.address
+  , view = view
+  , inputs = [incommingData] }
+
+main : Signal Html
+main =
+  app.html
+
+port tasks : Signal (Task.Task Never ())
+port tasks =
+  app.tasks
 
 -- JS interop
 
@@ -38,20 +56,7 @@ incommingData : Signal Action.Action
 incommingData =
   Signal.map (ActionForData << UpdateData) setData
 
-
--- App starting
-
-app : StartApp.App Model
-app = StartApp.start
-  { init = initialModel
-  , update = update jsMailbox.address
-  , view = view
-  , inputs = [incommingData] }
-
-main : Signal Html
-main =
-  app.html
-
-port tasks : Signal (Task.Task Never ())
-port tasks =
-  app.tasks
+port requestDataSync : Signal Data.Model
+port requestDataSync =
+  Signal.sampleOn (every <| 30 * second) app.model
+    |> Signal.map .data

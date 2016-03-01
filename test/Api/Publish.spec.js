@@ -4,7 +4,7 @@ import Publish from '../../src/Api/Publish';
 import JSONB from 'json-buffer';
 
 describe('Publish', () => {
-  let dht, dhtPutData, callback, currentData;
+  let dht, dhtPutData, callback, head, tweet;
 
   beforeEach(() => {
     dhtPutData = [];
@@ -24,35 +24,29 @@ describe('Publish', () => {
 
     callback = spy();
 
-    currentData = {
-      'head': { hash: 'myhead', next: ['foo', 'bar'] },
-      'tweets': [
-        { hash: 'foo', t: 'you are looking for?', next: ['bar'] },
-        { hash: 'bar', t: "hello it's me", next: [] }
-      ]
-    };
-    Publish.publish(currentData, callback);
+    head = { hash: 'myhead', next: ['foo'] };
+    tweet = { hash: 'foo', t: "hello it's me you are looking for?", next: ['bar'] };
+    Publish.publish(head, callback);
+    Publish.publish(tweet, callback);
   });
 
-  it('calls the callback for each item', () => {
+  it('calls the callback for the published tweet', () => {
     expect(callback.getCall(0).args[1]).to.equal('myhead');
     expect(callback.getCall(1).args[1]).to.equal('foo');
-    expect(callback.getCall(2).args[1]).to.equal('bar');
   });
 
   it('calls the callback without errors', () => {
     expect(callback.getCall(0).args[0]).to.equal(undefined);
     expect(callback.getCall(1).args[0]).to.equal(undefined);
-    expect(callback.getCall(2).args[0]).to.equal(undefined);
   });
 
-  it('triggers the callback with an error when the dht gives an error', () => {
+  it('calls the callback with an error when the dht gives an error', () => {
     callback.reset();
 
     Publish.__Rewire__('dht', {
       put: (_, fn) => fn('404 DOGE NOT FOUND')
     });
-    Publish.publish(currentData, callback);
+    Publish.publish(tweet, callback);
 
     expect(callback.getCall(0).args[0]).to.equal('404 DOGE NOT FOUND');
   });
@@ -64,24 +58,22 @@ describe('Publish', () => {
     expect(opts.sign('foo').toString('hex')).to.equal('1805a5a2f4246eedba3655a66e0dbe52e43d749cfe819bab7788e6c4e4d40f486604b7b2b275385050bbbeb1062cf7b234216d3c7144a8a6f57f502b56535c0b');
   });
 
-  it('publishes all the tweets recursively removing the hash key', () => {
+  it('removes hash key for publishing', () => {
+    expect(dhtPutData[0].v.hash).to.be.undefined;
     expect(dhtPutData[1].v.hash).to.be.undefined;
-    expect(dhtPutData[2].v.hash).to.be.undefined;
   });
 
-  it('publishes all the tweets recursively with the right text', () => {
-    let tweetText1 = dhtPutData[1].v.t.toString();
-    let tweetText2 = dhtPutData[2].v.t.toString();
+  it('publishes tweets with the right text', () => {
+    let tweetText = dhtPutData[1].v.t.toString();
 
-    expect(tweetText1).to.equal('you are looking for?');
-    expect(tweetText2).to.equal("hello it's me");
+    expect(tweetText).to.equal("hello it's me you are looking for?");
   });
 
   it('publishes the head and tweets with the right next hashes', () => {
     let headNext = dhtPutData[0].v.next.toString();
-    let firstTweetNext = dhtPutData[1].v.next.toString();
+    let tweetNext = dhtPutData[1].v.next.toString();
 
-    expect(headNext).to.equal('foobar');
-    expect(firstTweetNext).to.equal('bar');
+    expect(headNext).to.equal('foo');
+    expect(tweetNext).to.equal('bar');
   });
 });

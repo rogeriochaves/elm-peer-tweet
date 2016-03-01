@@ -26,13 +26,11 @@ const encodeKeys = (item) =>
 const encodeItem = (hash, item) =>
   ({ v: encodeKeys(item), ...optionsFor(hash) });
 
-export const publish = (data, callback, item = data.head) => {
-  const next = data.tweets.find(x => x.hash === item.next[0]);
+export const publish = (item, callback) => {
   console.log(`Publishing`, item);
 
   dht.put(encodeItem(item.hash, item), (err) => {
     callback(err, item.hash);
-    if (next) publish(data, callback, next);
   });
 };
 

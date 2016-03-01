@@ -7,10 +7,11 @@ import StartApp
 import Html exposing (Html)
 import Action exposing (..)
 import Data.Action exposing (..)
+import Sync.Action exposing (..)
+import Sync.Signals exposing (requestPublish)
 import Update exposing (update)
 import Task exposing (Task)
 import Effects exposing (Never)
-import Time exposing (every, second)
 
 -- App starting
 
@@ -19,7 +20,7 @@ app = StartApp.start
   { init = initialModel
   , update = update jsMailbox.address
   , view = view
-  , inputs = [incommingData] }
+  , inputs = [incommingData, requestPublish] }
 
 main : Signal Html
 main =
@@ -34,7 +35,7 @@ port tasks =
 jsMailbox : Signal.Mailbox Action.Action
 jsMailbox = Signal.mailbox NoOp
 
-port setData : Signal Data.Model
+port dataStream : Signal Data.Model
 
 port requestAddTweet : Signal (Maybe AddTweetRequestData)
 port requestAddTweet =
@@ -54,9 +55,20 @@ port requestAddTweet =
 
 incommingData : Signal Action.Action
 incommingData =
-  Signal.map (ActionForData << UpdateData) setData
+  Signal.map (ActionForData << UpdateData) dataStream
 
-port requestDataSync : Signal Data.Model
-port requestDataSync =
-  Signal.sampleOn (every <| 30 * second) app.model
-    |> Signal.map .data
+port requestPublishHead : Signal (Maybe Data.Head)
+port requestPublishHead =
+  let isRequestPublishHead action =
+        case action of
+          ActionForSync (PublishHead head) -> True
+          _ -> False
+
+      getRequest action =
+        case action of
+          ActionForSync (PublishHead head) -> Just head
+          _ -> Nothing
+  in
+    jsMailbox.signal
+      |> Signal.filter isRequestPublishHead NoOp
+      |> Signal.map getRequest

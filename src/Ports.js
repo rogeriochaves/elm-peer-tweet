@@ -1,18 +1,21 @@
 import { hash } from './Api/Account';
 import Tweets from './Api/Tweets';
 import { initialData } from './Api/Account';
+import { publish } from './Api/Publish';
 
-export const setup = ({ setData, requestAddTweet, requestDataSync }) => {
-  setData.send(initialData());
+export const setup = ({ requestAddTweet, dataStream, requestPublishHead, publishStream }) => {
+  dataStream.send(initialData());
 
   requestAddTweet.subscribe(({data, text}) => {
     const newData = Tweets.add(hash(), data)(text);
 
-    setData.send(newData);
+    dataStream.send(newData);
   });
 
-  requestDataSync.subscribe((data) => {
-    console.log('Data sync!', data);
+  requestPublishHead.subscribe((item) => {
+    publish(item, (err, data) => {
+      publishStream.send(data);
+    });
   });
 };
 

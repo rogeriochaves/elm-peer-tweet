@@ -23,3 +23,15 @@ initialModel =
   { head = { hash = "", next = [] }
   , tweets = []
   }
+
+nextHash : { b | next : List a } -> Maybe a
+nextHash = List.head << .next
+
+findTweet : Model -> Maybe Hash -> Maybe Tweet
+findTweet model hash =
+  case hash of
+    Just hash ->
+      List.filter (\t -> t.hash == hash) model.tweets
+        |> List.head
+    Nothing ->
+      Nothing

@@ -5,6 +5,6 @@ import Elm from './Main';
 import { initialData } from './Api/Account';
 import { setup } from './Ports';
 
-let App = Elm.embed(Elm.Main, document.getElementById('main'), { setData: initialData() });
+let App = Elm.embed(Elm.Main, document.getElementById('main'), { dataStream: initialData() });
 
 setup(App.ports);

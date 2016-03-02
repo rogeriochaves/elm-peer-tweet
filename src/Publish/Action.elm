@@ -1,10 +1,10 @@
 module Publish.Action where
 
-import Data.Model exposing (Head, Tweet)
+import Data.Model exposing (Hash, Head, Tweet)
 
 type Action
     = BeginPublish
     | PublishHead Head
-    | DonePublishHead Head
+    | DonePublishHead Hash
     | PublishTweet Tweet
-    | DonePublishTweet Tweet
+    | DonePublishTweet Hash

@@ -1,13 +1,20 @@
 module Publish.Ports where
 
-import Data.Model as Data
-import Action exposing (..)
+import Data.Model as Data exposing (Head, Tweet, Hash)
+import Action as RootAction exposing (..)
 import Publish.Action exposing (..)
 import Ports exposing (jsMailbox, isJust, filterEmpty)
+import Publish.Action exposing (..)
+import Time exposing (every, second)
 
-port publishHeadStream : Signal (Maybe Data.Head)
+requestPublish : Signal RootAction.Action
+requestPublish =
+  (every <| 30 * second)
+    |> Signal.map (\_ -> ActionForPublish BeginPublish)
 
-port requestPublishHead : Signal (Maybe Data.Head)
+port publishHeadStream : Signal (Maybe Hash)
+
+port requestPublishHead : Signal (Maybe Head)
 port requestPublishHead =
   let getRequest action =
     case action of
@@ -17,13 +24,13 @@ port requestPublishHead =
     Signal.map getRequest jsMailbox.signal
       |> filterEmpty
 
-publishHeadInput : Signal Action.Action
+publishHeadInput : Signal RootAction.Action
 publishHeadInput =
-  Signal.map (\_ -> NoOp) publishHeadStream
+  Signal.map (Maybe.map (ActionForPublish << DonePublishHead) >> Maybe.withDefault NoOp) publishHeadStream
 
-port publishTweetStream : Signal (Maybe Data.Tweet)
+port publishTweetStream : Signal (Maybe Hash)
 
-port requestPublishTweet : Signal (Maybe Data.Tweet)
+port requestPublishTweet : Signal (Maybe Tweet)
 port requestPublishTweet =
   let getRequest action =
     case action of
@@ -33,6 +40,6 @@ port requestPublishTweet =
     Signal.map getRequest jsMailbox.signal
       |> filterEmpty
 
-publishTweetInput : Signal Action.Action
+publishTweetInput : Signal RootAction.Action
 publishTweetInput =
-  Signal.map (\_ -> NoOp) publishTweetStream
+  Signal.map (Maybe.map (ActionForPublish << DonePublishTweet) >> Maybe.withDefault NoOp) publishTweetStream

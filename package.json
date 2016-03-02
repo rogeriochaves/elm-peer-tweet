@@ -41,5 +41,9 @@
     "crypto": "0.0.3",
     "ed25519-supercop": "^1.0.2",
     "json-buffer": "^2.0.11"
+  },
+  "devEngines": {
+    "node": "5.x",
+    "npm": "3.x"
   }
 }

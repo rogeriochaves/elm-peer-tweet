@@ -27,7 +27,7 @@ const encodeItem = (hash, item) =>
   ({ v: encodeKeys(item), ...optionsFor(hash) });
 
 export const publish = (item, callback) => {
-  console.log(`Publishing`, item);
+  console.log('Publishing', item);
 
   dht.put(encodeItem(item.hash, item), (err) => {
     callback(err, item.hash);

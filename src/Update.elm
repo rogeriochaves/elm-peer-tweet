@@ -15,7 +15,7 @@ modelUpdate action model =
   { model |
       data = Data.update action model.data,
       newTweet = NewTweet.update action model.newTweet,
-      sync = Publish.update action model.sync
+      publish = Publish.update action model.publish
   }
 
 effectsUpdate : Signal.Address Action -> Action -> Model -> Effects Action

@@ -9,7 +9,7 @@ import Action exposing (Action)
 type alias Model =
   { data: Data.Model
   , newTweet: NewTweet.Model
-  , sync: Publish.Model
+  , publish: Publish.Model
   }
 
 initialModel : (Model, Effects Action)
@@ -17,7 +17,7 @@ initialModel =
   (
    { data = Data.initialModel
    , newTweet = NewTweet.initialModel
-   , sync = Publish.initialModel
+   , publish = Publish.initialModel
    }
   , Effects.none
   )

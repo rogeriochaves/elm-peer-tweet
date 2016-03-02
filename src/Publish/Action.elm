@@ -1,9 +1,9 @@
-module Sync.Action where
+module Publish.Action where
 
 import Data.Model exposing (Head, Tweet)
 
 type Action
-    = BeginSync
+    = BeginPublish
     | PublishHead Head
     | DonePublishHead Head
     | PublishTweet Tweet

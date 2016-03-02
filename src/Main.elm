@@ -7,8 +7,8 @@ import StartApp
 import Html exposing (Html)
 import Action exposing (..)
 import Data.Action exposing (..)
-import Sync.Action exposing (..)
-import Sync.Signals exposing (requestPublish)
+import Publish.Action exposing (..)
+import Publish.Signals exposing (requestPublish)
 import Update exposing (update)
 import Task exposing (Task)
 import Effects exposing (Never)
@@ -61,12 +61,12 @@ port requestPublishHead : Signal (Maybe Data.Head)
 port requestPublishHead =
   let isRequestPublishHead action =
         case action of
-          ActionForSync (PublishHead head) -> True
+          ActionForPublish (PublishHead head) -> True
           _ -> False
 
       getRequest action =
         case action of
-          ActionForSync (PublishHead head) -> Just head
+          ActionForPublish (PublishHead head) -> Just head
           _ -> Nothing
   in
     jsMailbox.signal

@@ -5,10 +5,11 @@
   "main": "elm.js",
   "scripts": {
     "start": "electron main.js",
-    "build": "webpack",
-    "watch": "webpack --watch",
-    "dev": "webpack-dev-server --port 3000",
-    "test": "./node_modules/mocha/bin/mocha --compilers js:babel-core/register test/*.js test/**/*.js"
+    "build": "npm run build-ports && webpack",
+    "watch": "npm run build-ports && webpack --watch",
+    "dev": "npm run build-ports && webpack-dev-server --port 3000",
+    "test": "./node_modules/mocha/bin/mocha --compilers js:babel-core/register test/*.js test/**/*.js",
+    "build-ports": "elm-make src/**/Ports.elm --output /dev/null"
   },
   "author": "",
   "license": "ISC",

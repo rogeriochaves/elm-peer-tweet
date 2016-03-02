@@ -3,7 +3,11 @@ import Tweets from './Api/Tweets';
 import { initialData } from './Api/Account';
 import { publish } from './Api/Publish';
 
-export const setup = ({ requestAddTweet, dataStream, requestPublishHead, publishStream }) => {
+export const setup = (ports) => {
+  const { requestAddTweet, dataStream,
+          requestPublishHead, publishHeadStream,
+          requestPublishTweet, publishTweetStream } = ports;
+
   dataStream.send(initialData());
 
   requestAddTweet.subscribe(({data, text}) => {
@@ -14,7 +18,13 @@ export const setup = ({ requestAddTweet, dataStream, requestPublishHead, publish
 
   requestPublishHead.subscribe((item) => {
     publish(item, (err, data) => {
-      publishStream.send(data);
+      publishHeadStream.send(data);
+    });
+  });
+
+  requestPublishTweet.subscribe((item) => {
+    publish(item, (err, data) => {
+      publishTweetStream.send(data);
     });
   });
 };

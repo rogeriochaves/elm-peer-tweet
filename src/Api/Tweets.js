@@ -1,5 +1,6 @@
 import bencode from 'bencode';
 import crypto from 'crypto';
+import { encodeItem } from './Publish';
 
 export const add = (hash, data) => (text) => {
   const tweet = hashItem(buildTweet(data)(text));
@@ -26,7 +27,10 @@ const selectHops = (nexts) =>
   [nexts[0], nexts[1], nexts[3], nexts[7]].filter(a => a)
 
 const hashItem = (item) =>
-  ({ hash: sha1(bencode.encode(item)).toString('hex'), ...item });
+  ({ hash: sha1(bencodeItem(item)).toString('hex'), ...item });
+
+const bencodeItem = (item) =>
+  bencode.encode(encodeItem(null, item).v);
 
 const sha1 = (buf) =>
   crypto.createHash('sha1').update(buf).digest();

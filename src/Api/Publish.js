@@ -23,7 +23,7 @@ const encodeKeys = (item) =>
       { ...accumulated, [key]: encodeKey(key, item[key]) }
     ), {});
 
-const encodeItem = (hash, item) =>
+export const encodeItem = (hash, item) =>
   ({ v: encodeKeys(item), ...optionsFor(hash) });
 
 export const publish = (item, callback) => {
@@ -34,4 +34,4 @@ export const publish = (item, callback) => {
   });
 };
 
-export default { publish };
+export default { publish, encodeItem };

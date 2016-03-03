@@ -2,11 +2,14 @@ import { dht } from './Utils';
 import { getKeys, hash as head } from './Account';
 import ed from 'ed25519-supercop';
 
+const hexBuffer = (value) =>
+  Buffer(value, 'hex');
+
 const optionsFor = (item) =>
-  item === head() ? {opts: { k: getKeys().publicKey, sign }} : {};
+  item === head() ? { k: hexBuffer(getKeys().publicKey), sign, seq: 1 } : {};
 
 const sign = (buf) =>
-  ed.sign(buf, getKeys().publicKey, getKeys().secretKey);
+  ed.sign(buf, hexBuffer(getKeys().publicKey), hexBuffer(getKeys().secretKey));
 
 const encodeKey = (key, value) => {
   switch (key) {

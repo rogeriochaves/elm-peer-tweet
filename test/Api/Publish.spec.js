@@ -52,9 +52,9 @@ describe('Publish', () => {
   });
 
   it('publishes the head with the right options', () => {
-    let opts = dhtPutData[0].opts;
+    let opts = dhtPutData[0];
 
-    expect(opts.k).to.equal('1b5a526a05953cff95dbf6c160cc3c621a4c12f360c111c5c44b01c925d24167');
+    expect(opts.k.toString('hex')).to.equal('1b5a526a05953cff95dbf6c160cc3c621a4c12f360c111c5c44b01c925d24167');
     expect(opts.sign('foo').toString('hex')).to.equal('1805a5a2f4246eedba3655a66e0dbe52e43d749cfe819bab7788e6c4e4d40f486604b7b2b275385050bbbeb1062cf7b234216d3c7144a8a6f57f502b56535c0b');
   });
 

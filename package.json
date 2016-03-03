@@ -39,8 +39,7 @@
     "bencode": "^0.7.0",
     "bittorrent-dht": "^6.4.1",
     "crypto": "0.0.3",
-    "ed25519-supercop": "^1.0.2",
-    "json-buffer": "^2.0.11"
+    "ed25519-supercop": "^1.0.2"
   },
   "devEngines": {
     "node": "5.x",

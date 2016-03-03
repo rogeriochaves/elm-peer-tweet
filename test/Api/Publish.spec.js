@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import Publish from '../../src/Api/Publish';
-import JSONB from 'json-buffer';
 
 describe('Publish', () => {
   let dht, dhtPutData, callback, head, tweet;

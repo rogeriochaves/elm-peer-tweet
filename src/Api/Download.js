@@ -5,7 +5,7 @@ const validKeys = ['t', 'next'];
 const decodeKey = (key, value) => {
   switch (key) {
     case 't': return { [key]: value.toString() };
-    case 'next': return { [key]: value.toString().match(/.{1,40}/g) };
+    case 'next': return { [key]: value.toString() ? value.toString().match(/.{1,40}/g) : [] };
     default: return {};
   }
 };
@@ -16,8 +16,11 @@ const decodeKeys = (values) =>
       { ...accumulated, ...decodeKey(key, values[key]) }
     ), {});
 
+const addNext = (values) =>
+  ({...values, next: (values.next || new Buffer([])) });
+
 const decodeItem = (hash, item) =>
-  ({ hash: hash, ...decodeKeys(item.v) });
+  ({ hash: hash, ...decodeKeys(addNext(item.v)) });
 
 export const download = (hash, callback) => {
   console.log('Downloading', hash);

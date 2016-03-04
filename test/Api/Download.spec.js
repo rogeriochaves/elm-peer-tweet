@@ -66,4 +66,53 @@ describe('Download', () => {
 
     expect(callback.getCall(0).args[0]).to.equal('404 DOGE NOT FOUND');
   });
+
+  it('has an empty array as next when next is null', () => {
+    callback.reset();
+
+    const withoutNextResponse = {
+      id: new Buffer([138, 77, 221, 23, 241, 16, 219, 114, 118, 255, 212, 115, 239, 100, 122, 70, 102, 112, 72, 78]),
+      seq: 0,
+      token: new Buffer([224, 103, 19, 182, 217, 173, 135, 131, 137, 52, 54, 117, 68, 29, 121, 120, 21, 99, 112, 24]),
+      v: {
+        next: new Buffer([]),
+        t: new Buffer([98, 97, 122])
+      }
+    };
+
+    Download.__Rewire__('dht', {
+      get: (_, fn) => fn(null, withoutNextResponse)
+    });
+    Download.download('tweet', callback);
+
+    expect(callback.getCall(0).args[1]).to.deep.equal({
+      hash: 'tweet',
+      t: 'baz',
+      next: []
+    });
+  });
+
+  it('has an empty array as next when next is not there', () => {
+    callback.reset();
+
+    const withoutNextResponse = {
+      id: new Buffer([138, 77, 221, 23, 241, 16, 219, 114, 118, 255, 212, 115, 239, 100, 122, 70, 102, 112, 72, 78]),
+      seq: 0,
+      token: new Buffer([224, 103, 19, 182, 217, 173, 135, 131, 137, 52, 54, 117, 68, 29, 121, 120, 21, 99, 112, 24]),
+      v: {
+        t: new Buffer([98, 97, 122])
+      }
+    };
+
+    Download.__Rewire__('dht', {
+      get: (_, fn) => fn(null, withoutNextResponse)
+    });
+    Download.download('tweet', callback);
+
+    expect(callback.getCall(0).args[1]).to.deep.equal({
+      hash: 'tweet',
+      t: 'baz',
+      next: []
+    });
+  });
 });

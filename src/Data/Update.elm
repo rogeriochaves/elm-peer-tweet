@@ -3,7 +3,7 @@ module Data.Update (update, effects) where
 import Action as RootAction exposing (..)
 import Data.Action exposing (..)
 import Download.Action as DownloadAction exposing (..)
-import Data.Model exposing (Model)
+import Data.Model exposing (Model, addTweet)
 import Effects exposing (Effects)
 import Task exposing (Task)
 
@@ -23,7 +23,7 @@ updateDownloadedData action model =
     DoneDownloadHead head ->
       { model | head = head }
     DoneDownloadTweet tweet ->
-      { model | tweets = tweet :: model.tweets }
+      addTweet model tweet
     _ -> model
 
 effects : Signal.Address RootAction.Action -> RootAction.Action -> Model -> Effects RootAction.Action

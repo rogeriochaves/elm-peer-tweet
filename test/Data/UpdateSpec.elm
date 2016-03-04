@@ -12,13 +12,18 @@ tests =
     [ describe "downloaded data"
       [ it "adds new tweets to data" <|
           let
-            model = initialModel
             tweet = { hash = "foo", t = "bar", next = [] }
+            model = initialModel
             action = ActionForDownload (DoneDownloadTweet tweet)
           in
             expect (update action model) toBe { initialModel | tweets = tweet :: initialModel.tweets }
 
-      , it "fails for non-sense stuff" <|
-          expect True toBe True
+      , it "does not add existing tweets to data" <|
+          let
+            tweet = { hash = "foo", t = "bar", next = [] }
+            model = { initialModel | tweets = [tweet] }
+            action = ActionForDownload (DoneDownloadTweet tweet)
+          in
+            expect (update action model) toBe model
       ]
     ]

@@ -3,7 +3,8 @@ import { spy } from 'sinon';
 import Ports from '../src/Ports';
 
 describe('Ports', () => {
-  let ports, requestAddTweet, receivedData, requestPublishHead, receivedPublishHead, requestPublishTweet, receivedPublishTweet;
+  let ports, requestAddTweet, receivedData, requestPublishHead, receivedPublishHead, requestPublishTweet, receivedPublishTweet,
+    requestDownloadHead, receivedDownloadHead, requestDownloadTweet, receivedDownloadTweet;
 
   beforeEach(() => {
     global.localStorage = {
@@ -13,6 +14,7 @@ describe('Ports', () => {
 
     Ports.__Rewire__('initialData', () => 'initialData');
     Ports.__Rewire__('publish', (item, fn) => fn(null, item));
+    Ports.__Rewire__('download', (hash, fn) => fn(null, { hash: hash } ));
 
     ports = {
       requestAddTweet: {
@@ -32,6 +34,18 @@ describe('Ports', () => {
       },
       publishTweetStream: {
         send: (data) => { receivedPublishTweet = data }
+      },
+      requestDownloadHead: {
+        subscribe: (fn) => { requestDownloadHead = fn }
+      },
+      downloadHeadStream: {
+        send: (data) => { receivedDownloadHead = data }
+      },
+      requestDownloadTweet: {
+        subscribe: (fn) => { requestDownloadTweet = fn }
+      },
+      downloadTweetStream: {
+        send: (data) => { receivedDownloadTweet = data }
       }
     };
   });
@@ -69,5 +83,21 @@ describe('Ports', () => {
     requestPublishTweet({ data: 'foo' });
 
     expect(receivedPublishTweet).to.deep.equal({ data: 'foo' });
+  });
+
+  it('downloads head, sending data back', () => {
+    Ports.setup(ports);
+
+    requestDownloadHead('foo');
+
+    expect(receivedDownloadHead).to.deep.equal({ hash: 'foo' });
+  });
+
+  it('downloads tweet, sending data back', () => {
+    Ports.setup(ports);
+
+    requestDownloadTweet('bar');
+
+    expect(receivedDownloadTweet).to.deep.equal({ hash: 'bar' });
   });
 });

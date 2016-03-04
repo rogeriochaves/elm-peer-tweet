@@ -8,10 +8,8 @@ export const add = (hash, data) => (text) =>
 const updateData = (data) => (tweet) =>
   updateHead(tweet)(updateTweets(data)(tweet));
 
-const buildTweet = (data) => (text) => ({
-  t: text,
-  next: selectHops(findNext([], data.head, data))
-});
+const buildTweet = (data) => (text) =>
+  ({ t: text, next: selectHops(findNext([], data.head, data)) });
 
 const updateTweets = (data) => (tweet) =>
   ({ ...data, tweets: [...data.tweets, tweet] });

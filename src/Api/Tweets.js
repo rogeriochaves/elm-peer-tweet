@@ -4,8 +4,9 @@ import { encodeItem } from './Publish';
 
 export const add = (hash, data) => (text) => {
   const tweet = hashItem(buildTweet(data)(text));
+  const dataWithTweet = { ...data, tweets: [...data.tweets, tweet] };
 
-  return { ...data, head: buildHead(hash, data)(tweet), tweets: [...data.tweets, tweet] };
+  return { ...dataWithTweet, head: buildHead(hash, dataWithTweet)(tweet) };
 };
 
 const buildHead = (hash, data) => (tweet) =>

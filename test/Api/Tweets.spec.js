@@ -34,6 +34,10 @@ describe('Tweets', () => {
     expect(tweet.next).to.deep.equal(['bar', 'baz', 'uno', 'qui']);
   });
 
+  it('updates the head next keys', () => {
+    expect(result.head.next).to.deep.equal(['30671613bbf209cf79a466b469bac7dcec35557c', 'bar', 'qux', 'qua']);
+  });
+
   it('returns the right result for the first tweet', () => {
     result = Tweets.add('foo', { head: { hash: 'my-hash', next: [] }, tweets: [] })('foo');
 

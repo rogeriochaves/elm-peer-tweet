@@ -1,9 +1,9 @@
-Elm.Native.Sample = {};
-Elm.Native.Sample.make = function (localRuntime) {
+Elm.Native.ConcatMap = {};
+Elm.Native.ConcatMap.make = function (localRuntime) {
   localRuntime.Native = localRuntime.Native || {};
-  localRuntime.Native.Sample = localRuntime.Native.Sample || {};
+  localRuntime.Native.ConcatMap = localRuntime.Native.ConcatMap || {};
 
-  if (!localRuntime.Native.Sample.values) {
+  if (!localRuntime.Native.ConcatMap.values) {
     var Signal = Elm.Native.Signal.make(localRuntime);
     var Task = Elm.Native.Task.make(localRuntime);
 
@@ -40,10 +40,10 @@ Elm.Native.Sample.make = function (localRuntime) {
       };
     };
 
-    localRuntime.Native.Sample.values = {
+    localRuntime.Native.ConcatMap.values = {
       concatMap: concatMap
     };
   }
 
-  return localRuntime.Native.Sample.values;
+  return localRuntime.Native.ConcatMap.values;
 };

@@ -7,7 +7,7 @@ import ElmTest exposing (..)
 import Effects exposing (Never)
 import Signal.Extra exposing (combine)
 import ElmTestBDDStyle exposing (describe, it, expect, toBe)
-import Native.Sample
+import Native.ConcatMap
 
 import Data.UpdateSpec
 import Download.UpdateSpec
@@ -42,7 +42,7 @@ main =
   Signal.map (Maybe.map elementRunner >> Maybe.withDefault (show "Running tests")) testsMailbox.signal
 
 concatMap : (a -> Signal b) -> Signal a -> Signal b
-concatMap = Native.Sample.concatMap
+concatMap = Native.ConcatMap.concatMap
 
 port runner : Signal (Task.Task x ())
 port runner =

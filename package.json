@@ -24,6 +24,7 @@
     "chai": "^3.5.0",
     "css-loader": "^0.23.1",
     "electron-prebuilt": "^0.36.0",
+    "elm-test": "^0.16.0",
     "elm-webpack-loader": "^2.0.0",
     "file-loader": "^0.8.5",
     "mocha": "^2.4.5",

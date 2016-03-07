@@ -1,7 +1,7 @@
 module Main where
 
 import Task exposing (Task, andThen, sequence)
-import Console exposing (run, putStrLn)
+import Console exposing (run, putStrLn, (>>>))
 import Graphics.Element exposing (Element, show)
 import ElmTest exposing (..)
 import Effects exposing (Never)
@@ -49,8 +49,8 @@ port runner =
   let
     command tests =
       case tests of
-        Just tests -> Console.run <| consoleRunner <| tests
-        Nothing -> Console.run <| putStrLn "Wait..."
+        Just tests -> Console.run <| (putStrLn "" >>> putStrLn "" >>> consoleRunner tests)
+        Nothing -> Console.run <| (putStrLn "Wait...")
   in
     testsMailbox.signal
       |> concatMap command

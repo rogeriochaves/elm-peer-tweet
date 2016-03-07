@@ -7,36 +7,38 @@ Elm.Native.ConcatMap.make = function (localRuntime) {
     var Signal = Elm.Native.Signal.make(localRuntime);
     var Task = Elm.Native.Task.make(localRuntime);
 
-    // Timeout fix to stop test runner from trying to use window.setTimeout
+    // Timeout fix to stop runner from trying to use window.setTimeout when code is ran on node.js env
     window.setTimeout = setTimeout;
+
+    var addNotifier = function (toSignal, fromSignal) {
+      Signal.output("concatMap-listener-" + fromSignal.name + '-' + toSignal.name,
+        function (value) {
+          toSignal.notify((new Date()).getTime(), toSignal.id, value);
+        }, fromSignal);
+
+      return fromSignal.kids.length - 1;
+    };
+
+    var removeNotifier = function (signal, position) {
+      signal.kids.splice(position, 1);
+    };
 
     var concatMap = function (signalCreator) {
       return function (sourceSignal) {
         var concattedSignal = signalCreator(sourceSignal.value);
-        var newSignal = Signal.input('concatMap-'+ sourceSignal.name, concattedSignal.value);
-        var notifierPosition = null;
+        var resultSignal = Signal.input('concatMap-' + sourceSignal.name + '-' + concattedSignal.name, concattedSignal.value);
+        var notifierPosition = addNotifier(resultSignal, concattedSignal);
 
-        var addNotifierToConcattedSignal = function () {
-          notifierPosition = sourceSignal.kids.length;
+        Signal.output("concatMap-listener-" + sourceSignal.name,
+          function (value) {
+            removeNotifier(concattedSignal, notifierPosition);
+            concattedSignal = signalCreator(value);
+            notifierPosition = addNotifier(resultSignal, concattedSignal);
 
-          Signal.output("concattedSignal-concatMap-" + sourceSignal.name,
-            function () {
-              newSignal.notify((new Date()).getTime(), newSignal.id, concattedSignal.value);
-            }, concattedSignal);
-        };
-
-        addNotifierToConcattedSignal();
-
-        Signal.output("sourceSignal-concatMap-" + sourceSignal.name,
-          function () {
-            concattedSignal.kids.splice(notifierPosition - 1, 1); // clear previous notifier
-            concattedSignal = signalCreator(sourceSignal.value);
-            addNotifierToConcattedSignal();
-
-            newSignal.notify((new Date()).getTime(), newSignal.id, concattedSignal.value);
+            resultSignal.notify((new Date()).getTime(), resultSignal.id, concattedSignal.value);
       		}, sourceSignal);
 
-        return newSignal;
+        return resultSignal;
       };
     };
 

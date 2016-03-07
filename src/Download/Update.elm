@@ -6,7 +6,7 @@ import Data.Model as Data
 import Download.Model exposing (Model)
 import Effects exposing (Effects)
 import Task exposing (Task)
-import Data.Model exposing (Hash, nextHash, findTweet)
+import Data.Model exposing (Hash, nextHash, nextHashToDownload, findTweet)
 
 update : RootAction.Action -> Model -> Model
 update action model =
@@ -49,21 +49,19 @@ effectsDownload jsAddress action data =
         |> Task.map (\_ -> NoOp)
         |> Effects.task
     DoneDownloadHead head ->
-      Task.succeed (nextHash head |> nextDownloadAction)
+      Task.succeed (nextDownloadAction data head.hash)
         |> Effects.task
     DownloadTweet hash ->
-      Signal.send jsAddress (ActionForDownload <| DownloadTweet hash)
+      Signal.send jsAddress (nextDownloadAction data hash)
         |> Task.toMaybe
         |> Task.map (\_ -> NoOp)
         |> Effects.task
     DoneDownloadTweet tweet ->
-      Task.succeed (nextHash tweet |> nextDownloadAction)
+      Task.succeed (nextDownloadAction data tweet.hash)
         |> Effects.task
 
-nextDownloadAction : Maybe Data.Hash -> RootAction.Action
-nextDownloadAction hash =
-  case hash of
-    Just hash ->
-      ActionForDownload (DownloadTweet hash)
-    Nothing ->
-      NoOp
+nextDownloadAction : Data.Model -> Hash -> RootAction.Action
+nextDownloadAction data hash =
+  nextHashToDownload data hash
+    |> Maybe.map (ActionForDownload << DownloadTweet)
+    |> Maybe.withDefault NoOp

@@ -5,7 +5,8 @@
     "license": "BSD3",
     "source-directories": [
         "src",
-        "test"
+        "test",
+        "vendor/rogeriochaves/signal-concat-map/src"
     ],
     "exposed-modules": [],
     "native-modules": true,

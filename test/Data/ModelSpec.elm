@@ -6,8 +6,8 @@ import ElmTestBDDStyle exposing (..)
 setupModel : Model
 setupModel =
   { initialModel |
-      tweets = [{ hash = "bar", t = "something", next = ["baz"] }
-               ,{ hash = "baz", t = "something", next = ["qux"] }]
+      tweets = [{ hash = "bar", d = 1, t = "something", next = ["baz"] }
+               ,{ hash = "baz", d = 1, t = "something", next = ["qux"] }]
   }
 
 tests : Test
@@ -30,14 +30,14 @@ tests =
 
       , it "returns nothing if there is no next" <|
           let
-            model = { setupModel | tweets = { hash = "baz", t = "something", next = [] } :: setupModel.tweets }
+            model = { setupModel | tweets = { hash = "baz", d = 1, t = "something", next = [] } :: setupModel.tweets }
           in
             expect (nextHashToDownload model "bar") toBe <| Nothing
       ]
 
     , describe "findTweet" <|
       [ it "finds the tweet" <|
-          expect (findTweet setupModel <| Just "bar") toBe <| Just { hash = "bar", t = "something", next = ["baz"] }
+          expect (findTweet setupModel <| Just "bar") toBe <| Just { hash = "bar", d = 1, t = "something", next = ["baz"] }
 
       , it "returns empty when the tweet is not there" <|
           expect (findTweet setupModel <| Just "uno") toBe Nothing
@@ -46,13 +46,13 @@ tests =
     , describe "addTweet" <|
       [ it "adds a tweet if it is not there yet" <|
           let
-            tweet = { hash = "uno", t = "something", next = [] }
+            tweet = { hash = "uno", d = 1, t = "something", next = [] }
           in
             expect
               (addTweet setupModel tweet |> .tweets |> List.head)
             toBe <| Just tweet
 
       , it "does not add an existing tweet" <|
-          expect (addTweet setupModel { hash = "bar", t = "something", next = ["baz"] }) toBe setupModel
+          expect (addTweet setupModel { hash = "bar", d = 1, t = "something", next = ["baz"] }) toBe setupModel
       ]
     ]

@@ -36,7 +36,7 @@ tests =
         , signalIt "dispatches next tweet download after a head download is done" <|
             let
               model = initialModel
-              action = (ActionForDownload <| DoneDownloadHead { hash = "uno", next = ["duo"] })
+              action = (ActionForDownload <| DoneDownloadHead { hash = "uno", d = 1, next = ["duo"] })
               data = setup model action
             in
               expectSignal (data.actionsSignal, data.task) toBe [(ActionForDownload <| DownloadTweet "duo")]
@@ -45,7 +45,7 @@ tests =
     , signalDescribe "Tweet Download"
         [ signalIt "forwards download tweets actions to javascript mailbox" <|
             let
-              model = { initialModel | tweets = [ { hash = "foo", t = "something", next = ["bar"] } ] }
+              model = { initialModel | tweets = [ { hash = "foo", d = 1, t = "something", next = ["bar"] } ] }
               action = (ActionForDownload <| DownloadTweet "foo")
               data = setup model action
             in
@@ -53,7 +53,7 @@ tests =
 
         , signalIt "forwards NoOp actions when there is no next hash" <|
             let
-              model = { initialModel | tweets = [ { hash = "foo", t = "something", next = [] } ] }
+              model = { initialModel | tweets = [ { hash = "foo", d = 1, t = "something", next = [] } ] }
               action = (ActionForDownload <| DownloadTweet "foo")
               data = setup model action
             in
@@ -62,7 +62,7 @@ tests =
         , signalIt "dispatches next tweet download after a tweet download is done" <|
             let
               model = initialModel
-              action = (ActionForDownload <| DoneDownloadTweet { hash = "uno", t = "something", next = ["duo"] })
+              action = (ActionForDownload <| DoneDownloadTweet { hash = "uno", d = 1, t = "something", next = ["duo"] })
               data = setup model action
             in
               expectSignal (data.actionsSignal, data.task) toBe [(ActionForDownload <| DownloadTweet "duo")]

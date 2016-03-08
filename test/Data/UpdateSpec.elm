@@ -12,7 +12,7 @@ tests =
     [ describe "downloaded data"
       [ it "adds new tweets to data" <|
           let
-            tweet = { hash = "foo", t = "bar", next = [] }
+            tweet = { hash = "foo", d = 1, t = "bar", next = [] }
             model = initialModel
             action = ActionForDownload (DoneDownloadTweet tweet)
           in

@@ -17,13 +17,5 @@ tests =
             action = ActionForDownload (DoneDownloadTweet tweet)
           in
             expect (update action model) toBe { initialModel | tweets = tweet :: initialModel.tweets }
-
-      , it "does not add existing tweets to data" <|
-          let
-            tweet = { hash = "foo", t = "bar", next = [] }
-            model = { initialModel | tweets = [tweet] }
-            action = ActionForDownload (DoneDownloadTweet tweet)
-          in
-            expect (update action model) toBe model
       ]
     ]

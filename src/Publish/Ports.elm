@@ -10,7 +10,7 @@ import Time exposing (every, second)
 requestPublish : Signal RootAction.Action
 requestPublish =
   (every <| 30 * second)
-    |> Signal.map (\_ -> ActionForPublish BeginPublish)
+    |> Signal.map (always <| ActionForPublish BeginPublish)
 
 port publishHeadStream : Signal (Maybe Hash)
 

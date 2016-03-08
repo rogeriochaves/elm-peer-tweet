@@ -45,13 +45,13 @@ effectsPublish jsAddress action data =
     PublishHead head ->
       Signal.send jsAddress (ActionForPublish <| PublishHead head)
         |> Task.toMaybe
-        |> Task.map (\_ -> nextHash (Just head) |> findTweet data |> nextPublishAction)
+        |> Task.map (always <| nextPublishAction <| findTweet data <| nextHash <| Just head)
     DonePublishHead _ ->
       Task.succeed NoOp
     PublishTweet tweet ->
       Signal.send jsAddress (ActionForPublish <| PublishTweet tweet)
         |> Task.toMaybe
-        |> Task.map (\_ -> nextHash (Just tweet) |> findTweet data |> nextPublishAction)
+        |> Task.map (always <| nextPublishAction <| findTweet data <| nextHash <| Just tweet)
     DonePublishTweet _ ->
       Task.succeed NoOp
 

@@ -10,7 +10,7 @@ import Time exposing (every, second)
 requestDownload : Signal RootAction.Action
 requestDownload =
   (every <| 30 * second)
-    |> Signal.map (\_ -> ActionForDownload BeginDownload)
+    |> Signal.map (always <| ActionForDownload BeginDownload)
 
 port downloadHeadStream : Signal (Maybe Head)
 

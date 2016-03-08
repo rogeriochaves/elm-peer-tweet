@@ -46,13 +46,13 @@ effectsDownload jsAddress action data =
     DownloadHead hash ->
       Signal.send jsAddress (ActionForDownload <| DownloadHead hash)
         |> Task.toMaybe
-        |> Task.map (\_ -> NoOp)
+        |> Task.map (always NoOp)
     DoneDownloadHead head ->
       Task.succeed (nextDownloadAction data <| nextHash (Just head))
     DownloadTweet hash ->
       Signal.send jsAddress (nextDownloadAction data <| Just hash)
         |> Task.toMaybe
-        |> Task.map (\_ -> NoOp)
+        |> Task.map (always NoOp)
     DoneDownloadTweet tweet ->
       Task.succeed (nextDownloadAction data <| nextHash (Just tweet))
 

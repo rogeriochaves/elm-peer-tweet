@@ -32,7 +32,7 @@ effects jsAddress action _ =
     ActionForData (AddTweetRequest request) ->
       Signal.send jsAddress (ActionForData (AddTweetRequest request))
         |> Task.toMaybe
-        |> Task.map (\_ -> NoOp)
+        |> Task.map (always NoOp)
         |> Effects.task
     _ ->
       Effects.none

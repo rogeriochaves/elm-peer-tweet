@@ -11,9 +11,18 @@ const optionsFor = (item) =>
 const sign = (buf) =>
   ed.sign(buf, hexBuffer(getKeys().publicKey), hexBuffer(getKeys().secretKey));
 
+const encodeTimestamp = (time) => {
+  const length = Math.ceil(Math.log(time) / Math.log(2) / 8);
+  let buffer = new Buffer(length);
+  buffer.writeUIntBE(time, 0, length);
+
+  return buffer;
+}
+
 const encodeKey = (key, value) => {
   switch (key) {
     case 't': return new Buffer(value);
+    case 'd': return encodeTimestamp(value);
     case 'next': return Buffer.concat(value.map(x => new Buffer(x)));
     default: return value;
   }

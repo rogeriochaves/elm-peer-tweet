@@ -23,8 +23,8 @@ describe('Publish', () => {
 
     callback = spy();
 
-    head = { hash: 'myhead', next: ['foo'] };
-    tweet = { hash: 'foo', t: "hello it's me you are looking for?", next: ['bar'] };
+    head = { hash: 'myhead', d: 1457409506204, next: ['foo'] };
+    tweet = { hash: 'foo', d: 2457409506204, t: "hello it's me you are looking for?", next: ['bar'] };
     Publish.publish(head, callback);
     Publish.publish(tweet, callback);
   });
@@ -74,5 +74,13 @@ describe('Publish', () => {
 
     expect(headNext).to.equal('foo');
     expect(tweetNext).to.equal('bar');
+  });
+
+  it('publishes the head and tweets with the right timestamps', () => {
+    let headTimestamp = dhtPutData[0].v.d.readIntBE(0, 6);
+    let tweetTimestamp = dhtPutData[1].v.d.readIntBE(0, 6);
+
+    expect(headTimestamp).to.equal(1457409506204);
+    expect(tweetTimestamp).to.equal(2457409506204);
   });
 });

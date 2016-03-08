@@ -21,7 +21,7 @@ describe('Tweets', () => {
       ]
     };
     result = Tweets.add('foo', currentData)('Hello World!');
-    tweet = result.tweets.find(x => x.hash === '351b27683b4320088c357c5ae64f785f799d1e6e');
+    tweet = result.tweets.find(x => x.hash === '160e7fc4e51400ecd09ece3aed1788e9ecbcfaf5');
   });
 
   it('has the new tweet on the results with the right key', () => {
@@ -41,7 +41,7 @@ describe('Tweets', () => {
   });
 
   it('updates the head next keys', () => {
-    expect(result.head.next).to.deep.equal(['351b27683b4320088c357c5ae64f785f799d1e6e', 'bar', 'qux', 'qua']);
+    expect(result.head.next).to.deep.equal(['160e7fc4e51400ecd09ece3aed1788e9ecbcfaf5', 'bar', 'qux', 'qua']);
   });
 
   it('updates the head timestamp', () => {
@@ -52,9 +52,9 @@ describe('Tweets', () => {
     result = Tweets.add('foo', { head: { hash: 'my-hash', next: [] }, tweets: [] })('foo');
 
     expect(result).to.deep.equal({
-      head: { hash: 'my-hash', d: 1457409506204, next: ['7cbd6faf74b6752a538e2d33f4903e9291cc360c'] },
+      head: { hash: 'my-hash', d: 1457409506204, next: ['b076d09e41bb54d3e6a9021240389807f5cdc97f'] },
       tweets: [
-        { hash: '7cbd6faf74b6752a538e2d33f4903e9291cc360c', d: 1457409506204, t: 'foo', next: [] }
+        { hash: 'b076d09e41bb54d3e6a9021240389807f5cdc97f', d: 1457409506204, t: 'foo', next: [] }
       ]
     });
   });

@@ -64,9 +64,9 @@ describe('Ports', () => {
     requestAddTweet({ data: { head: { hash: 'myhash', next: [] }, tweets: [] }, text: 'hello world' });
 
     expect(receivedData).to.deep.equal({
-      head: { hash: 'myhash', d: 1457409506204, next: ['30f4dd1cab8efec761cb4214c441736166205037'] },
+      head: { hash: 'myhash', d: 1457409506204, next: ['6048a8a05b82c3ad229e897788f339c02449660e'] },
       tweets: [
-        { hash: '30f4dd1cab8efec761cb4214c441736166205037', d: 1457409506204, t: 'hello world', next: [] }
+        { hash: '6048a8a05b82c3ad229e897788f339c02449660e', d: 1457409506204, t: 'hello world', next: [] }
       ]
     });
   });

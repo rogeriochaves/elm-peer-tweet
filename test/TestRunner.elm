@@ -10,11 +10,13 @@ import ElmTestBDDStyle exposing (describe, it, expect, toBe)
 import SignalConcatMap exposing ((>>=))
 
 import Data.UpdateSpec
+import Data.ModelSpec
 import Download.UpdateSpec
 
 simpleTests : List Test
 simpleTests =
   [ Data.UpdateSpec.tests
+  , Data.ModelSpec.tests
   ]
 
 effectsTests : List (Signal (Task Never Test))

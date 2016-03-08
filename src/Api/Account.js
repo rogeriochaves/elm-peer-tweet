@@ -24,6 +24,7 @@ export const hash = () => {
 export const initialData = () => ({
   head: {
     hash: hash(),
+    d: Date.now(),
     next: []
   },
   tweets: []

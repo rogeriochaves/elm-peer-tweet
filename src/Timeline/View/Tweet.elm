@@ -9,7 +9,7 @@ view tweet =
   div [class "tweet"] [
     text "Fulano",
     div [class "minutes-ago"] [
-      text "5 minutes ago"
+      text <| toString tweet.d
     ],
     div [] [
       text tweet.t

@@ -13,7 +13,9 @@ import Data.Ports exposing (dataInput)
 import Publish.Ports exposing (requestPublish, publishHeadInput, publishTweetInput)
 import Download.Ports exposing (requestDownload, downloadHeadInput, downloadTweetInput)
 
+
 -- App starting
+
 
 inputs : List (Signal Action)
 inputs =
@@ -23,18 +25,24 @@ inputs =
   , publishTweetInput
   , requestDownload
   , downloadHeadInput
-  , downloadTweetInput ]
+  , downloadTweetInput
+  ]
+
 
 app : StartApp.App Model
-app = StartApp.start
-  { init = initialModel
-  , update = update jsMailbox.address
-  , view = view
-  , inputs = inputs }
+app =
+  StartApp.start
+    { init = initialModel
+    , update = update jsMailbox.address
+    , view = view
+    , inputs = inputs
+    }
+
 
 main : Signal Html
 main =
   app.html
+
 
 port tasks : Signal (Task.Task Never ())
 port tasks =

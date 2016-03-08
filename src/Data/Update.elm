@@ -7,24 +7,32 @@ import Data.Model exposing (Model, addTweet)
 import Effects exposing (Effects)
 import Task exposing (Task)
 
+
 update : RootAction.Action -> Model -> Model
 update action model =
   case action of
     ActionForData (UpdateData data) ->
       data
+
     ActionForDownload downloadAction ->
       updateDownloadedData downloadAction model
+
     _ ->
       model
+
 
 updateDownloadedData : DownloadAction.Action -> Model -> Model
 updateDownloadedData action model =
   case action of
     DoneDownloadHead head ->
       { model | head = head }
+
     DoneDownloadTweet tweet ->
       addTweet model tweet
-    _ -> model
+
+    _ ->
+      model
+
 
 effects : Signal.Address RootAction.Action -> RootAction.Action -> Model -> Effects RootAction.Action
 effects jsAddress action _ =
@@ -34,5 +42,6 @@ effects jsAddress action _ =
         |> Task.toMaybe
         |> Task.map (always NoOp)
         |> Effects.task
+
     _ ->
       Effects.none

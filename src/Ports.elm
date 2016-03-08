@@ -1,15 +1,23 @@
-module Ports where
+module Ports (..) where
 
 import Action exposing (..)
 
+
 jsMailbox : Signal.Mailbox Action.Action
-jsMailbox = Signal.mailbox NoOp
+jsMailbox =
+  Signal.mailbox NoOp
+
 
 isJust : Maybe a -> Bool
 isJust a =
   case a of
-    Just _ -> True
-    Nothing -> False
+    Just _ ->
+      True
+
+    Nothing ->
+      False
+
 
 filterEmpty : Signal (Maybe a) -> Signal (Maybe a)
-filterEmpty = Signal.filter isJust Nothing
+filterEmpty =
+  Signal.filter isJust Nothing

@@ -1,8 +1,10 @@
 module Publish.Model (Model, initialModel) where
 
+
 type alias Model =
-  { publishingCount: Int
+  { publishingCount : Int
   }
+
 
 initialModel : Model
 initialModel =

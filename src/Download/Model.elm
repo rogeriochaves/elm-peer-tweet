@@ -1,8 +1,10 @@
 module Download.Model (Model, initialModel) where
 
+
 type alias Model =
-  { downloadingCount: Int
+  { downloadingCount : Int
   }
+
 
 initialModel : Model
 initialModel =

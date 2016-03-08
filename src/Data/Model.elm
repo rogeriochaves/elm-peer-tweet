@@ -5,9 +5,11 @@ import Maybe exposing (andThen, map, withDefault)
 
 type alias Hash = String
 
+type alias Timestamp = Int
 
 type alias Head =
   { hash: Hash
+  , d: Timestamp
   , next: List Hash
   }
 
@@ -15,6 +17,7 @@ type alias Head =
 type alias Tweet =
   { hash: Hash
   , t: String
+  , d: Timestamp
   , next: List Hash
   }
 
@@ -27,7 +30,7 @@ type alias Model =
 
 initialModel : Model
 initialModel =
-  { head = { hash = "", next = [] }
+  { head = { hash = "", d = 0, next = [] }
   , tweets = []
   }
 

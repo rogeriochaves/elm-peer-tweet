@@ -7,32 +7,64 @@ import Download.Action exposing (..)
 import ElmTestBDDStyle exposing (..)
 import Effects exposing (toTask)
 import Task exposing (Task, andThen, sequence)
-import TestHelpers exposing (signalExpect, signalIt, signalDescribe)
+import TestHelpers exposing (expectSignal, signalIt, signalDescribe, expectTask)
 
-setup : Model -> { signal : Signal Action.Action, task : Task Effects.Never () }
-setup model =
+setup : Model -> Action.Action -> { jsSignal : Signal Action.Action, actionsSignal : Signal (List Action.Action), task : Task Effects.Never () }
+setup model action =
   let
-    mailbox = Signal.mailbox NoOp
-    dumpMailbox = Signal.mailbox [NoOp]
-    action = (ActionForDownload <| DownloadTweet "foo")
-    effect = effects mailbox.address action model
+    jsMailbox = Signal.mailbox NoOp
+    actionsMailbox = Signal.mailbox [NoOp]
+    effect = effects jsMailbox.address action model
   in
-    { signal = mailbox.signal
-    , task = toTask dumpMailbox.address (effect)
+    { jsSignal = jsMailbox.signal
+    , actionsSignal = actionsMailbox.signal
+    , task = toTask actionsMailbox.address (effect)
     }
 
 tests : Signal (Task Effects.Never Test)
 tests =
   signalDescribe "Download.Update"
-    [ signalIt "forwards download tweets actions to javascript mailbox" <|
-        let
-          data = setup { initialModel | tweets = [ { hash = "foo", t = "something", next = ["bar"] } ] }
-        in
-          signalExpect (data.signal, data.task) toBe (ActionForDownload <| DownloadTweet "bar")
+    [ signalDescribe "Head Download"
+        [ signalIt "forwards download head actions to javascript mailbox" <|
+            let
+              model = initialModel
+              action = (ActionForDownload <| DownloadHead "foo")
+              data = setup model action
+            in
+              expectSignal (data.jsSignal, data.task) toBe (ActionForDownload <| DownloadHead "foo")
 
-    , signalIt "forwards NoOp actions when there is no next hash" <|
-        let
-          data = setup { initialModel | tweets = [ { hash = "foo", t = "something", next = [] } ] }
-        in
-          signalExpect (data.signal, data.task) toBe (NoOp)
+        , signalIt "dispatches next tweet download after a head download is done" <|
+            let
+              model = initialModel
+              action = (ActionForDownload <| DoneDownloadHead { hash = "uno", next = ["duo"] })
+              data = setup model action
+            in
+              expectSignal (data.actionsSignal, data.task) toBe [(ActionForDownload <| DownloadTweet "duo")]
+        ]
+
+    , signalDescribe "Tweet Download"
+        [ signalIt "forwards download tweets actions to javascript mailbox" <|
+            let
+              model = { initialModel | tweets = [ { hash = "foo", t = "something", next = ["bar"] } ] }
+              action = (ActionForDownload <| DownloadTweet "foo")
+              data = setup model action
+            in
+              expectSignal (data.jsSignal, data.task) toBe (ActionForDownload <| DownloadTweet "bar")
+
+        , signalIt "forwards NoOp actions when there is no next hash" <|
+            let
+              model = { initialModel | tweets = [ { hash = "foo", t = "something", next = [] } ] }
+              action = (ActionForDownload <| DownloadTweet "foo")
+              data = setup model action
+            in
+              expectSignal (data.jsSignal, data.task) toBe (NoOp)
+
+        , signalIt "dispatches next tweet download after a tweet download is done" <|
+            let
+              model = initialModel
+              action = (ActionForDownload <| DoneDownloadTweet { hash = "uno", t = "something", next = ["duo"] })
+              data = setup model action
+            in
+              expectSignal (data.actionsSignal, data.task) toBe [(ActionForDownload <| DownloadTweet "duo")]
+        ]
     ]

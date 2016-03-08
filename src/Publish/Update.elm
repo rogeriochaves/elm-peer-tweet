@@ -34,29 +34,26 @@ decPublishingCount model =
 effects : Signal.Address RootAction.Action -> RootAction.Action -> Data.Model -> Effects RootAction.Action
 effects jsAddress action data =
   case action of
-    ActionForPublish syncAction -> effectsPublish jsAddress syncAction data
+    ActionForPublish syncAction -> effectsPublish jsAddress syncAction data |> Effects.task
     _ -> Effects.none
 
-effectsPublish : Signal.Address RootAction.Action -> Publish.Action -> Data.Model -> Effects RootAction.Action
+effectsPublish : Signal.Address RootAction.Action -> Publish.Action -> Data.Model -> Task a RootAction.Action
 effectsPublish jsAddress action data =
   case action of
     BeginPublish ->
       Task.succeed (ActionForPublish <| PublishHead data.head)
-        |> Effects.task
     PublishHead head ->
       Signal.send jsAddress (ActionForPublish <| PublishHead head)
         |> Task.toMaybe
         |> Task.map (\_ -> nextHash (Just head) |> findTweet data |> nextPublishAction)
-        |> Effects.task
     DonePublishHead _ ->
-      Effects.none
+      Task.succeed NoOp
     PublishTweet tweet ->
       Signal.send jsAddress (ActionForPublish <| PublishTweet tweet)
         |> Task.toMaybe
         |> Task.map (\_ -> nextHash (Just tweet) |> findTweet data |> nextPublishAction)
-        |> Effects.task
     DonePublishTweet _ ->
-      Effects.none
+      Task.succeed NoOp
 
 nextPublishAction : Maybe Data.Tweet -> RootAction.Action
 nextPublishAction tweet =

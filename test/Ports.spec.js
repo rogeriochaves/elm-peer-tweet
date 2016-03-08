@@ -59,12 +59,14 @@ describe('Ports', () => {
   it('adds a tweet, sending the data back to the dataStream port', () => {
     Ports.setup(ports);
 
+    Date.now = () => 1457409506204;
+
     requestAddTweet({ data: { head: { hash: 'myhash', next: [] }, tweets: [] }, text: 'hello world' });
 
     expect(receivedData).to.deep.equal({
-      head: { hash: 'myhash', next: ['dcbfa7a4332149de74822303ad05b1c77d0f72f0'] },
+      head: { hash: 'myhash', d: 1457409506204, next: ['30f4dd1cab8efec761cb4214c441736166205037'] },
       tweets: [
-        { hash: 'dcbfa7a4332149de74822303ad05b1c77d0f72f0', t: 'hello world', next: [] }
+        { hash: '30f4dd1cab8efec761cb4214c441736166205037', d: 1457409506204, t: 'hello world', next: [] }
       ]
     });
   });

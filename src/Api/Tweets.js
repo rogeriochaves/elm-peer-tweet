@@ -9,7 +9,7 @@ const updateData = (data) => (tweet) =>
   updateHead(tweet)(updateTweets(data)(tweet));
 
 const buildTweet = (data) => (text) =>
-  ({ t: text, next: selectHops(findNext([], data.head, data)) });
+  ({ t: text, d: Date.now(), next: selectHops(findNext([], data.head, data)) });
 
 const updateTweets = (data) => (tweet) =>
   ({ ...data, tweets: [...data.tweets, tweet] });
@@ -18,7 +18,7 @@ const updateHead = (tweet) => (data) =>
   ({ ...data, head: buildHead(data)(tweet) });
 
 const buildHead = (data) => (tweet) =>
-  ({ ...data.head, next: selectHops(findNext([], { next: [tweet.hash] }, data)) })
+  ({ ...data.head, d: Date.now(), next: selectHops(findNext([], { next: [tweet.hash] }, data)) })
 
 const findNext = (accumulated, current, data) => {
   let next = current && current.next && current.next[0];
@@ -28,7 +28,7 @@ const findNext = (accumulated, current, data) => {
 };
 
 const selectHops = (nexts) =>
-  [nexts[0], nexts[1], nexts[3], nexts[7]].filter(a => a)
+  [nexts[0], nexts[1], nexts[3], nexts[7]].filter(a => a);
 
 const hashItem = (item) =>
   ({ hash: sha1(bencodeItem(item)).toString('hex'), ...item });

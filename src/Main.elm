@@ -12,6 +12,7 @@ import Ports exposing (jsMailbox)
 import Data.Ports exposing (dataInput)
 import Publish.Ports exposing (requestPublish, publishHeadInput, publishTweetInput)
 import Download.Ports exposing (requestDownload, downloadHeadInput, downloadTweetInput)
+import DateTime.Signals exposing (updateDateTime)
 
 
 -- App starting
@@ -26,6 +27,7 @@ inputs =
   , requestDownload
   , downloadHeadInput
   , downloadTweetInput
+  , updateDateTime
   ]
 
 

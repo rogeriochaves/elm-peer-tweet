@@ -7,6 +7,7 @@ import Data.Update as Data
 import NewTweet.Update as NewTweet
 import Publish.Update as Publish
 import Download.Update as Download
+import DateTime.Update as DateTime
 
 
 update : Signal.Address Action -> Action -> Model -> ( Model, Effects Action )
@@ -21,6 +22,7 @@ modelUpdate action model =
     , newTweet = NewTweet.update action model.newTweet
     , publish = Publish.update action model.publish
     , download = Download.update action model.download
+    , dateTime = DateTime.update action model.dateTime
   }
 
 

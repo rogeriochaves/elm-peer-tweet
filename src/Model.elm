@@ -1,11 +1,12 @@
 module Model (Model, initialModel) where
 
+import Effects exposing (Effects)
+import Action exposing (Action)
 import Data.Model as Data
 import NewTweet.Model as NewTweet
 import Publish.Model as Publish
 import Download.Model as Download
-import Effects exposing (Effects)
-import Action exposing (Action)
+import DateTime.Model as DateTime
 
 
 type alias Model =
@@ -13,6 +14,7 @@ type alias Model =
   , newTweet : NewTweet.Model
   , publish : Publish.Model
   , download : Download.Model
+  , dateTime : DateTime.Model
   }
 
 
@@ -22,6 +24,7 @@ initialModel =
     , newTweet = NewTweet.initialModel
     , publish = Publish.initialModel
     , download = Download.initialModel
+    , dateTime = DateTime.initialModel
     }
   , Effects.none
   )

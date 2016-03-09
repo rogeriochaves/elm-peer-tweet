@@ -1,10 +1,19 @@
-module Timeline.View.Timeline where
+module Timeline.View.Timeline (..) where
 
 import Html exposing (Html, div, text)
-import Data.Model exposing (Model)
+import Model exposing (Model)
 import Timeline.View.Tweet as Tweet
+
 
 view : Model -> Html
 view model =
-  div []
-    (List.map Tweet.view model.tweets)
+  let
+    timestamp =
+      model.dateTime.timestamp
+
+    tweets =
+      model.data.tweets
+  in
+    div
+      []
+      (List.map (Tweet.view timestamp) tweets)

@@ -11,14 +11,14 @@ import SignalConcatMap exposing ((>>=))
 import Data.UpdateSpec
 import Data.ModelSpec
 import Download.UpdateSpec
-import Timeline.View.DateSpec
+import DateTime.View.TimeDifferenceSpec
 
 
 simpleTests : List Test
 simpleTests =
   [ Data.UpdateSpec.tests
   , Data.ModelSpec.tests
-  , Timeline.View.DateSpec.tests
+  , DateTime.View.TimeDifferenceSpec.tests
   ]
 
 

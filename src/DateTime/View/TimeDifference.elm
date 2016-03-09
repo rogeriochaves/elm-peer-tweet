@@ -1,7 +1,6 @@
-module Timeline.View.Date (..) where
+module DateTime.View.TimeDifference (..) where
 
-import Date exposing (Date, toTime)
-import Time exposing (second, minute, hour)
+import Time exposing (Time, second, minute, hour)
 
 
 day : Float
@@ -19,16 +18,29 @@ year =
   day * 365
 
 
-formatTimeDifference : Date -> Date -> String
-formatTimeDifference from to =
+formatTimeDifference : Time -> Time -> String
+formatTimeDifference to from =
   let
-    diff = (toTime to) - (toTime from)
-    seconds = diff / second |> truncate
-    minutes = diff / minute |> truncate
-    hours = diff / hour |> truncate
-    days = diff / day |> truncate
-    months = diff / month |> truncate
-    years = diff / year |> truncate
+    diff =
+      to - from
+
+    seconds =
+      diff / second |> truncate
+
+    minutes =
+      diff / minute |> truncate
+
+    hours =
+      diff / hour |> truncate
+
+    days =
+      diff / day |> truncate
+
+    months =
+      diff / month |> truncate
+
+    years =
+      diff / year |> truncate
   in
     if diff < second then
       "just now"

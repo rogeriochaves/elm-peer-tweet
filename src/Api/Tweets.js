@@ -2,7 +2,7 @@ import bencode from 'bencode';
 import crypto from 'crypto';
 import { encodeItem } from './Publish';
 
-export const add = (hash, data) => (text) =>
+export const add = (data) => (text) =>
   updateData(data)(hashItem(buildTweet(data)(text)));
 
 const updateData = (data) => (tweet) =>

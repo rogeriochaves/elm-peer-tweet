@@ -12,7 +12,7 @@ const pipePort = (ports) => (input, transform, output) =>
   });
 
 const addTweet = ({data, text}, resolve) =>
-  resolve(null, Tweets.add(hash(), data)(text));
+  resolve(null, Tweets.add(data)(text));
 
 export const setup = (ports) => {
   const pipe = pipePort(ports);

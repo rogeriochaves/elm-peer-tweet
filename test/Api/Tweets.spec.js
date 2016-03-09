@@ -20,7 +20,7 @@ describe('Tweets', () => {
         { hash: 'qui', next: [] }
       ]
     };
-    result = Tweets.add('foo', currentData)('Hello World!');
+    result = Tweets.add(currentData)('Hello World!');
     tweet = result.tweets.find(x => x.hash === '160e7fc4e51400ecd09ece3aed1788e9ecbcfaf5');
   });
 
@@ -49,7 +49,7 @@ describe('Tweets', () => {
   });
 
   it('returns the right result for the first tweet', () => {
-    result = Tweets.add('foo', { head: { hash: 'my-hash', next: [] }, tweets: [] })('foo');
+    result = Tweets.add({ head: { hash: 'my-hash', next: [] }, tweets: [] })('foo');
 
     expect(result).to.deep.equal({
       head: { hash: 'my-hash', d: 1457409506204, next: ['b076d09e41bb54d3e6a9021240389807f5cdc97f'] },

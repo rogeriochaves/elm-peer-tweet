@@ -3,7 +3,7 @@ import { spy } from 'sinon';
 import Publish from '../../src/Api/Publish';
 
 describe('Publish', () => {
-  let dht, dhtPutData, callback, head, tweet;
+  let dht, dhtPutData, callback, head, tweet, followBlock;
 
   beforeEach(() => {
     dhtPutData = [];
@@ -23,20 +23,25 @@ describe('Publish', () => {
 
     callback = spy();
 
-    head = { hash: 'myhead', d: 1457409506204, next: ['foo'] };
+    head = { hash: 'myhead', d: 1457409506204, next: ['foo'], f: ['uno', 'quattro'] };
     tweet = { hash: 'foo', d: 2457409506204, t: "hello it's me you are looking for?", next: ['bar'] };
+    followBlock = { hash: 'uno', d: 3457409506204, l: ['duo', 'tre'], next: ['quattro'] };
+
     Publish.publish(head, callback);
     Publish.publish(tweet, callback);
+    Publish.publish(followBlock, callback);
   });
 
   it('calls the callback for the published tweet', () => {
     expect(callback.getCall(0).args[1]).to.equal('myhead');
     expect(callback.getCall(1).args[1]).to.equal('foo');
+    expect(callback.getCall(2).args[1]).to.equal('uno');
   });
 
   it('calls the callback without errors', () => {
     expect(callback.getCall(0).args[0]).to.equal(undefined);
     expect(callback.getCall(1).args[0]).to.equal(undefined);
+    expect(callback.getCall(2).args[0]).to.equal(undefined);
   });
 
   it('calls the callback with an error when the dht gives an error', () => {
@@ -60,6 +65,7 @@ describe('Publish', () => {
   it('removes hash key for publishing', () => {
     expect(dhtPutData[0].v.hash).to.be.undefined;
     expect(dhtPutData[1].v.hash).to.be.undefined;
+    expect(dhtPutData[2].v.hash).to.be.undefined;
   });
 
   it('publishes tweets with the right text', () => {
@@ -68,12 +74,26 @@ describe('Publish', () => {
     expect(tweetText).to.equal("hello it's me you are looking for?");
   });
 
-  it('publishes the head and tweets with the right next hashes', () => {
+  it('publishes followBlock with the right hashes list', () => {
+    let hashesList = dhtPutData[2].v.l.toString();
+
+    expect(hashesList).to.equal('duotre');
+  });
+
+  it('publishes head with the right follow blocks hashes list', () => {
+    let followBlocksHashesList = dhtPutData[0].v.f.toString();
+
+    expect(followBlocksHashesList).to.equal('unoquattro');
+  });
+
+  it('publishes the head, tweets and followBlocks with the right next hashes', () => {
     let headNext = dhtPutData[0].v.next.toString();
     let tweetNext = dhtPutData[1].v.next.toString();
+    let followBlockNext = dhtPutData[2].v.next.toString();
 
     expect(headNext).to.equal('foo');
     expect(tweetNext).to.equal('bar');
+    expect(followBlockNext).to.equal('quattro');
   });
 
   it('publishes the head and tweets with the right timestamps', () => {

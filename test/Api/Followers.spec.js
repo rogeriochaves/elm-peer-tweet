@@ -21,15 +21,15 @@ describe('Followers', () => {
   it('adds a followers item if there is none', () => {
     result = Followers.add({ head: { f: [] }, followers: [] })('duo');
 
-    expect(result.followers[0]).to.deep.equal({ hash: '938e9cbe15a9fb217cf28731968a8ee6ee203cc7', d: 1457409506204, l: ['duo'], next: [] });
+    expect(result.followers[0]).to.deep.equal({ hash: '8d1b8caacfc16192666d1a87a6a2f71851531e00', d: 1457409506204, l: ['duo'], next: [] });
   });
 
   it('updates the head', () => {
-    expect(result.head).to.deep.equal({ hash: 'head-hash', next: [], f: ['5435e537a7476fe5046a2ec278dee83547299284'], d: 1457409506204, next: [] });
+    expect(result.head).to.deep.equal({ hash: 'head-hash', next: [], f: ['3ef5ef68f145b59990429cd722e035a1aa9d472b'], d: 1457409506204, next: [] });
   });
 
   it('adds the hash to followers when it has less than 20', () => {
-    expect(followers[0]).to.deep.equal({ hash: '5435e537a7476fe5046a2ec278dee83547299284', d: 1457409506204, l: ['baz', 'bar'], next: [] });
+    expect(followers[0]).to.deep.equal({ hash: '3ef5ef68f145b59990429cd722e035a1aa9d472b', d: 1457409506204, l: ['baz', 'bar'], next: [] });
   });
 
   it('create a new followers object when the current one has 20 already', () => {
@@ -40,7 +40,7 @@ describe('Followers', () => {
     };
     result = Followers.add({ head: { f: ['currentFollowers'] }, followers: [currentFollowers] })('uno');
 
-    expect(result.followers[0]).to.deep.equal({ hash: 'd9fe6aca05941b1c1f32806a578748f24b941e52', d: 1457409506204, l: ['uno'], next: ['currentFollowers'] });
+    expect(result.followers[0]).to.deep.equal({ hash: 'cc9976d51a3079819439f733c3f04b95af3fef14', d: 1457409506204, l: ['uno'], next: ['currentFollowers'] });
     expect(result.followers[1]).to.deep.equal(currentFollowers);
   });
 });

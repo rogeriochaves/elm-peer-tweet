@@ -19,11 +19,16 @@ const encodeTimestamp = (time) => {
   return buffer;
 }
 
+const encodeArray = (value) =>
+  Buffer.concat(value.map(x => new Buffer(x)));
+
 const encodeKey = (key, value) => {
   switch (key) {
     case 't': return new Buffer(value);
     case 'd': return encodeTimestamp(value);
-    case 'next': return Buffer.concat(value.map(x => new Buffer(x)));
+    case 'l': return encodeArray(value);
+    case 'f': return encodeArray(value);
+    case 'next': return encodeArray(value);
     default: return value;
   }
 };

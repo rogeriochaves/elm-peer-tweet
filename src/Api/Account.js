@@ -25,9 +25,11 @@ export const initialData = () => ({
   head: {
     hash: hash(),
     d: Date.now(),
-    next: []
+    next: [],
+    f: []
   },
-  tweets: []
+  tweets: [],
+  followers: []
 });
 
 export default { getKeys, hash, initialData };

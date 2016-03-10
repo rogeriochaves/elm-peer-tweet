@@ -21,10 +21,10 @@ const addHashToFollowers = (data) => (hash) => {
 }
 
 const addHash = (data) => (follower) => (hash) =>
-  ({ ...follower, d: Date.now(), l: [ hash, ...follower.l ] });
+  ({ ...follower, l: [ hash, ...follower.l ] });
 
 const buildFollower = (data) => (hash) => {
-  return ({ d: Date.now(), l: [ hash ], next: selectHops(findNext([], { next: data.head.f }, data.followers)) });
+  return ({ l: [ hash ], next: selectHops(findNext([], { next: data.head.f }, data.followers)) });
 }
 
 const updateHead = (hash) => (data) =>

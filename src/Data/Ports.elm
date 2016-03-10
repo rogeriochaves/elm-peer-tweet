@@ -24,6 +24,21 @@ port requestAddTweet =
       |> filterEmpty
 
 
+port requestAddFollowerRequest : Signal (Maybe AddFollowerRequestData)
+port requestAddFollowerRequest =
+  let
+    getRequest action =
+      case action of
+        ActionForData (AddFollowerRequest req) ->
+          Just req
+
+        _ ->
+          Nothing
+  in
+    Signal.map getRequest jsMailbox.signal
+      |> filterEmpty
+
+
 dataInput : Signal Action.Action
 dataInput =
   Signal.map (ActionForData << UpdateData) dataStream

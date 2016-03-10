@@ -37,8 +37,8 @@ updateDownloadedData action model =
 effects : Signal.Address RootAction.Action -> RootAction.Action -> Model -> Effects RootAction.Action
 effects jsAddress action _ =
   case action of
-    ActionForData (AddTweetRequest request) ->
-      Signal.send jsAddress (ActionForData (AddTweetRequest request))
+    ActionForData dataAction ->
+      Signal.send jsAddress (ActionForData dataAction)
         |> Task.toMaybe
         |> Task.map (always NoOp)
         |> Effects.task

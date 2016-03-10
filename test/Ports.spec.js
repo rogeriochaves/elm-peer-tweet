@@ -3,7 +3,7 @@ import { spy } from 'sinon';
 import Ports from '../src/Ports';
 
 describe('Ports', () => {
-  let ports, requestAddTweet, receivedData, requestPublishHead, receivedPublishHead, requestPublishTweet, receivedPublishTweet,
+  let ports, requestAddTweet, requestAddFollower, receivedData, requestPublishHead, receivedPublishHead, requestPublishTweet, receivedPublishTweet,
     requestDownloadHead, receivedDownloadHead, requestDownloadTweet, receivedDownloadTweet;
 
   beforeEach(() => {
@@ -19,6 +19,9 @@ describe('Ports', () => {
     ports = {
       requestAddTweet: {
         subscribe: (fn) => { requestAddTweet = fn }
+      },
+      requestAddFollower: {
+        subscribe: (fn) => { requestAddFollower = fn }
       },
       dataStream: {
         send: (data) => { receivedData = data }
@@ -67,6 +70,21 @@ describe('Ports', () => {
       head: { hash: 'myhash', d: 1457409506204, next: ['6048a8a05b82c3ad229e897788f339c02449660e'] },
       tweets: [
         { hash: '6048a8a05b82c3ad229e897788f339c02449660e', d: 1457409506204, t: 'hello world', next: [] }
+      ]
+    });
+  });
+
+  it('adds a follower, sending the data back to the dataStream port', () => {
+    Ports.setup(ports);
+
+    Date.now = () => 1457409506204;
+
+    requestAddFollower({ data: { head: { hash: 'myhash', next: [], f: [] }, followers: [] }, hash: '6048a8a05b82c3ad229e897788f339c02449660e' });
+
+    expect(receivedData).to.deep.equal({
+      head: { hash: 'myhash', d: 1457409506204, next: [], f: ['d703c79f640a8443d288e58d9f31dae2df4a3179'] },
+      followers: [
+        { hash: 'd703c79f640a8443d288e58d9f31dae2df4a3179', l: ['6048a8a05b82c3ad229e897788f339c02449660e'], next: [] }
       ]
     });
   });

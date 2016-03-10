@@ -7,35 +7,57 @@ type alias Hash =
   String
 
 
+type alias HeadHash =
+  Hash
+
+
+type alias TweetHash =
+  Hash
+
+
+type alias FollowBlockHash =
+  Hash
+
+
 type alias Timestamp =
   Int
 
 
 type alias Head =
-  { hash : Hash
+  { hash : HeadHash
   , d : Timestamp
-  , next : List Hash
+  , next : List TweetHash
+  , f: List FollowBlockHash
   }
 
 
 type alias Tweet =
-  { hash : Hash
+  { hash : TweetHash
   , t : String
   , d : Timestamp
-  , next : List Hash
+  , next : List TweetHash
+  }
+
+
+type alias FollowBlock =
+  { hash : FollowBlockHash
+  , l : List HeadHash
+  , next: List FollowBlockHash
   }
 
 
 type alias Model =
   { head : Head
   , tweets : List Tweet
+  , followers : List FollowBlock
   }
 
 
 initialModel : Model
 initialModel =
-  { head = { hash = "", d = 0, next = [] }
+  { head = { hash = "", d = 0, next = [], f = [] }
   , tweets = []
+  , followers = []
   }
 
 

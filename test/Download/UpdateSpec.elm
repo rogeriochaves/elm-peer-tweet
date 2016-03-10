@@ -36,7 +36,7 @@ tests =
         , signalIt "dispatches next tweet download after a head download is done" <|
             let
               model = initialModel
-              action = (ActionForDownload <| DoneDownloadHead { hash = "uno", d = 1, next = ["duo"] })
+              action = (ActionForDownload <| DoneDownloadHead { hash = "uno", d = 1, next = ["duo"], f = [] })
               data = setup model action
             in
               expectSignal (data.actionsSignal, data.task) toBe [(ActionForDownload <| DownloadTweet "duo")]

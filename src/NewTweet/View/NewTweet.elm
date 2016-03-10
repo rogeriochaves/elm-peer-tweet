@@ -19,5 +19,8 @@ view address model =
     ],
     button [onClick address (ActionForData <| AddTweetRequest { data = model.data, text = model.newTweet.text } )] [
       text "Tweet"
+    ],
+    button [onClick address (ActionForData <| AddFollowerRequest { data = model.data, hash = model.newTweet.text } )] [
+      text "Follow"
     ]
   ]

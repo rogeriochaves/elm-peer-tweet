@@ -13,7 +13,12 @@ view model =
 
     tweets =
       model.data.tweets
+
+    followBlocks =
+      model.data.followBlocks
   in
-    div
-      []
-      (List.map (Tweet.view timestamp) tweets)
+    div []
+      [ div [] (List.map (Tweet.view timestamp) tweets)
+      , div [] [text "following:"]
+      , div [] (List.map (text << toString << .l) followBlocks)
+      ]

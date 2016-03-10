@@ -24,8 +24,8 @@ port requestAddTweet =
       |> filterEmpty
 
 
-port requestAddFollowerRequest : Signal (Maybe AddFollowerRequestData)
-port requestAddFollowerRequest =
+port requestAddFollower : Signal (Maybe AddFollowerRequestData)
+port requestAddFollower =
   let
     getRequest action =
       case action of

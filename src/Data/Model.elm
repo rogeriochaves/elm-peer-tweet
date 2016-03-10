@@ -49,7 +49,7 @@ type alias FollowBlock =
 type alias Model =
   { head : Head
   , tweets : List Tweet
-  , followers : List FollowBlock
+  , followBlocks : List FollowBlock
   }
 
 
@@ -57,7 +57,7 @@ initialModel : Model
 initialModel =
   { head = { hash = "", d = 0, next = [], f = [] }
   , tweets = []
-  , followers = []
+  , followBlocks = []
   }
 
 

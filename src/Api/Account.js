@@ -29,7 +29,7 @@ export const initialData = () => ({
     f: []
   },
   tweets: [],
-  followers: []
+  followBlocks: []
 });
 
 export default { getKeys, hash, initialData };

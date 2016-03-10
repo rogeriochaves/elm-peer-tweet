@@ -79,11 +79,11 @@ describe('Ports', () => {
 
     Date.now = () => 1457409506204;
 
-    requestAddFollower({ data: { head: { hash: 'myhash', next: [], f: [] }, followers: [] }, hash: '6048a8a05b82c3ad229e897788f339c02449660e' });
+    requestAddFollower({ data: { head: { hash: 'myhash', next: [], f: [] }, followBlocks: [] }, hash: '6048a8a05b82c3ad229e897788f339c02449660e' });
 
     expect(receivedData).to.deep.equal({
       head: { hash: 'myhash', d: 1457409506204, next: [], f: ['d703c79f640a8443d288e58d9f31dae2df4a3179'] },
-      followers: [
+      followBlocks: [
         { hash: 'd703c79f640a8443d288e58d9f31dae2df4a3179', l: ['6048a8a05b82c3ad229e897788f339c02449660e'], next: [] }
       ]
     });

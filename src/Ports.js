@@ -1,6 +1,6 @@
 import { hash } from './Api/Account';
 import Tweets from './Api/Tweets';
-import Followers from './Api/Followers';
+import FollowBlocks from './Api/FollowBlocks';
 import { initialData } from './Api/Account';
 import { publish } from './Api/Publish';
 import { download } from './Api/Download';
@@ -16,7 +16,7 @@ const addTweet = ({data, text}, resolve) =>
   resolve(null, Tweets.add(data)(text));
 
 const addFollower = ({data, hash}, resolve) =>
-  resolve(null, Followers.add(data)(hash));
+  resolve(null, FollowBlocks.add(data)(hash));
 
 export const setup = (ports) => {
   const pipe = pipePort(ports);

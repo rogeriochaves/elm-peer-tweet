@@ -1,10 +1,15 @@
 import { dht } from './Utils';
 
+const decodeHashesArray = (value) =>
+  value.toString() ? value.toString().match(/.{1,40}/g) : [];
+
 const decodeKey = (key, value) => {
   switch (key) {
     case 't': return { [key]: value.toString() };
     case 'd': return { [key]: value.readIntBE(0, value.length) };
-    case 'next': return { [key]: value.toString() ? value.toString().match(/.{1,40}/g) : [] };
+    case 'l': return { [key]: decodeHashesArray(value) };
+    case 'f': return { [key]: decodeHashesArray(value) };
+    case 'next': return { [key]: decodeHashesArray(value) };
     default: return {};
   }
 };

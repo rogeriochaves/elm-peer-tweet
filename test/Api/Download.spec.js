@@ -3,12 +3,11 @@ import { spy } from 'sinon';
 import Download from '../../src/Api/Download';
 
 describe('Download', () => {
-  let headResponse, tweetResponse, callback;
+  let headResponse, tweetResponse, followBlockResponse, callback;
 
   beforeEach(() => {
     tweetResponse = {
       id: new Buffer([138, 77, 221, 23, 241, 16, 219, 114, 118, 255, 212, 115, 239, 100, 122, 70, 102, 112, 72, 78]),
-      seq: 0,
       token: new Buffer([224, 103, 19, 182, 217, 173, 135, 131, 137, 52, 54, 117, 68, 29, 121, 120, 21, 99, 112, 24]),
       v: {
         next: new Buffer([52, 55, 51, 51, 56, 49, 102, 102, 56, 56, 49, 99, 57, 49, 102, 51, 98, 102, 101, 100, 101, 50, 56, 102, 52, 50, 102, 56, 99, 98, 100, 55, 55, 55, 52, 50, 53, 51, 54, 51, 56, 97, 52, 100, 57, 48, 56, 98, 102, 55, 100, 97, 97, 102, 51, 48, 97, 98, 98, 54, 98, 56, 101, 49, 101, 97, 55, 57, 53, 49, 48, 56, 57, 51, 97, 52, 51, 56, 53, 98]),
@@ -25,13 +24,25 @@ describe('Download', () => {
       token: new Buffer([137, 80, 157, 37, 43, 84, 119, 65, 221, 211, 151, 231, 53, 237, 98, 191, 48, 25, 18, 69]),
       v: {
         next: new Buffer([52, 55, 51, 51, 56, 49, 102, 102, 56, 56, 49, 99, 57, 49, 102, 51, 98, 102, 101, 100, 101, 50, 56, 102, 52, 50, 102, 56, 99, 98, 100, 55, 55, 55, 52, 50, 53, 51, 54, 51, 56, 97, 52, 100, 57, 48, 56, 98, 102, 55, 100, 97, 97, 102, 51, 48, 97, 98, 98, 54, 98, 56, 101, 49, 101, 97, 55, 57, 53, 49, 48, 56, 57, 51, 97, 52, 51, 56, 53, 98]),
-        d: new Buffer([1, 83, 86, 34, 199, 187])
+        d: new Buffer([1, 83, 86, 34, 199, 187]),
+        f: new Buffer([52, 55, 51, 51, 56, 49, 102, 102, 56, 56, 49, 99, 57, 49, 102, 51, 98, 102, 101, 100, 101, 50, 56, 102, 52, 50, 102, 56, 99, 98, 100, 55, 55, 55, 52, 50, 53, 51, 54, 51, 56, 97, 52, 100, 57, 48, 56, 98, 102, 55, 100, 97, 97, 102, 51, 48, 97, 98, 98, 54, 98, 56, 101, 49, 101, 97, 55, 57, 53, 49, 48, 56, 57, 51, 97, 52, 51, 56, 53, 98])
+      }
+    };
+
+    followBlockResponse = {
+      id: new Buffer([57, 97, 52, 100, 100, 100, 49, 55, 102, 49, 49, 48, 100, 98, 55, 50, 55, 53, 102, 102, 100, 52, 55, 51, 101, 102, 54, 52, 55, 97, 52, 54, 54, 54, 55, 48, 52, 56, 52, 101]),
+      token: new Buffer([101, 48, 54, 55, 49, 51, 49, 54, 100, 57, 97, 100, 56, 55, 56, 51, 56, 57, 51, 52, 52, 54, 55, 53, 52, 52, 49, 100, 55, 57, 55, 56, 49, 53, 54, 51, 55, 48, 49, 56]),
+      v: {
+        next: new Buffer([52, 55, 51, 51, 56, 49, 102, 102, 56, 56, 49, 99, 57, 49, 102, 51, 98, 102, 101, 100, 101, 50, 56, 102, 52, 50, 102, 56, 99, 98, 100, 55, 55, 55, 52, 50, 53, 51, 54, 51, 56, 97, 52, 100, 57, 48, 56, 98, 102, 55, 100, 97, 97, 102, 51, 48, 97, 98, 98, 54, 98, 56, 101, 49, 101, 97, 55, 57, 53, 49, 48, 56, 57, 51, 97, 52, 51, 56, 53, 98]),
+        l: new Buffer([52, 55, 51, 51, 56, 49, 102, 102, 56, 56, 49, 99, 57, 49, 102, 51, 98, 102, 101, 100, 101, 50, 56, 102, 52, 50, 102, 56, 99, 98, 100, 55, 55, 55, 52, 50, 53, 51, 54, 51, 56, 97, 52, 100, 57, 48, 56, 98, 102, 55, 100, 97, 97, 102, 51, 48, 97, 98, 98, 54, 98, 56, 101, 49, 101, 97, 55, 57, 53, 49, 48, 56, 57, 51, 97, 52, 51, 56, 53, 98])
       }
     };
 
     let dht = {
       get: (hash, fn) => {
-        hash === 'head' ? fn(null, headResponse) : fn(null, tweetResponse);
+        hash === 'head' ? fn(null, headResponse) :
+          hash === 'tweet' ? fn(null, tweetResponse) :
+            fn(null, followBlockResponse);
       }
     };
     Download.__Rewire__('dht', dht);
@@ -39,13 +50,15 @@ describe('Download', () => {
     callback = spy();
     Download.download('head', callback);
     Download.download('tweet', callback);
+    Download.download('followBlock', callback);
   });
 
   it('calls the callback with the head response', () => {
     expect(callback.getCall(0).args[1]).to.deep.equal({
       hash: 'head',
       d: 1457439033275,
-      next: ['473381ff881c91f3bfede28f42f8cbd777425363', '8a4d908bf7daaf30abb6b8e1ea79510893a4385b']
+      next: ['473381ff881c91f3bfede28f42f8cbd777425363', '8a4d908bf7daaf30abb6b8e1ea79510893a4385b'],
+      f: ['473381ff881c91f3bfede28f42f8cbd777425363', '8a4d908bf7daaf30abb6b8e1ea79510893a4385b']
     });
     expect(callback.getCall(1).args[1]).to.deep.equal({
       hash: 'tweet',
@@ -53,11 +66,17 @@ describe('Download', () => {
       d: 1457408150227,
       next: ['473381ff881c91f3bfede28f42f8cbd777425363', '8a4d908bf7daaf30abb6b8e1ea79510893a4385b']
     });
+    expect(callback.getCall(2).args[1]).to.deep.equal({
+      hash: 'followBlock',
+      next: ['473381ff881c91f3bfede28f42f8cbd777425363', '8a4d908bf7daaf30abb6b8e1ea79510893a4385b'],
+      l: ['473381ff881c91f3bfede28f42f8cbd777425363', '8a4d908bf7daaf30abb6b8e1ea79510893a4385b']
+    });
   });
 
   it('calls the callback without errors', () => {
     expect(callback.getCall(0).args[0]).to.equal(null);
     expect(callback.getCall(1).args[0]).to.equal(null);
+    expect(callback.getCall(2).args[0]).to.equal(null);
   });
 
   it('calls the callback with an error when the dht gives an error', () => {

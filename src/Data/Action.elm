@@ -1,6 +1,7 @@
 module Data.Action (..) where
 
-import Account.Model as Account exposing (Hash)
+import Account.Model as Account exposing (HeadHash)
+import Account.Action as AccountAction
 
 
 type alias AddTweetRequestPayload =
@@ -8,10 +9,11 @@ type alias AddTweetRequestPayload =
 
 
 type alias AddFollowerRequestPayload =
-  { account : Account.Model, hash : Hash }
+  { account : Account.Model, hash : HeadHash }
 
 
 type Action
   = AddTweetRequest AddTweetRequestPayload
   | AddFollowerRequest AddFollowerRequestPayload
   | UpdateAccount Account.Model
+  | ActionForAccount HeadHash AccountAction.Action

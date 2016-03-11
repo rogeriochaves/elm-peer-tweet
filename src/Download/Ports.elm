@@ -1,6 +1,6 @@
 module Download.Ports (..) where
 
-import Data.Model as Data exposing (Head, Tweet, Hash)
+import Account.Model as Account exposing (Head, Tweet, Hash)
 import Action as RootAction exposing (..)
 import Download.Action exposing (..)
 import Ports exposing (jsMailbox, isJust, filterEmpty)

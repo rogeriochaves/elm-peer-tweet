@@ -1,16 +1,16 @@
-module Data.UpdateSpec where
+module Account.UpdateSpec where
 
-import Data.Update exposing (update)
-import Data.Model exposing (initialModel)
+import Account.Update exposing (update)
+import Account.Model exposing (initialModel)
 import Action exposing (..)
 import Download.Action exposing (..)
 import ElmTestBDDStyle exposing (..)
 
 tests : Test
 tests =
-  describe "Data.Update"
-    [ describe "downloaded data"
-      [ it "adds new tweets to data" <|
+  describe "Account.Update"
+    [ describe "downloaded account"
+      [ it "adds new tweets to account" <|
           let
             tweet = { hash = "foo", d = 1, t = "bar", next = [] }
             model = initialModel

@@ -2,11 +2,11 @@ module Publish.Update (update, effects) where
 
 import Action as RootAction exposing (..)
 import Publish.Action as Publish exposing (..)
-import Data.Model as Data
+import Account.Model as Account
 import Publish.Model exposing (Model)
 import Effects exposing (Effects)
 import Task exposing (Task)
-import Data.Model exposing (Hash, nextHash, findTweet)
+import Account.Model exposing (Hash, nextHash, findTweet)
 
 
 update : RootAction.Action -> Model -> Model
@@ -48,26 +48,26 @@ decPublishingCount model =
   { model | publishingCount = model.publishingCount - 1 }
 
 
-effects : Signal.Address RootAction.Action -> RootAction.Action -> Data.Model -> Effects RootAction.Action
-effects jsAddress action data =
+effects : Signal.Address RootAction.Action -> RootAction.Action -> Account.Model -> Effects RootAction.Action
+effects jsAddress action account =
   case action of
     ActionForPublish syncAction ->
-      effectsPublish jsAddress syncAction data |> Effects.task
+      effectsPublish jsAddress syncAction account |> Effects.task
 
     _ ->
       Effects.none
 
 
-effectsPublish : Signal.Address RootAction.Action -> Publish.Action -> Data.Model -> Task a RootAction.Action
-effectsPublish jsAddress action data =
+effectsPublish : Signal.Address RootAction.Action -> Publish.Action -> Account.Model -> Task a RootAction.Action
+effectsPublish jsAddress action account =
   case action of
     BeginPublish ->
-      Task.succeed (ActionForPublish <| PublishHead data.head)
+      Task.succeed (ActionForPublish <| PublishHead account.head)
 
     PublishHead head ->
       Signal.send jsAddress (ActionForPublish <| PublishHead head)
         |> Task.toMaybe
-        |> Task.map (always <| nextPublishAction <| findTweet data <| nextHash <| Just head)
+        |> Task.map (always <| nextPublishAction <| findTweet account <| nextHash <| Just head)
 
     DonePublishHead _ ->
       Task.succeed NoOp
@@ -75,13 +75,13 @@ effectsPublish jsAddress action data =
     PublishTweet tweet ->
       Signal.send jsAddress (ActionForPublish <| PublishTweet tweet)
         |> Task.toMaybe
-        |> Task.map (always <| nextPublishAction <| findTweet data <| nextHash <| Just tweet)
+        |> Task.map (always <| nextPublishAction <| findTweet account <| nextHash <| Just tweet)
 
     DonePublishTweet _ ->
       Task.succeed NoOp
 
 
-nextPublishAction : Maybe Data.Tweet -> RootAction.Action
+nextPublishAction : Maybe Account.Tweet -> RootAction.Action
 nextPublishAction tweet =
   case tweet of
     Just tweet ->

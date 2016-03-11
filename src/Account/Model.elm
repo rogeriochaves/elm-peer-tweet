@@ -1,4 +1,4 @@
-module Data.Model (..) where
+module Account.Model (..) where
 
 import Maybe exposing (andThen, map, withDefault)
 

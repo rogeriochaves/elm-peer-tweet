@@ -3,34 +3,34 @@ import crypto from 'crypto';
 import { encodeItem } from './Publish';
 import { findNext, selectHops, hashItem, bencodeItem, sha1 } from './Utils';
 
-export const add = (data) => (hash) =>
-  updateData(data)(hash);
+export const add = (account) => (hash) =>
+  updateAccount(account)(hash);
 
-const updateData = (data) => (hash) =>
-  updateHead(hash)(updateFollowBlocks(data)(hash));
+const updateAccount = (account) => (hash) =>
+  updateHead(hash)(updateFollowBlocks(account)(hash));
 
-const updateFollowBlocks = (data) => (hash) =>
-  ({ ...data, followBlocks: addHashToFollowBlocks(data)(hash) });
+const updateFollowBlocks = (account) => (hash) =>
+  ({ ...account, followBlocks: addHashToFollowBlocks(account)(hash) });
 
-const addHashToFollowBlocks = (data) => (hash) => {
-  const lastFollowBlock = data.followBlocks.find(x => x.hash === data.head.f[0]);
+const addHashToFollowBlocks = (account) => (hash) => {
+  const lastFollowBlock = account.followBlocks.find(x => x.hash === account.head.f[0]);
 
   return lastFollowBlock && lastFollowBlock.l.length < 20 ?
-    [ hashItem(addHash(data)(lastFollowBlock)(hash)), ...data.followBlocks.filter(x => x.hash != data.head.f[0]) ] :
-    [ hashItem(buildFollowBlock(data)(hash)), ...data.followBlocks ]
+    [ hashItem(addHash(account)(lastFollowBlock)(hash)), ...account.followBlocks.filter(x => x.hash != account.head.f[0]) ] :
+    [ hashItem(buildFollowBlock(account)(hash)), ...account.followBlocks ]
 }
 
-const addHash = (data) => (follower) => (hash) =>
+const addHash = (account) => (follower) => (hash) =>
   ({ ...follower, l: [ hash, ...follower.l ] });
 
-const buildFollowBlock = (data) => (hash) => {
-  return ({ l: [ hash ], next: selectHops(findNext([], { next: data.head.f }, data.followBlocks)) });
+const buildFollowBlock = (account) => (hash) => {
+  return ({ l: [ hash ], next: selectHops(findNext([], { next: account.head.f }, account.followBlocks)) });
 }
 
-const updateHead = (hash) => (data) =>
-  ({ ...data, head: buildHead(data)(hash) });
+const updateHead = (hash) => (account) =>
+  ({ ...account, head: buildHead(account)(hash) });
 
-const buildHead = (data) => (hash) =>
-  ({ ...data.head, d: Date.now(), f: selectHops(findNext([], { next: [data.followBlocks[0].hash] }, data.followBlocks)) })
+const buildHead = (account) => (hash) =>
+  ({ ...account.head, d: Date.now(), f: selectHops(findNext([], { next: [account.followBlocks[0].hash] }, account.followBlocks)) })
 
 export default { add };

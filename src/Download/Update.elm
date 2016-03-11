@@ -2,11 +2,11 @@ module Download.Update (update, effects) where
 
 import Action as RootAction exposing (..)
 import Download.Action as Download exposing (..)
-import Data.Model as Data
+import Account.Model as Account
 import Download.Model exposing (Model)
 import Effects exposing (Effects)
 import Task exposing (Task)
-import Data.Model exposing (Hash, nextHash, nextHashToDownload, findTweet)
+import Account.Model exposing (Hash, nextHash, nextHashToDownload, findTweet)
 import Maybe exposing (andThen)
 
 
@@ -49,21 +49,21 @@ decDownloadingCount model =
   { model | downloadingCount = model.downloadingCount - 1 }
 
 
-effects : Signal.Address RootAction.Action -> RootAction.Action -> Data.Model -> Effects RootAction.Action
-effects jsAddress action data =
+effects : Signal.Address RootAction.Action -> RootAction.Action -> Account.Model -> Effects RootAction.Action
+effects jsAddress action account =
   case action of
     ActionForDownload syncAction ->
-      effectsDownload jsAddress syncAction data |> Effects.task
+      effectsDownload jsAddress syncAction account |> Effects.task
 
     _ ->
       Effects.none
 
 
-effectsDownload : Signal.Address RootAction.Action -> Download.Action -> Data.Model -> Task a RootAction.Action
-effectsDownload jsAddress action data =
+effectsDownload : Signal.Address RootAction.Action -> Download.Action -> Account.Model -> Task a RootAction.Action
+effectsDownload jsAddress action account =
   case action of
     BeginDownload ->
-      Task.succeed (ActionForDownload <| DownloadHead data.head.hash)
+      Task.succeed (ActionForDownload <| DownloadHead account.head.hash)
 
     DownloadHead hash ->
       Signal.send jsAddress (ActionForDownload <| DownloadHead hash)
@@ -71,20 +71,20 @@ effectsDownload jsAddress action data =
         |> Task.map (always NoOp)
 
     DoneDownloadHead head ->
-      Task.succeed (nextDownloadAction data <| nextHash (Just head))
+      Task.succeed (nextDownloadAction account <| nextHash (Just head))
 
     DownloadTweet hash ->
-      Signal.send jsAddress (nextDownloadAction data <| Just hash)
+      Signal.send jsAddress (nextDownloadAction account <| Just hash)
         |> Task.toMaybe
         |> Task.map (always NoOp)
 
     DoneDownloadTweet tweet ->
-      Task.succeed (nextDownloadAction data <| nextHash (Just tweet))
+      Task.succeed (nextDownloadAction account <| nextHash (Just tweet))
 
 
-nextDownloadAction : Data.Model -> Maybe Hash -> RootAction.Action
-nextDownloadAction data hash =
+nextDownloadAction : Account.Model -> Maybe Hash -> RootAction.Action
+nextDownloadAction account hash =
   hash
-    `andThen` nextHashToDownload data
+    `andThen` nextHashToDownload account
     |> Maybe.map (ActionForDownload << DownloadTweet)
     |> Maybe.withDefault NoOp

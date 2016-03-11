@@ -8,16 +8,16 @@ import Effects exposing (Never)
 import Signal.Extra exposing (combine)
 import ElmTestBDDStyle exposing (describe, it, expect, toBe)
 import SignalConcatMap exposing ((>>=))
-import Data.UpdateSpec
-import Data.ModelSpec
+import Account.UpdateSpec
+import Account.ModelSpec
 import Download.UpdateSpec
 import DateTime.View.TimeDifferenceSpec
 
 
 simpleTests : List Test
 simpleTests =
-  [ Data.UpdateSpec.tests
-  , Data.ModelSpec.tests
+  [ Account.UpdateSpec.tests
+  , Account.ModelSpec.tests
   , DateTime.View.TimeDifferenceSpec.tests
   ]
 

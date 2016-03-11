@@ -16,7 +16,7 @@ view address model =
     [ Sidebar.view address model
     , div
         [ class "flexbox-content" ]
-        [ text model.data.head.hash
+        [ text model.account.head.hash
         , Topbar.view address model
         , Timeline.view model
         ]

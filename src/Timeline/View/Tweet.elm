@@ -2,7 +2,7 @@ module Timeline.View.Tweet (..) where
 
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (class)
-import Data.Model exposing (Tweet)
+import Account.Model exposing (Tweet)
 import Time exposing (Time)
 import DateTime.View.TimeDifference exposing (formatTimeDifference)
 

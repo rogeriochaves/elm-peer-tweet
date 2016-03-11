@@ -2,19 +2,19 @@ import { expect } from 'chai';
 import FollowBlocks from '../../src/Api/FollowBlocks';
 
 describe('FollowBlocks', () => {
-  let currentData, result, followers;
+  let currentAccount, result, followers;
 
   beforeEach(() => {
     global.localStorage = {};
 
     Date.now = () => 1457409506204;
 
-    currentData = {
+    currentAccount = {
       head: { hash: 'head-hash', next: [], f: ['followers-block'] },
       tweets: [],
       followBlocks: [{ hash: 'followers-block', l: ['bar'], next: [] }]
     };
-    result = FollowBlocks.add(currentData)('baz');
+    result = FollowBlocks.add(currentAccount)('baz');
     followers = result.followBlocks;
   });
 

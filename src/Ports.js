@@ -1,30 +1,30 @@
 import { hash } from './Api/Account';
 import Tweets from './Api/Tweets';
 import FollowBlocks from './Api/FollowBlocks';
-import { initialData } from './Api/Account';
+import { initialAccount } from './Api/Account';
 import { publish } from './Api/Publish';
 import { download } from './Api/Download';
 
 const pipePort = (ports) => (input, transform, output) =>
-  ports[input].subscribe((data) => {
-    transform(data, (err, result) => {
+  ports[input].subscribe((account) => {
+    transform(account, (err, result) => {
       ports[output].send(result);
     });
   });
 
-const addTweet = ({data, text}, resolve) =>
-  resolve(null, Tweets.add(data)(text));
+const addTweet = ({account, text}, resolve) =>
+  resolve(null, Tweets.add(account)(text));
 
-const addFollower = ({data, hash}, resolve) =>
-  resolve(null, FollowBlocks.add(data)(hash));
+const addFollower = ({account, hash}, resolve) =>
+  resolve(null, FollowBlocks.add(account)(hash));
 
 export const setup = (ports) => {
   const pipe = pipePort(ports);
 
-  ports.dataStream.send(initialData());
+  ports.accountStream.send(initialAccount());
 
-  pipe('requestAddTweet', addTweet, 'dataStream');
-  pipe('requestAddFollower', addFollower, 'dataStream');
+  pipe('requestAddTweet', addTweet, 'accountStream');
+  pipe('requestAddFollower', addFollower, 'accountStream');
 
   pipe('requestPublishHead', publish, 'publishHeadStream');
   pipe('requestPublishTweet', publish, 'publishTweetStream');

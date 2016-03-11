@@ -2,12 +2,12 @@ import { expect } from 'chai';
 import Tweets from '../../src/Api/Tweets';
 
 describe('Tweets', () => {
-  let currentData, result, tweet;
+  let currentAccount, result, tweet;
 
   beforeEach(() => {
     Date.now = () => 1457409506204;
 
-    currentData = {
+    currentAccount = {
       head: { hash: 'foo', next: ['bar', 'baz', 'uno', 'qui'] },
       tweets: [
         { hash: 'bar', next: ['baz', 'qux', 'duo'] },
@@ -20,7 +20,7 @@ describe('Tweets', () => {
         { hash: 'qui', next: [] }
       ]
     };
-    result = Tweets.add(currentData)('Hello World!');
+    result = Tweets.add(currentAccount)('Hello World!');
     tweet = result.tweets.find(x => x.hash === '160e7fc4e51400ecd09ece3aed1788e9ecbcfaf5');
   });
 

@@ -12,10 +12,10 @@ view model =
       model.dateTime.timestamp
 
     tweets =
-      model.data.tweets
+      model.account.tweets
 
     followBlocks =
-      model.data.followBlocks
+      model.account.followBlocks
   in
     div []
       [ div [] (List.map (Tweet.view timestamp) tweets)

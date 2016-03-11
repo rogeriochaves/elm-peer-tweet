@@ -1,9 +1,9 @@
-module Data.Update (update, effects) where
+module Account.Update (update, effects) where
 
 import Action as RootAction exposing (..)
-import Data.Action exposing (..)
+import Account.Action exposing (..)
 import Download.Action as DownloadAction exposing (..)
-import Data.Model exposing (Model, addTweet)
+import Account.Model exposing (Model, addTweet)
 import Effects exposing (Effects)
 import Task exposing (Task)
 
@@ -11,18 +11,18 @@ import Task exposing (Task)
 update : RootAction.Action -> Model -> Model
 update action model =
   case action of
-    ActionForData (UpdateData data) ->
-      data
+    ActionForAccount (UpdateAccount account) ->
+      account
 
     ActionForDownload downloadAction ->
-      updateDownloadedData downloadAction model
+      updateDownloadedAccount downloadAction model
 
     _ ->
       model
 
 
-updateDownloadedData : DownloadAction.Action -> Model -> Model
-updateDownloadedData action model =
+updateDownloadedAccount : DownloadAction.Action -> Model -> Model
+updateDownloadedAccount action model =
   case action of
     DoneDownloadHead head ->
       { model | head = head }
@@ -37,8 +37,8 @@ updateDownloadedData action model =
 effects : Signal.Address RootAction.Action -> RootAction.Action -> Model -> Effects RootAction.Action
 effects jsAddress action _ =
   case action of
-    ActionForData dataAction ->
-      Signal.send jsAddress (ActionForData dataAction)
+    ActionForAccount accountAction ->
+      Signal.send jsAddress (ActionForAccount accountAction)
         |> Task.toMaybe
         |> Task.map (always NoOp)
         |> Effects.task

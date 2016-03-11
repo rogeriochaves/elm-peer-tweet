@@ -4,7 +4,7 @@ import Html exposing (Html, div, textarea, text, button)
 import Html.Attributes exposing (class)
 import Html.Events exposing (onClick, on, targetValue)
 import Action as RootAction exposing (..)
-import Data.Action exposing (..)
+import Account.Action exposing (..)
 import NewTweet.Action exposing (..)
 import Model exposing (Model)
 
@@ -17,10 +17,10 @@ view address model =
     ] [
       text model.newTweet.text
     ],
-    button [onClick address (ActionForData <| AddTweetRequest { data = model.data, text = model.newTweet.text } )] [
+    button [onClick address (ActionForAccount <| AddTweetRequest { account = model.account, text = model.newTweet.text } )] [
       text "Tweet"
     ],
-    button [onClick address (ActionForData <| AddFollowerRequest { data = model.data, hash = model.newTweet.text } )] [
+    button [onClick address (ActionForAccount <| AddFollowerRequest { account = model.account, hash = model.newTweet.text } )] [
       text "Follow"
     ]
   ]

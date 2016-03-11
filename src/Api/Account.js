@@ -21,7 +21,7 @@ export const hash = () => {
   return crypto.createHash('sha1').update(k).digest('hex');
 };
 
-export const initialData = () => ({
+export const initialAccount = () => ({
   head: {
     hash: hash(),
     d: Date.now(),
@@ -32,4 +32,4 @@ export const initialData = () => ({
   followBlocks: []
 });
 
-export default { getKeys, hash, initialData };
+export default { getKeys, hash, initialAccount };

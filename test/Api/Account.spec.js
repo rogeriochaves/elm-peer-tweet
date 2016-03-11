@@ -30,11 +30,11 @@ describe('Account', () => {
     expect(Account.hash()).to.equal('9ef39f8b577cd867b2173e450e2cb30542cc1d98');
   });
 
-  it('returns the initial data', () => {
+  it('returns the initial account', () => {
     Date.now = () => 1457409506204;
 
     global.localStorage = { publicKey: '6393a821af08e151399a8df339d02a9e36134b3da5f893849673cf176810eb98', secretKey: 'foo' };
 
-    expect(Account.initialData()).to.deep.equal({ head: { hash: '9ef39f8b577cd867b2173e450e2cb30542cc1d98', d: 1457409506204, next: [], f: [] }, tweets: [], followBlocks: [] });
+    expect(Account.initialAccount()).to.deep.equal({ head: { hash: '9ef39f8b577cd867b2173e450e2cb30542cc1d98', d: 1457409506204, next: [], f: [] }, tweets: [], followBlocks: [] });
   });
 });

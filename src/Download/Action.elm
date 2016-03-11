@@ -1,6 +1,6 @@
 module Download.Action (..) where
 
-import Data.Model exposing (Hash, Head, Tweet)
+import Account.Model exposing (Hash, Head, Tweet)
 
 
 type Action

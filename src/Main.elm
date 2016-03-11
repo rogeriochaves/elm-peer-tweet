@@ -9,7 +9,7 @@ import Update exposing (update)
 import Task exposing (Task)
 import Effects exposing (Never)
 import Ports exposing (jsMailbox)
-import Data.Ports exposing (dataInput)
+import Account.Ports exposing (accountInput)
 import Publish.Ports exposing (requestPublish, publishHeadInput, publishTweetInput)
 import Download.Ports exposing (requestDownload, downloadHeadInput, downloadTweetInput)
 import DateTime.Signals exposing (updateDateTime)
@@ -21,7 +21,7 @@ import DateTime.Signals exposing (updateDateTime)
 inputs : List (Signal Action)
 inputs =
   [ requestPublish
-  , dataInput
+  , accountInput
   , publishHeadInput
   , publishTweetInput
   , requestDownload

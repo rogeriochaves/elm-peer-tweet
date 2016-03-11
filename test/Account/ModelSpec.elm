@@ -1,6 +1,6 @@
-module Data.ModelSpec where
+module Account.ModelSpec where
 
-import Data.Model exposing (Model, initialModel, nextHash, nextHashToDownload, findTweet, addTweet)
+import Account.Model exposing (Model, initialModel, nextHash, nextHashToDownload, findTweet, addTweet)
 import ElmTestBDDStyle exposing (..)
 
 setupModel : Model
@@ -12,7 +12,7 @@ setupModel =
 
 tests : Test
 tests =
-  describe "Data.Model"
+  describe "Account.Model"
     [ describe "nextHash"
       [ it "returns the next hash" <|
           expect (nextHash <| Just { next = [ "foo", "bar" ] }) toBe <| Just "foo"

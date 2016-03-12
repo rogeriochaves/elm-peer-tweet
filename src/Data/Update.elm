@@ -2,7 +2,7 @@ module Data.Update (..) where
 
 import Action as RootAction exposing (..)
 import Data.Action as DataAction exposing (..)
-import Data.Model exposing (Model)
+import Data.Model exposing (Model, findAccount)
 import Account.Update as AccountUpdate
 import Account.Model as AccountModel exposing (HeadHash)
 import Account.Action as AccountAction exposing (..)
@@ -20,7 +20,8 @@ update action model =
 
     ActionForData (UpdateUserAccount account) ->
       { model
-        | accounts = updateAccount model model.hash (Update account)
+        | hash = account.head.hash
+        , accounts = updateAccount model model.hash (Update account)
       }
 
     _ ->
@@ -29,14 +30,26 @@ update action model =
 
 updateAccount : Model -> HeadHash -> AccountAction.Action -> List AccountModel.Model
 updateAccount model hash action =
-  List.map
-    (\x ->
-      if x.head.hash == hash then
-        AccountUpdate.update action x
-      else
-        x
-    )
-    model.accounts
+  let
+    foundAccount =
+      findAccount model (Just hash)
+
+    accounts =
+      model.accounts
+  in
+    case foundAccount of
+      Just _ ->
+        List.map
+          (\account ->
+            if account.head.hash == hash then
+              AccountUpdate.update action account
+            else
+              account
+          )
+          accounts
+
+      Nothing ->
+        AccountUpdate.update action AccountModel.initialModel :: accounts
 
 
 effects : Signal.Address RootAction.Action -> RootAction.Action -> Model -> Effects RootAction.Action

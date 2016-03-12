@@ -18,6 +18,9 @@ const addTweet = ({account, text}, resolve) =>
 const addFollower = ({account, hash}, resolve) =>
   resolve(null, FollowBlocks.add(account)(hash));
 
+const downloadTweet = ({headHash, tweetHash}, resolve) =>
+  download(tweetHash, (err, tweet) => resolve(err, { headHash, tweet }));
+
 export const setup = (ports) => {
   const pipe = pipePort(ports);
 
@@ -30,7 +33,7 @@ export const setup = (ports) => {
   pipe('requestPublishTweet', publish, 'publishTweetStream');
 
   pipe('requestDownloadHead', download, 'downloadHeadStream');
-  pipe('requestDownloadTweet', download, 'downloadTweetStream');
+  pipe('requestDownloadTweet', downloadTweet, 'downloadTweetStream');
 };
 
 export default { setup };

@@ -113,11 +113,11 @@ describe('Ports', () => {
     expect(receivedDownloadHead).to.deep.equal({ hash: 'foo' });
   });
 
-  it('downloads tweet, sending account back', () => {
+  it('downloads tweet by hash, sending tweet back', () => {
     Ports.setup(ports);
 
-    requestDownloadTweet('bar');
+    requestDownloadTweet({ headHash: 'foo', tweetHash: 'bar' });
 
-    expect(receivedDownloadTweet).to.deep.equal({ hash: 'bar' });
+    expect(receivedDownloadTweet).to.deep.equal({ headHash: 'foo', tweet: { hash:'bar' } });
   });
 });

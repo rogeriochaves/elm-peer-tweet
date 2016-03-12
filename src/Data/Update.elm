@@ -5,7 +5,7 @@ import Data.Action as DataAction exposing (..)
 import Data.Model exposing (Model)
 import Account.Update as AccountUpdate
 import Account.Model as AccountModel exposing (HeadHash)
-import Account.Action as AccountAction
+import Account.Action as AccountAction exposing (..)
 import Task
 import Effects exposing (Effects)
 
@@ -13,9 +13,14 @@ import Effects exposing (Effects)
 update : RootAction.Action -> Model -> Model
 update action model =
   case action of
-    ActionForData (DataAction.ActionForAccount hash accountAction) ->
+    ActionForData (ActionForAccount hash accountAction) ->
       { model
         | accounts = updateAccount model hash accountAction
+      }
+
+    ActionForData (UpdateUserAccount account) ->
+      { model
+        | accounts = updateAccount model model.hash (Update account)
       }
 
     _ ->
@@ -37,8 +42,8 @@ updateAccount model hash action =
 effects : Signal.Address RootAction.Action -> RootAction.Action -> Model -> Effects RootAction.Action
 effects jsAddress action _ =
   case action of
-    ActionForData (DataAction.ActionForAccount hash accountAction) ->
-      Signal.send jsAddress (ActionForData (DataAction.ActionForAccount hash accountAction))
+    ActionForData dataAction ->
+      Signal.send jsAddress (ActionForData dataAction)
         |> Task.toMaybe
         |> Task.map (always RootAction.NoOp)
         |> Effects.task

@@ -41,4 +41,4 @@ port requestAddFollower =
 
 accountInput : Signal Action.Action
 accountInput =
-  Signal.map (ActionForData << UpdateAccount) accountStream
+  Signal.map (ActionForData << UpdateUserAccount) accountStream

@@ -4,4 +4,4 @@ import Account.Model exposing (Model)
 
 
 type Action
-  = UpdateAccount Model
+  = Update Model

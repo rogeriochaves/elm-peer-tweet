@@ -16,5 +16,5 @@ type Action
   = NoOp
   | AddTweetRequest AddTweetRequestPayload
   | AddFollowerRequest AddFollowerRequestPayload
-  | UpdateAccount Account.Model
+  | UpdateUserAccount Account.Model
   | ActionForAccount HeadHash AccountAction.Action

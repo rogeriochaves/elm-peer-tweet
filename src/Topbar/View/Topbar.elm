@@ -5,10 +5,11 @@ import Html.Attributes exposing (class)
 import NewTweet.View.NewTweet as NewTweet
 import Action exposing (Action)
 import Model exposing (Model)
+import Account.Model as Account
 
 
-view : Signal.Address Action -> Model -> Html
-view address model =
+view : Signal.Address Action -> Model -> Account.Model -> Html
+view address model account =
   div
     []
     [ div
@@ -17,6 +18,6 @@ view address model =
         ]
     , div
         []
-        [ NewTweet.view address model
+        [ NewTweet.view address model account
         ]
     ]

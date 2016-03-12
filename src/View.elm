@@ -8,18 +8,29 @@ import Timeline.View.Timeline as Timeline
 import Action exposing (Action)
 import Model exposing (Model)
 import Data.Model exposing (getUserAccount)
+import Account.Model as Account
 
 
 view : Signal.Address Action -> Model -> Html
 view address model =
+  Maybe.map (loggedInView address model) (getUserAccount model.data)
+    |> Maybe.withDefault (loggedOutView address model)
+
+
+loggedInView : Signal.Address Action -> Model -> Account.Model -> Html
+loggedInView address model account =
   div
     [ class "flexbox-container" ]
     [ Sidebar.view address model
     , div
         [ class "flexbox-content" ]
         [ text model.data.hash
-        , Topbar.view address model
-        , Maybe.map (Timeline.view model) (getUserAccount model.data)
-            |> Maybe.withDefault (text "You are not logged in")
+        , Topbar.view address model account
+        , Timeline.view model account
         ]
     ]
+
+
+loggedOutView : Signal.Address Action -> Model -> Html
+loggedOutView address model =
+  text "You are not logged in"

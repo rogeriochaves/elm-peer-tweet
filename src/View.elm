@@ -7,6 +7,7 @@ import Topbar.View.Topbar as Topbar
 import Timeline.View.Timeline as Timeline
 import Action exposing (Action)
 import Model exposing (Model)
+import Data.Model exposing (getUserAccount)
 
 
 view : Signal.Address Action -> Model -> Html
@@ -16,8 +17,9 @@ view address model =
     [ Sidebar.view address model
     , div
         [ class "flexbox-content" ]
-        [ text model.account.head.hash
+        [ text model.data.hash
         , Topbar.view address model
-        , Timeline.view model
+        , Maybe.map (Timeline.view model) (getUserAccount model.data)
+            |> Maybe.withDefault (text "You are not logged in")
         ]
     ]

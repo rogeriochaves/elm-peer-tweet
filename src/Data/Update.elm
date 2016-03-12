@@ -27,7 +27,7 @@ updateAccount model hash action =
   List.map
     (\x ->
       if x.head.hash == hash then
-        AccountUpdate.update (RootAction.ActionForAccount action) x
+        AccountUpdate.update action x
       else
         x
     )
@@ -40,7 +40,7 @@ effects jsAddress action _ =
     ActionForData (DataAction.ActionForAccount hash accountAction) ->
       Signal.send jsAddress (ActionForData (DataAction.ActionForAccount hash accountAction))
         |> Task.toMaybe
-        |> Task.map (always NoOp)
+        |> Task.map (always RootAction.NoOp)
         |> Effects.task
 
     _ ->

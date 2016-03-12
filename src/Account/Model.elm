@@ -27,7 +27,7 @@ type alias Head =
   { hash : HeadHash
   , d : Timestamp
   , next : List TweetHash
-  , f: List FollowBlockHash
+  , f : List FollowBlockHash
   }
 
 
@@ -42,7 +42,7 @@ type alias Tweet =
 type alias FollowBlock =
   { hash : FollowBlockHash
   , l : List HeadHash
-  , next: List FollowBlockHash
+  , next : List FollowBlockHash
   }
 
 

@@ -13,7 +13,7 @@ describe('Ports', () => {
     };
 
     Ports.__Rewire__('initialAccount', () => 'initialAccount');
-    Ports.__Rewire__('publish', (item, fn) => fn(null, item));
+    Ports.__Rewire__('publish', (item, fn) => fn(null, item.hash));
     Ports.__Rewire__('download', (hash, fn) => fn(null, { hash: hash } ));
 
     ports = {
@@ -24,31 +24,31 @@ describe('Ports', () => {
         subscribe: (fn) => { requestAddFollower = fn }
       },
       accountStream: {
-        send: (account) => { receivedAccount = account }
+        send: (data) => { receivedAccount = data }
       },
       requestPublishHead: {
         subscribe: (fn) => { requestPublishHead = fn }
       },
       publishHeadStream: {
-        send: (account) => { receivedPublishHead = account }
+        send: (data) => { receivedPublishHead = data }
       },
       requestPublishTweet: {
         subscribe: (fn) => { requestPublishTweet = fn }
       },
       publishTweetStream: {
-        send: (account) => { receivedPublishTweet = account }
+        send: (data) => { receivedPublishTweet = data }
       },
       requestDownloadHead: {
         subscribe: (fn) => { requestDownloadHead = fn }
       },
       downloadHeadStream: {
-        send: (account) => { receivedDownloadHead = account }
+        send: (data) => { receivedDownloadHead = data }
       },
       requestDownloadTweet: {
         subscribe: (fn) => { requestDownloadTweet = fn }
       },
       downloadTweetStream: {
-        send: (account) => { receivedDownloadTweet = account }
+        send: (data) => { receivedDownloadTweet = data }
       }
     };
   });
@@ -92,17 +92,17 @@ describe('Ports', () => {
   it('publishes head, sending the hashes of account being published back', () => {
     Ports.setup(ports);
 
-    requestPublishHead({ account: 'foo' });
+    requestPublishHead({ hash: 'foo' });
 
-    expect(receivedPublishHead).to.deep.equal({ account: 'foo' });
+    expect(receivedPublishHead).to.equal('foo');
   });
 
   it('publishes tweet, sending the hashes of account being published back', () => {
     Ports.setup(ports);
 
-    requestPublishTweet({ account: 'foo' });
+    requestPublishTweet({ headHash: 'foo', tweet: {hash: 'bar'} });
 
-    expect(receivedPublishTweet).to.deep.equal({ account: 'foo' });
+    expect(receivedPublishTweet).to.deep.equal({ headHash: 'foo', tweetHash: 'bar' });
   });
 
   it('downloads head, sending account back', () => {

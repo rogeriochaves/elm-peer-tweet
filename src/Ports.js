@@ -21,6 +21,9 @@ const addFollower = ({account, hash}, resolve) =>
 const downloadTweet = ({headHash, tweetHash}, resolve) =>
   download(tweetHash, (err, tweet) => resolve(err, { headHash, tweet }));
 
+const publishTweet = ({headHash, tweet}, resolve) =>
+  publish(tweet, (err, tweetHash) => resolve(err, { headHash, tweetHash }));
+
 export const setup = (ports) => {
   const pipe = pipePort(ports);
 
@@ -30,7 +33,7 @@ export const setup = (ports) => {
   pipe('requestAddFollower', addFollower, 'accountStream');
 
   pipe('requestPublishHead', publish, 'publishHeadStream');
-  pipe('requestPublishTweet', publish, 'publishTweetStream');
+  pipe('requestPublishTweet', publishTweet, 'publishTweetStream');
 
   pipe('requestDownloadHead', download, 'downloadHeadStream');
   pipe('requestDownloadTweet', downloadTweet, 'downloadTweetStream');

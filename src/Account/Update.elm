@@ -12,3 +12,6 @@ update action model =
 
     UpdateHead head ->
       { model | head = head }
+
+    AddTweet tweet ->
+      addTweet model tweet

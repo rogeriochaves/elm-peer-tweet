@@ -27,7 +27,12 @@ update action model =
 
     ActionForDownload (DoneDownloadHead head) ->
       { model
-        | accounts = updateAccount model model.hash (UpdateHead head)
+        | accounts = updateAccount model head.hash (UpdateHead head)
+      }
+
+    ActionForDownload (DoneDownloadTweet { headHash, tweet }) ->
+      { model
+        | accounts = updateAccount model headHash (AddTweet tweet)
       }
 
     _ ->

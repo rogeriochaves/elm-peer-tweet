@@ -79,7 +79,7 @@ tests =
                 account =
                   setup model action
                in
-                expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForDownload <| DownloadTweet "duo") ]
+                expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForDownload <| DownloadTweet { headHash = "uno", tweetHash = "duo" }) ]
         ]
     , signalDescribe
         "Tweet Download"
@@ -89,19 +89,19 @@ tests =
                   { data | accounts = [ { userAccount | tweets = [ { hash = "foo", d = 1, t = "something", next = [ "bar" ] } ] } ] }
 
                 action =
-                  (ActionForDownload <| DownloadTweet "foo")
+                  (ActionForDownload <| DownloadTweet { headHash = "user", tweetHash = "foo" })
 
                 account =
                   setup model action
                in
-                expectSignal ( account.jsSignal, account.task ) toBe (ActionForDownload <| DownloadTweet "bar")
+                expectSignal ( account.jsSignal, account.task ) toBe (ActionForDownload <| DownloadTweet { headHash = "user", tweetHash = "bar" })
         , signalIt "forwards NoOp actions when there is no next hash"
             <| let
                 model =
                   { data | accounts = [ { userAccount | tweets = [ { hash = "foo", d = 1, t = "something", next = [] } ] } ] }
 
                 action =
-                  (ActionForDownload <| DownloadTweet "foo")
+                  (ActionForDownload <| DownloadTweet { headHash = "user", tweetHash = "foo" })
 
                 account =
                   setup model action
@@ -113,11 +113,11 @@ tests =
                   data
 
                 action =
-                  (ActionForDownload <| DoneDownloadTweet { hash = "uno", d = 1, t = "something", next = [ "duo" ] })
+                  (ActionForDownload <| DoneDownloadTweet { headHash = "user", tweet = { hash = "uno", d = 1, t = "something", next = [ "duo" ] } })
 
                 account =
                   setup model action
                in
-                expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForDownload <| DownloadTweet "duo") ]
+                expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForDownload <| DownloadTweet { headHash = "user", tweetHash = "duo" }) ]
         ]
     ]

@@ -98,4 +98,6 @@ nextDownloadAction data headHash tweetHash =
           |> Maybe.withDefault NoOp
 
       Nothing ->
-        NoOp
+        tweetHash
+          |> Maybe.map (\hash -> ActionForDownload <| DownloadTweet { headHash = headHash, tweetHash = hash })
+          |> Maybe.withDefault NoOp

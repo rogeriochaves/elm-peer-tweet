@@ -6,6 +6,7 @@ import Data.Model exposing (Model, findAccount)
 import Account.Update as AccountUpdate
 import Account.Model as AccountModel exposing (HeadHash)
 import Account.Action as AccountAction exposing (..)
+import Download.Action as DownloadAction exposing (..)
 import Task
 import Effects exposing (Effects)
 
@@ -22,6 +23,11 @@ update action model =
       { model
         | hash = account.head.hash
         , accounts = updateAccount model model.hash (Update account)
+      }
+
+    ActionForDownload (DoneDownloadHead head) ->
+      { model
+        | accounts = updateAccount model model.hash (UpdateHead head)
       }
 
     _ ->

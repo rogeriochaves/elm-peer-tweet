@@ -9,3 +9,6 @@ update action model =
   case action of
     Update account ->
       account
+
+    UpdateHead head ->
+      { model | head = head }

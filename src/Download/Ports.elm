@@ -1,6 +1,6 @@
 module Download.Ports (..) where
 
-import Account.Model as Account exposing (Head, Tweet, Hash)
+import Account.Model as Account exposing (Head, Tweet, HeadHash, TweetHash)
 import Action as RootAction exposing (..)
 import Download.Action exposing (..)
 import Ports exposing (jsMailbox, isJust, filterEmpty)
@@ -17,7 +17,7 @@ requestDownload =
 port downloadHeadStream : Signal (Maybe Head)
 
 
-port requestDownloadHead : Signal (Maybe Hash)
+port requestDownloadHead : Signal (Maybe HeadHash)
 port requestDownloadHead =
   let
     getRequest action =
@@ -37,16 +37,16 @@ downloadHeadInput =
   Signal.map (Maybe.map (ActionForDownload << DoneDownloadHead) >> Maybe.withDefault NoOp) downloadHeadStream
 
 
-port downloadTweetStream : Signal (Maybe Tweet)
+port downloadTweetStream : Signal (Maybe DoneDownloadTweetPayload)
 
 
-port requestDownloadTweet : Signal (Maybe Hash)
+port requestDownloadTweet : Signal (Maybe DownloadTweetPayload)
 port requestDownloadTweet =
   let
     getRequest action =
       case action of
-        ActionForDownload (DownloadTweet hash) ->
-          Just hash
+        ActionForDownload (DownloadTweet payload) ->
+          Just payload
 
         _ ->
           Nothing
@@ -57,4 +57,6 @@ port requestDownloadTweet =
 
 downloadTweetInput : Signal RootAction.Action
 downloadTweetInput =
-  Signal.map (Maybe.map (ActionForDownload << DoneDownloadTweet) >> Maybe.withDefault NoOp) downloadTweetStream
+  Signal.map
+    (Maybe.map (ActionForDownload << DoneDownloadTweet) >> Maybe.withDefault NoOp)
+    downloadTweetStream

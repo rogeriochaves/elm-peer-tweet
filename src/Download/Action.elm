@@ -1,11 +1,19 @@
 module Download.Action (..) where
 
-import Account.Model exposing (Hash, Head, Tweet)
+import Account.Model exposing (HeadHash, TweetHash, Head, Tweet)
+
+
+type alias DownloadTweetPayload =
+  { headHash : HeadHash, tweetHash : HeadHash }
+
+
+type alias DoneDownloadTweetPayload =
+  { headHash : HeadHash, tweet : Tweet }
 
 
 type Action
   = BeginDownload
-  | DownloadHead Hash
+  | DownloadHead HeadHash
   | DoneDownloadHead Head
-  | DownloadTweet Hash
-  | DoneDownloadTweet Tweet
+  | DownloadTweet DownloadTweetPayload
+  | DoneDownloadTweet DoneDownloadTweetPayload

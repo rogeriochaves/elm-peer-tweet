@@ -7,9 +7,9 @@ import Data.Model as Data
 import Download.Model exposing (Model)
 import Effects exposing (Effects)
 import Task exposing (Task)
-import Account.Model exposing (Hash, nextHash, nextHashToDownload, findTweet)
+import Account.Model exposing (HeadHash, TweetHash, nextHash, nextHashToDownload, findTweet)
 import Maybe exposing (andThen)
-import Data.Model as Data exposing (getUserAccount)
+import Data.Model as Data exposing (findAccount)
 
 
 update : RootAction.Action -> Model -> Model
@@ -73,28 +73,28 @@ effectsDownload jsAddress action data =
         |> Task.map (always NoOp)
 
     DoneDownloadHead head ->
-      Task.succeed (nextDownloadAction data <| nextHash (Just head))
+      Task.succeed (nextDownloadAction data head.hash <| nextHash (Just head))
 
-    DownloadTweet hash ->
-      Signal.send jsAddress (nextDownloadAction data <| Just hash)
+    DownloadTweet { headHash, tweetHash } ->
+      Signal.send jsAddress (nextDownloadAction data headHash <| Just tweetHash)
         |> Task.toMaybe
         |> Task.map (always NoOp)
 
-    DoneDownloadTweet tweet ->
-      Task.succeed (nextDownloadAction data <| nextHash (Just tweet))
+    DoneDownloadTweet { headHash, tweet } ->
+      Task.succeed (nextDownloadAction data headHash <| nextHash (Just tweet))
 
 
-nextDownloadAction : Data.Model -> Maybe Hash -> RootAction.Action
-nextDownloadAction data hash =
+nextDownloadAction : Data.Model -> HeadHash -> Maybe TweetHash -> RootAction.Action
+nextDownloadAction data headHash tweetHash =
   let
     foundAccount =
-      getUserAccount data
+      findAccount data (Just headHash)
   in
     case foundAccount of
       Just account ->
-        hash
+        tweetHash
           `andThen` nextHashToDownload account
-          |> Maybe.map (ActionForDownload << DownloadTweet)
+          |> Maybe.map (\hash -> ActionForDownload <| DownloadTweet { headHash = account.head.hash, tweetHash = hash })
           |> Maybe.withDefault NoOp
 
       Nothing ->

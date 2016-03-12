@@ -37,10 +37,10 @@ publishHeadInput =
   Signal.map (Maybe.map (ActionForPublish << DonePublishHead) >> Maybe.withDefault NoOp) publishHeadStream
 
 
-port publishTweetStream : Signal (Maybe Hash)
+port publishTweetStream : Signal (Maybe DonePublishTweetPayload)
 
 
-port requestPublishTweet : Signal (Maybe Tweet)
+port requestPublishTweet : Signal (Maybe PublishTweetPayload)
 port requestPublishTweet =
   let
     getRequest action =

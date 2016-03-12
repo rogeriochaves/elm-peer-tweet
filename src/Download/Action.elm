@@ -4,7 +4,7 @@ import Account.Model exposing (HeadHash, TweetHash, Head, Tweet)
 
 
 type alias DownloadTweetPayload =
-  { headHash : HeadHash, tweetHash : HeadHash }
+  { headHash : HeadHash, tweetHash : TweetHash }
 
 
 type alias DoneDownloadTweetPayload =

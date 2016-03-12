@@ -1,11 +1,19 @@
 module Publish.Action (..) where
 
-import Account.Model exposing (Hash, Head, Tweet)
+import Account.Model exposing (HeadHash, TweetHash, Head, Tweet)
+
+
+type alias PublishTweetPayload =
+  { headHash : HeadHash, tweet : Tweet }
+
+
+type alias DonePublishTweetPayload =
+  { headHash : HeadHash, tweetHash : TweetHash }
 
 
 type Action
   = BeginPublish
   | PublishHead Head
-  | DonePublishHead Hash
-  | PublishTweet Tweet
-  | DonePublishTweet Hash
+  | DonePublishHead HeadHash
+  | PublishTweet PublishTweetPayload
+  | DonePublishTweet DonePublishTweetPayload

@@ -77,6 +77,24 @@ tests =
                   setup data action
                in
                 expectSignal ( account.jsSignal, account.task ) toBe (ActionForPublish <| PublishHead head)
+        , signalIt "dispatches publish action for the next tweets"
+            <| let
+                head =
+                  { hash = "uno", d = 1, next = [ "foo" ], f = [] }
+
+                nextTweet =
+                  { hash = "foo", d = 2, t = "something", next = [] }
+
+                model =
+                  { data | accounts = [ { userAccount | head = head, tweets = [ nextTweet ] } ] }
+
+                action =
+                  (ActionForPublish <| PublishHead head)
+
+                account =
+                  setup model action
+               in
+                expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForPublish <| PublishTweet { headHash = "uno", tweet = nextTweet }) ]
         ]
     , signalDescribe
         "Tweet Publish"
@@ -86,12 +104,12 @@ tests =
                   { hash = "foo", d = 1, t = "something", next = [] }
 
                 action =
-                  (ActionForPublish <| PublishTweet tweet)
+                  (ActionForPublish <| PublishTweet { headHash = "user", tweet = tweet })
 
                 account =
                   setup data action
                in
-                expectSignal ( account.jsSignal, account.task ) toBe (ActionForPublish <| PublishTweet tweet)
+                expectSignal ( account.jsSignal, account.task ) toBe action
         , signalIt "dispatches publish action for the next item"
             <| let
                 tweet =
@@ -104,11 +122,11 @@ tests =
                   { data | accounts = [ { userAccount | tweets = [ tweet, nextTweet ] } ] }
 
                 action =
-                  (ActionForPublish <| PublishTweet tweet)
+                  (ActionForPublish <| PublishTweet { headHash = "user", tweet = tweet })
 
                 account =
                   setup model action
                in
-                expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForPublish <| PublishTweet nextTweet) ]
+                expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForPublish <| PublishTweet { headHash = "user", tweet = nextTweet }) ]
         ]
     ]

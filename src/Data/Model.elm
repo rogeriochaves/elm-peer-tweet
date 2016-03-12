@@ -25,3 +25,8 @@ findAccount model hash =
         |> List.head
   in
     hash `andThen` find
+
+
+getUserAccount : Model -> Maybe Account.Model
+getUserAccount model =
+  findAccount model (Just model.hash)

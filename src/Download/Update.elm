@@ -3,11 +3,13 @@ module Download.Update (update, effects) where
 import Action as RootAction exposing (..)
 import Download.Action as Download exposing (..)
 import Account.Model as Account
+import Data.Model as Data
 import Download.Model exposing (Model)
 import Effects exposing (Effects)
 import Task exposing (Task)
 import Account.Model exposing (Hash, nextHash, nextHashToDownload, findTweet)
 import Maybe exposing (andThen)
+import Data.Model as Data exposing (getUserAccount)
 
 
 update : RootAction.Action -> Model -> Model
@@ -49,7 +51,7 @@ decDownloadingCount model =
   { model | downloadingCount = model.downloadingCount - 1 }
 
 
-effects : Signal.Address RootAction.Action -> RootAction.Action -> Account.Model -> Effects RootAction.Action
+effects : Signal.Address RootAction.Action -> RootAction.Action -> Data.Model -> Effects RootAction.Action
 effects jsAddress action account =
   case action of
     ActionForDownload syncAction ->
@@ -59,11 +61,11 @@ effects jsAddress action account =
       Effects.none
 
 
-effectsDownload : Signal.Address RootAction.Action -> Download.Action -> Account.Model -> Task a RootAction.Action
-effectsDownload jsAddress action account =
+effectsDownload : Signal.Address RootAction.Action -> Download.Action -> Data.Model -> Task a RootAction.Action
+effectsDownload jsAddress action data =
   case action of
     BeginDownload ->
-      Task.succeed (ActionForDownload <| DownloadHead account.head.hash)
+      Task.succeed (ActionForDownload <| DownloadHead data.hash)
 
     DownloadHead hash ->
       Signal.send jsAddress (ActionForDownload <| DownloadHead hash)
@@ -71,20 +73,29 @@ effectsDownload jsAddress action account =
         |> Task.map (always NoOp)
 
     DoneDownloadHead head ->
-      Task.succeed (nextDownloadAction account <| nextHash (Just head))
+      Task.succeed (nextDownloadAction data <| nextHash (Just head))
 
     DownloadTweet hash ->
-      Signal.send jsAddress (nextDownloadAction account <| Just hash)
+      Signal.send jsAddress (nextDownloadAction data <| Just hash)
         |> Task.toMaybe
         |> Task.map (always NoOp)
 
     DoneDownloadTweet tweet ->
-      Task.succeed (nextDownloadAction account <| nextHash (Just tweet))
+      Task.succeed (nextDownloadAction data <| nextHash (Just tweet))
 
 
-nextDownloadAction : Account.Model -> Maybe Hash -> RootAction.Action
-nextDownloadAction account hash =
-  hash
-    `andThen` nextHashToDownload account
-    |> Maybe.map (ActionForDownload << DownloadTweet)
-    |> Maybe.withDefault NoOp
+nextDownloadAction : Data.Model -> Maybe Hash -> RootAction.Action
+nextDownloadAction data hash =
+  let
+    foundAccount =
+      getUserAccount data
+  in
+    case foundAccount of
+      Just account ->
+        hash
+          `andThen` nextHashToDownload account
+          |> Maybe.map (ActionForDownload << DownloadTweet)
+          |> Maybe.withDefault NoOp
+
+      Nothing ->
+        NoOp

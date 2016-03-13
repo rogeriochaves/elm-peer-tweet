@@ -61,54 +61,47 @@ initialModel =
   }
 
 
-nextHash : Maybe { b | next : List Hash } -> Maybe Hash
+nextHash : Maybe { a | next : List Hash } -> Maybe Hash
 nextHash hash =
   hash `andThen` (List.head << .next)
 
 
-nextHashToDownload : Model -> Hash -> Maybe Hash
-nextHashToDownload model hash =
-  let
-    tweet =
-      findTweet model (Just hash)
-
-    next =
-      nextHash tweet
-  in
-    case tweet of
-      Nothing ->
-        Just hash
-
-      Just tweet ->
-        next `andThen` (nextHashToDownload model)
-
-
-nextFollowBlockHashToDownload : Model -> Hash -> Maybe Hash
-nextFollowBlockHashToDownload model hash =
-  let
-    followBlock =
-      findFollowBlock model (Just hash)
-
-    next =
-      nextHash followBlock
-  in
-    case followBlock of
-      Nothing ->
-        Just hash
-
-      Just followBlock ->
-        next `andThen` (nextFollowBlockHashToDownload model)
-
-
-findTweet : Model -> Maybe TweetHash -> Maybe Tweet
-findTweet model hash =
+findItem : List { a | hash : Hash } -> Maybe TweetHash -> Maybe { a | hash : Hash }
+findItem list hash =
   case hash of
     Just hash ->
-      List.filter (\t -> t.hash == hash) model.tweets
+      List.filter (\t -> t.hash == hash) list
         |> List.head
 
     Nothing ->
       Nothing
+
+
+nextItemToDownload : List { a | hash : Hash, next : List Hash } -> Hash -> Maybe Hash
+nextItemToDownload list hash =
+  let
+    item =
+      findItem list (Just hash)
+
+    next =
+      nextHash item
+  in
+    case item of
+      Nothing ->
+        Just hash
+
+      Just item ->
+        next `andThen` (nextItemToDownload list)
+
+
+findTweet : Model -> Maybe TweetHash -> Maybe Tweet
+findTweet model =
+  findItem model.tweets
+
+
+nextHashToDownload : Model -> Hash -> Maybe Hash
+nextHashToDownload model =
+  nextItemToDownload model.tweets
 
 
 addTweet : Model -> Tweet -> Model
@@ -121,21 +114,21 @@ addTweet model tweet =
       { model | tweets = tweet :: model.tweets }
 
 
-findFollowBlock : Model -> Maybe FollowBlockHash -> Maybe FollowBlock
-findFollowBlock model hash =
-  case hash of
-    Just hash ->
-      List.filter (\t -> t.hash == hash) model.followBlocks
-        |> List.head
+nextFollowBlockHashToDownload : Model -> Hash -> Maybe Hash
+nextFollowBlockHashToDownload model =
+  nextItemToDownload model.followBlocks
 
-    Nothing ->
-      Nothing
+
+findFollowBlock : Model -> Maybe FollowBlockHash -> Maybe FollowBlock
+findFollowBlock model =
+  findItem model.followBlocks
 
 
 firstFollowBlock : Model -> Maybe FollowBlock
 firstFollowBlock account =
   List.head account.head.f
     |> findFollowBlock account
+
 
 addFollowBlock : Model -> FollowBlock -> Model
 addFollowBlock model followBlock =

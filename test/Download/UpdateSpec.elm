@@ -80,6 +80,18 @@ tests =
                   setup model action
                in
                 expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForDownload <| DownloadTweet { headHash = "uno", tweetHash = "duo" }) ]
+        , signalIt "dispatches next followBlock download after a head download is done"
+            <| let
+                model =
+                  data
+
+                action =
+                  (ActionForDownload <| DoneDownloadHead { hash = "uno", d = 1, next = [], f = [ "tre" ] })
+
+                account =
+                  setup model action
+               in
+                expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForDownload <| DownloadFollowBlock { headHash = "uno", followBlockHash = "tre" }) ]
         ]
     , signalDescribe
         "Tweet Download"

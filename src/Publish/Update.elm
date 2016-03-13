@@ -76,7 +76,6 @@ effectsPublish jsAddress action data =
     PublishHead head ->
       Effects.batch
         [ Signal.send jsAddress (ActionForPublish <| PublishHead head)
-            |> Task.toMaybe
             |> Task.map (always <| nextPublishTweetAction data head.hash head)
             |> Effects.task
         , publishFirstFollowBlockEffect data head
@@ -88,7 +87,6 @@ effectsPublish jsAddress action data =
 
     PublishTweet payload ->
       Signal.send jsAddress (ActionForPublish <| PublishTweet payload)
-        |> Task.toMaybe
         |> Task.map (always <| nextPublishTweetAction data payload.headHash payload.tweet)
         |> Effects.task
 
@@ -98,7 +96,6 @@ effectsPublish jsAddress action data =
 
     PublishFollowBlock payload ->
       Signal.send jsAddress (ActionForPublish <| PublishFollowBlock payload)
-        |> Task.toMaybe
         |> Task.map (always <| nextPublishFollowBlockAction data payload.headHash payload.followBlock)
         |> Effects.task
 

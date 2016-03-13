@@ -136,3 +136,12 @@ firstFollowBlock : Model -> Maybe FollowBlock
 firstFollowBlock account =
   List.head account.head.f
     |> findFollowBlock account
+
+addFollowBlock : Model -> FollowBlock -> Model
+addFollowBlock model followBlock =
+  case (findFollowBlock model (Just followBlock.hash)) of
+    Just _ ->
+      model
+
+    Nothing ->
+      { model | followBlocks = followBlock :: model.followBlocks }

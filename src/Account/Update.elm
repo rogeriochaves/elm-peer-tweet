@@ -1,7 +1,7 @@
 module Account.Update (update) where
 
 import Account.Action exposing (..)
-import Account.Model exposing (Model, addTweet)
+import Account.Model exposing (Model, addTweet, addFollowBlock)
 
 
 update : Action -> Model -> Model
@@ -15,3 +15,6 @@ update action model =
 
     AddTweet tweet ->
       addTweet model tweet
+
+    AddFollowBlock followBlock ->
+      addFollowBlock model followBlock

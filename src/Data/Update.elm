@@ -35,6 +35,11 @@ update action model =
         | accounts = updateAccount model headHash (AddTweet tweet)
       }
 
+    ActionForDownload (DoneDownloadFollowBlock { headHash, followBlock }) ->
+      { model
+        | accounts = updateAccount model headHash (AddFollowBlock followBlock)
+      }
+
     _ ->
       model
 

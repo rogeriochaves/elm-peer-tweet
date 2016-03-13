@@ -9,39 +9,40 @@ import Account.Action as AccountAction exposing (..)
 import Download.Action as DownloadAction exposing (..)
 import Task
 import Effects exposing (Effects)
+import List.Extra exposing (replaceIf)
 
 
 update : RootAction.Action -> Model -> Model
 update action model =
-  case action of
-    ActionForData (ActionForAccount hash accountAction) ->
-      { model
-        | accounts = updateAccount model hash accountAction
-      }
+  let
+    updateIn =
+      updateAccounts model
+  in
+    case action of
+      ActionForData (ActionForAccount hash accountAction) ->
+        updateIn hash accountAction
 
-    ActionForData (UpdateUserAccount account) ->
-      { model
-        | hash = account.head.hash
-        , accounts = updateAccount model model.hash (Update account)
-      }
+      ActionForData (UpdateUserAccount account) ->
+        updateIn model.hash (Update account)
 
-    ActionForDownload (DoneDownloadHead head) ->
-      { model
-        | accounts = updateAccount model head.hash (UpdateHead head)
-      }
+      ActionForDownload (DoneDownloadHead head) ->
+        updateIn head.hash (UpdateHead head)
 
-    ActionForDownload (DoneDownloadTweet { headHash, tweet }) ->
-      { model
-        | accounts = updateAccount model headHash (AddTweet tweet)
-      }
+      ActionForDownload (DoneDownloadTweet { headHash, tweet }) ->
+        updateIn headHash (AddTweet tweet)
 
-    ActionForDownload (DoneDownloadFollowBlock { headHash, followBlock }) ->
-      { model
-        | accounts = updateAccount model headHash (AddFollowBlock followBlock)
-      }
+      ActionForDownload (DoneDownloadFollowBlock { headHash, followBlock }) ->
+        updateIn headHash (AddFollowBlock followBlock)
 
-    _ ->
-      model
+      _ ->
+        model
+
+
+updateAccounts : Model -> HeadHash -> AccountAction.Action -> Model
+updateAccounts model hash action =
+  { model
+    | accounts = updateAccount model hash action
+  }
 
 
 updateAccount : Model -> HeadHash -> AccountAction.Action -> List AccountModel.Model
@@ -49,23 +50,13 @@ updateAccount model hash action =
   let
     foundAccount =
       findAccount model (Just hash)
-
-    accounts =
-      model.accounts
   in
     case foundAccount of
-      Just _ ->
-        List.map
-          (\account ->
-            if account.head.hash == hash then
-              AccountUpdate.update action account
-            else
-              account
-          )
-          accounts
+      Just account ->
+        replaceIf (\x -> x.head.hash == hash) (AccountUpdate.update action account) model.accounts
 
       Nothing ->
-        AccountUpdate.update action AccountModel.initialModel :: accounts
+        AccountUpdate.update action AccountModel.initialModel :: model.accounts
 
 
 effects : Signal.Address RootAction.Action -> RootAction.Action -> Model -> Effects RootAction.Action
@@ -73,7 +64,6 @@ effects jsAddress action _ =
   case action of
     ActionForData dataAction ->
       Signal.send jsAddress (ActionForData dataAction)
-        |> Task.toMaybe
         |> Task.map (always RootAction.NoOp)
         |> Effects.task
 

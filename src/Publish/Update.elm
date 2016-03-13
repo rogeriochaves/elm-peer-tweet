@@ -7,7 +7,7 @@ import Data.Model as Data exposing (getUserAccount, findAccount)
 import Publish.Model exposing (Model)
 import Effects exposing (Effects)
 import Task exposing (Task)
-import Account.Model exposing (HeadHash, Hash, nextHash, findTweet)
+import Account.Model exposing (HeadHash, TweetHash, FollowBlockHash, Hash, FollowBlock, nextHash, findTweet, firstFollowBlock)
 import Maybe exposing (andThen)
 
 
@@ -39,6 +39,12 @@ updatePublish action model =
     DonePublishTweet _ ->
       decPublishingCount model
 
+    PublishFollowBlock _ ->
+      incPublishingCount model
+
+    DonePublishFollowBlock _ ->
+      decPublishingCount model
+
 
 incPublishingCount : Model -> Model
 incPublishingCount model =
@@ -54,47 +60,83 @@ effects : Signal.Address RootAction.Action -> RootAction.Action -> Data.Model ->
 effects jsAddress action data =
   case action of
     ActionForPublish syncAction ->
-      effectsPublish jsAddress syncAction data |> Effects.task
+      effectsPublish jsAddress syncAction data
 
     _ ->
       Effects.none
 
 
-effectsPublish : Signal.Address RootAction.Action -> Publish.Action -> Data.Model -> Task a RootAction.Action
+effectsPublish : Signal.Address RootAction.Action -> Publish.Action -> Data.Model -> Effects RootAction.Action
 effectsPublish jsAddress action data =
   case action of
     BeginPublish ->
       Task.succeed (Maybe.withDefault NoOp <| Maybe.map (ActionForPublish << PublishHead << .head) (getUserAccount data))
+        |> Effects.task
 
     PublishHead head ->
-      Signal.send jsAddress (ActionForPublish <| PublishHead head)
-        |> Task.toMaybe
-        |> Task.map (always <| nextPublishAction data head.hash head)
+      Effects.batch
+        [ Signal.send jsAddress (ActionForPublish <| PublishHead head)
+            |> Task.toMaybe
+            |> Task.map (always <| nextPublishTweetAction data head.hash head)
+            |> Effects.task
+        , publishFirstFollowBlockEffect data head
+        ]
 
     DonePublishHead _ ->
       Task.succeed NoOp
+        |> Effects.task
 
     PublishTweet payload ->
       Signal.send jsAddress (ActionForPublish <| PublishTweet payload)
         |> Task.toMaybe
-        |> Task.map (always <| nextPublishAction data payload.headHash payload.tweet)
+        |> Task.map (always <| nextPublishTweetAction data payload.headHash payload.tweet)
+        |> Effects.task
 
     DonePublishTweet _ ->
       Task.succeed NoOp
+        |> Effects.task
+
+    PublishFollowBlock payload ->
+      Signal.send jsAddress (ActionForPublish <| PublishFollowBlock payload)
+        |> Task.toMaybe
+        |> Task.map (always <| nextPublishTweetAction data payload.headHash payload.followBlock)
+        |> Effects.task
+
+    DonePublishFollowBlock _ ->
+      Task.succeed NoOp
+        |> Effects.task
 
 
-nextPublishAction : Data.Model -> HeadHash -> { a | next : List Hash } -> RootAction.Action
-nextPublishAction data headHash item =
+nextPublishTweetAction : Data.Model -> HeadHash -> { a | next : List TweetHash } -> RootAction.Action
+nextPublishTweetAction data headHash item =
   let
     hash =
       nextHash (Just item)
 
-    tweet =
+    foundTweet =
       findAccount data (Just headHash) `andThen` (\x -> findTweet x hash)
   in
-    case tweet of
+    case foundTweet of
       Just tweet ->
         ActionForPublish (PublishTweet { headHash = headHash, tweet = tweet })
 
       Nothing ->
         NoOp
+
+
+publishFirstFollowBlockEffect : Data.Model -> Account.Head -> Effects RootAction.Action
+publishFirstFollowBlockEffect data head =
+  let
+    account =
+      findAccount data (Just head.hash)
+
+    foundFollowBlock =
+      account `andThen` firstFollowBlock
+  in
+    case foundFollowBlock of
+      Just followBlock ->
+        Task.succeed (ActionForPublish (PublishFollowBlock { headHash = head.hash, followBlock = followBlock }))
+          |> Effects.task
+
+      Nothing ->
+        Effects.none

@@ -88,7 +88,7 @@ nextHashToDownload model hash =
             nextHashToDownload model hash
 
 
-findTweet : Model -> Maybe Hash -> Maybe Tweet
+findTweet : Model -> Maybe TweetHash -> Maybe Tweet
 findTweet model hash =
   case hash of
     Just hash ->
@@ -107,3 +107,20 @@ addTweet model tweet =
 
     Nothing ->
       { model | tweets = tweet :: model.tweets }
+
+
+findFollowBlock : Model -> Maybe FollowBlockHash -> Maybe FollowBlock
+findFollowBlock model hash =
+  case hash of
+    Just hash ->
+      List.filter (\t -> t.hash == hash) model.followBlocks
+        |> List.head
+
+    Nothing ->
+      Nothing
+
+
+firstFollowBlock : Model -> Maybe FollowBlock
+firstFollowBlock account =
+  List.head account.head.f
+    |> findFollowBlock account

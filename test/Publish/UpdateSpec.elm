@@ -80,7 +80,7 @@ tests =
         , signalIt "dispatches publish action for the next tweets"
             <| let
                 head =
-                  { hash = "uno", d = 1, next = [ "foo" ], f = [] }
+                  { hash = "uno", d = 1, next = [ "foo" ], f = [ ] }
 
                 nextTweet =
                   { hash = "foo", d = 2, t = "something", next = [] }
@@ -95,6 +95,24 @@ tests =
                   setup model action
                in
                 expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForPublish <| PublishTweet { headHash = "uno", tweet = nextTweet }) ]
+        , signalIt "dispatches publish action for the next followBlocks"
+            <| let
+                head =
+                  { hash = "uno", d = 1, next = [], f = [ "foo" ] }
+
+                nextFollowBlock =
+                  { hash = "foo", l = [ "somebody" ], next = [] }
+
+                model =
+                  { data | accounts = [ { userAccount | head = head, followBlocks = [ nextFollowBlock ] } ] }
+
+                action =
+                  (ActionForPublish <| PublishHead head)
+
+                account =
+                  setup model action
+               in
+                expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForPublish <| PublishFollowBlock { headHash = "uno", followBlock = nextFollowBlock }) ]
         ]
     , signalDescribe
         "Tweet Publish"

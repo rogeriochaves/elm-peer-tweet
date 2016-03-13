@@ -7,7 +7,7 @@ import Data.Model as Data exposing (getUserAccount, findAccount)
 import Publish.Model exposing (Model)
 import Effects exposing (Effects)
 import Task exposing (Task)
-import Account.Model exposing (HeadHash, TweetHash, FollowBlockHash, Hash, FollowBlock, nextHash, findTweet, firstFollowBlock)
+import Account.Model exposing (HeadHash, TweetHash, FollowBlockHash, Hash, FollowBlock, nextHash, findTweet, findFollowBlock, firstFollowBlock)
 import Maybe exposing (andThen)
 
 
@@ -99,7 +99,7 @@ effectsPublish jsAddress action data =
     PublishFollowBlock payload ->
       Signal.send jsAddress (ActionForPublish <| PublishFollowBlock payload)
         |> Task.toMaybe
-        |> Task.map (always <| nextPublishTweetAction data payload.headHash payload.followBlock)
+        |> Task.map (always <| nextPublishFollowBlockAction data payload.headHash payload.followBlock)
         |> Effects.task
 
     DonePublishFollowBlock _ ->
@@ -140,3 +140,19 @@ publishFirstFollowBlockEffect data head =
 
       Nothing ->
         Effects.none
+
+nextPublishFollowBlockAction : Data.Model -> HeadHash -> { a | next : List FollowBlockHash } -> RootAction.Action
+nextPublishFollowBlockAction data headHash item =
+  let
+    hash =
+      nextHash (Just item)
+
+    foundFollowBlock =
+      findAccount data (Just headHash) `andThen` (\x -> findFollowBlock x hash)
+  in
+    case foundFollowBlock of
+      Just followBlock ->
+        ActionForPublish (PublishFollowBlock { headHash = headHash, followBlock = followBlock })
+
+      Nothing ->
+        NoOp

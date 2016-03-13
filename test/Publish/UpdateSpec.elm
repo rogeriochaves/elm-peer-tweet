@@ -147,4 +147,37 @@ tests =
                in
                 expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForPublish <| PublishTweet { headHash = "user", tweet = nextTweet }) ]
         ]
+    , signalDescribe
+        "FollowBlock Publish"
+        [ signalIt "forwards publish followBlocks actions to javascript mailbox"
+            <| let
+                followBlock =
+                  { hash = "foo", l = ["bar"], next = [] }
+
+                action =
+                  (ActionForPublish <| PublishFollowBlock { headHash = "user", followBlock = followBlock })
+
+                account =
+                  setup data action
+               in
+                expectSignal ( account.jsSignal, account.task ) toBe action
+        , signalIt "dispatches publish action for the next item"
+            <| let
+                followBlock =
+                  { hash = "foo", l = ["uno"], next = [ "bar" ] }
+
+                nextFollowBlock =
+                  { hash = "bar", l = ["duo"], next = [] }
+
+                model =
+                  { data | accounts = [ { userAccount | followBlocks = [ followBlock, nextFollowBlock ] } ] }
+
+                action =
+                  (ActionForPublish <| PublishFollowBlock { headHash = "user", followBlock = followBlock })
+
+                account =
+                  setup model action
+               in
+                expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForPublish <| PublishFollowBlock { headHash = "user", followBlock = nextFollowBlock }) ]
+        ]
     ]

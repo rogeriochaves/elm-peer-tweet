@@ -58,3 +58,27 @@ port requestPublishTweet =
 publishTweetInput : Signal RootAction.Action
 publishTweetInput =
   Signal.map (Maybe.map (ActionForPublish << DonePublishTweet) >> Maybe.withDefault NoOp) publishTweetStream
+
+
+
+port publishFollowBlockStream : Signal (Maybe DonePublishFollowBlockPayload)
+
+
+port requestPublishFollowBlock : Signal (Maybe PublishFollowBlockPayload)
+port requestPublishFollowBlock =
+  let
+    getRequest action =
+      case action of
+        ActionForPublish (PublishFollowBlock tweet) ->
+          Just tweet
+
+        _ ->
+          Nothing
+  in
+    Signal.map getRequest jsMailbox.signal
+      |> filterEmpty
+
+
+publishFollowBlockInput : Signal RootAction.Action
+publishFollowBlockInput =
+  Signal.map (Maybe.map (ActionForPublish << DonePublishFollowBlock) >> Maybe.withDefault NoOp) publishFollowBlockStream

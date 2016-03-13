@@ -10,8 +10,8 @@ import Task exposing (Task)
 import Effects exposing (Never)
 import Ports exposing (jsMailbox)
 import Data.Ports exposing (accountInput)
-import Publish.Ports exposing (requestPublish, publishHeadInput, publishTweetInput)
-import Download.Ports exposing (requestDownload, downloadHeadInput, downloadTweetInput)
+import Publish.Ports exposing (requestPublish, publishHeadInput, publishTweetInput, publishFollowBlockInput)
+import Download.Ports exposing (requestDownload, downloadHeadInput, downloadTweetInput, downloadFollowBlockInput)
 import DateTime.Signals exposing (updateDateTime)
 
 
@@ -24,9 +24,11 @@ inputs =
   , accountInput
   , publishHeadInput
   , publishTweetInput
+  , publishFollowBlockInput
   , requestDownload
   , downloadHeadInput
   , downloadTweetInput
+  , downloadFollowBlockInput
   , updateDateTime
   ]
 

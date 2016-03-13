@@ -60,3 +60,28 @@ downloadTweetInput =
   Signal.map
     (Maybe.map (ActionForDownload << DoneDownloadTweet) >> Maybe.withDefault NoOp)
     downloadTweetStream
+
+
+port downloadFollowBlockStream : Signal (Maybe DoneDownloadFollowBlockPayload)
+
+
+port requestDownloadFollowBlock : Signal (Maybe DownloadFollowBlockPayload)
+port requestDownloadFollowBlock =
+  let
+    getRequest action =
+      case action of
+        ActionForDownload (DownloadFollowBlock payload) ->
+          Just payload
+
+        _ ->
+          Nothing
+  in
+    Signal.map getRequest jsMailbox.signal
+      |> filterEmpty
+
+
+downloadFollowBlockInput : Signal RootAction.Action
+downloadFollowBlockInput =
+  Signal.map
+    (Maybe.map (ActionForDownload << DoneDownloadFollowBlock) >> Maybe.withDefault NoOp)
+    downloadFollowBlockStream

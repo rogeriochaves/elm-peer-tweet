@@ -4,7 +4,8 @@ import Ports from '../src/Ports';
 
 describe('Ports', () => {
   let ports, requestAddTweet, requestAddFollower, receivedAccount, requestPublishHead, receivedPublishHead, requestPublishTweet, receivedPublishTweet,
-    requestDownloadHead, receivedDownloadHead, requestDownloadTweet, receivedDownloadTweet;
+    requestPublishFollowBlock, receivedPublishFollowBlock, requestDownloadHead, receivedDownloadHead, requestDownloadTweet, receivedDownloadTweet,
+    requestDownloadFollowBlock, receivedDownloadFollowBlock;
 
   beforeEach(() => {
     global.localStorage = {
@@ -38,6 +39,12 @@ describe('Ports', () => {
       publishTweetStream: {
         send: (data) => { receivedPublishTweet = data }
       },
+      requestPublishFollowBlock: {
+        subscribe: (fn) => { requestPublishFollowBlock = fn }
+      },
+      publishFollowBlockStream: {
+        send: (data) => { receivedPublishFollowBlock = data }
+      },
       requestDownloadHead: {
         subscribe: (fn) => { requestDownloadHead = fn }
       },
@@ -49,6 +56,12 @@ describe('Ports', () => {
       },
       downloadTweetStream: {
         send: (data) => { receivedDownloadTweet = data }
+      },
+      requestDownloadFollowBlock: {
+        subscribe: (fn) => { requestDownloadFollowBlock = fn }
+      },
+      downloadFollowBlockStream: {
+        send: (data) => { receivedDownloadFollowBlock = data }
       }
     };
   });
@@ -105,6 +118,14 @@ describe('Ports', () => {
     expect(receivedPublishTweet).to.deep.equal({ headHash: 'foo', tweetHash: 'bar' });
   });
 
+  it('publishes followBlock, sending the hashes of account being published back', () => {
+    Ports.setup(ports);
+
+    requestPublishFollowBlock({ headHash: 'foo', followBlock: {hash: 'bar'} });
+
+    expect(receivedPublishFollowBlock).to.deep.equal({ headHash: 'foo', followBlockHash: 'bar' });
+  });
+
   it('downloads head, sending account back', () => {
     Ports.setup(ports);
 
@@ -119,5 +140,13 @@ describe('Ports', () => {
     requestDownloadTweet({ headHash: 'foo', tweetHash: 'bar' });
 
     expect(receivedDownloadTweet).to.deep.equal({ headHash: 'foo', tweet: { hash:'bar' } });
+  });
+
+  it('downloads followBlock by hash, sending followBlock back', () => {
+    Ports.setup(ports);
+
+    requestDownloadFollowBlock({ headHash: 'foo', followBlockHash: 'bar' });
+
+    expect(receivedDownloadFollowBlock).to.deep.equal({ headHash: 'foo', followBlock: { hash:'bar' } });
   });
 });

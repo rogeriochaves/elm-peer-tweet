@@ -18,11 +18,11 @@ const addTweet = ({account, text}, resolve) =>
 const addFollower = ({account, hash}, resolve) =>
   resolve(null, FollowBlocks.add(account)(hash));
 
-const downloadTweet = ({headHash, tweetHash}, resolve) =>
-  download(tweetHash, (err, tweet) => resolve(err, { headHash, tweet }));
+const wireDownload = (hashKey, itemKey) => (data, resolve) =>
+  download(data[hashKey], (err, item) => resolve(err, { headHash: data.headHash, [itemKey]: item }));
 
-const publishTweet = ({headHash, tweet}, resolve) =>
-  publish(tweet, (err, tweetHash) => resolve(err, { headHash, tweetHash }));
+const wirePublish = (hashKey, itemKey) => (data, resolve) =>
+  publish(data[itemKey], (err, hash) => resolve(err, { headHash: data.headHash, [hashKey]: hash }));
 
 export const setup = (ports) => {
   const pipe = pipePort(ports);
@@ -33,10 +33,12 @@ export const setup = (ports) => {
   pipe('requestAddFollower', addFollower, 'accountStream');
 
   pipe('requestPublishHead', publish, 'publishHeadStream');
-  pipe('requestPublishTweet', publishTweet, 'publishTweetStream');
+  pipe('requestPublishTweet', wirePublish('tweetHash', 'tweet'), 'publishTweetStream');
+  pipe('requestPublishFollowBlock', wirePublish('followBlockHash', 'followBlock'), 'publishFollowBlockStream');
 
   pipe('requestDownloadHead', download, 'downloadHeadStream');
-  pipe('requestDownloadTweet', downloadTweet, 'downloadTweetStream');
+  pipe('requestDownloadTweet', wireDownload('tweetHash', 'tweet'), 'downloadTweetStream');
+  pipe('requestDownloadFollowBlock', wireDownload('followBlockHash', 'followBlock'), 'downloadFollowBlockStream');
 };
 
 export default { setup };

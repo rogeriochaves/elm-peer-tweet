@@ -80,12 +80,24 @@ nextHashToDownload model hash =
         Just hash
 
       Just tweet ->
-        case next of
-          Nothing ->
-            Nothing
+        next `andThen` (nextHashToDownload model)
 
-          Just hash ->
-            nextHashToDownload model hash
+
+nextFollowBlockHashToDownload : Model -> Hash -> Maybe Hash
+nextFollowBlockHashToDownload model hash =
+  let
+    followBlock =
+      findFollowBlock model (Just hash)
+
+    next =
+      nextHash followBlock
+  in
+    case followBlock of
+      Nothing ->
+        Just hash
+
+      Just followBlock ->
+        next `andThen` (nextFollowBlockHashToDownload model)
 
 
 findTweet : Model -> Maybe TweetHash -> Maybe Tweet

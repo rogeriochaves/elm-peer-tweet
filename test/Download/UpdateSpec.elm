@@ -132,4 +132,43 @@ tests =
                in
                 expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForDownload <| DownloadTweet { headHash = "user", tweetHash = "duo" }) ]
         ]
+      , signalDescribe
+          "FollowBlock Download"
+          [ signalIt "forwards download followBlocks actions to javascript mailbox"
+              <| let
+                  model =
+                    { data | accounts = [ { userAccount | followBlocks = [ { hash = "foo", l = ["somebody"], next = [ "bar" ] } ] } ] }
+
+                  action =
+                    (ActionForDownload <| DownloadFollowBlock { headHash = "user", followBlockHash = "foo" })
+
+                  account =
+                    setup model action
+                 in
+                  expectSignal ( account.jsSignal, account.task ) toBe (ActionForDownload <| DownloadFollowBlock { headHash = "user", followBlockHash = "bar" })
+          , signalIt "forwards NoOp actions when there is no next hash"
+              <| let
+                  model =
+                    { data | accounts = [ { userAccount | followBlocks = [ { hash = "foo", l = ["somebody"], next = [] } ] } ] }
+
+                  action =
+                    (ActionForDownload <| DownloadFollowBlock { headHash = "user", followBlockHash = "foo" })
+
+                  account =
+                    setup model action
+                 in
+                  expectSignal ( account.jsSignal, account.task ) toBe (NoOp)
+          , signalIt "dispatches next followBlock download after a followBlock download is done"
+              <| let
+                  model =
+                    data
+
+                  action =
+                    (ActionForDownload <| DoneDownloadFollowBlock { headHash = "user", followBlock = { hash = "uno", l = ["somebody"], next = [ "duo" ] } })
+
+                  account =
+                    setup model action
+                 in
+                  expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForDownload <| DownloadFollowBlock { headHash = "user", followBlockHash = "duo" }) ]
+          ]
     ]

@@ -80,7 +80,7 @@ tests =
         , signalIt "dispatches publish action for the next tweets"
             <| let
                 head =
-                  { hash = "uno", d = 1, next = [ "foo" ], f = [ ] }
+                  { hash = "uno", d = 1, next = [ "foo" ], f = [] }
 
                 nextTweet =
                   { hash = "foo", d = 2, t = "something", next = [] }
@@ -152,7 +152,7 @@ tests =
         [ signalIt "forwards publish followBlocks actions to javascript mailbox"
             <| let
                 followBlock =
-                  { hash = "foo", l = ["bar"], next = [] }
+                  { hash = "foo", l = [ "bar" ], next = [] }
 
                 action =
                   (ActionForPublish <| PublishFollowBlock { headHash = "user", followBlock = followBlock })
@@ -164,10 +164,10 @@ tests =
         , signalIt "dispatches publish action for the next item"
             <| let
                 followBlock =
-                  { hash = "foo", l = ["uno"], next = [ "bar" ] }
+                  { hash = "foo", l = [ "uno" ], next = [ "bar" ] }
 
                 nextFollowBlock =
-                  { hash = "bar", l = ["duo"], next = [] }
+                  { hash = "bar", l = [ "duo" ], next = [] }
 
                 model =
                   { data | accounts = [ { userAccount | followBlocks = [ followBlock, nextFollowBlock ] } ] }
@@ -179,5 +179,47 @@ tests =
                   setup model action
                in
                 expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForPublish <| PublishFollowBlock { headHash = "user", followBlock = nextFollowBlock }) ]
+        , signalIt "publishes the user followers"
+            <| let
+                followBlock =
+                  { hash = "foo", l = [ "batman" ], next = [] }
+
+                batman =
+                  { hash = "batman", d = 1, next = [], f = [] }
+
+                initialAccount =
+                  Account.initialModel
+
+                model =
+                  { data | accounts = [ { initialAccount | head = batman } ] }
+
+                action =
+                  (ActionForPublish <| PublishFollowBlock { headHash = "user", followBlock = followBlock })
+
+                account =
+                  setup model action
+               in
+                expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForPublish <| PublishHead batman) ]
+        , signalIt "does not publish follower if it is not being followed by the user"
+            <| let
+                followBlock =
+                  { hash = "foo", l = [ "batman" ], next = [] }
+
+                batman =
+                  { hash = "batman", d = 1, next = [], f = [] }
+
+                initialAccount =
+                  Account.initialModel
+
+                model =
+                  { data | accounts = [ { initialAccount | head = batman } ] }
+
+                action =
+                  (ActionForPublish <| PublishFollowBlock { headHash = "somebody else", followBlock = followBlock })
+
+                account =
+                  setup model action
+               in
+                expectSignal ( account.actionsSignal, account.task ) toBe [ NoOp ]
         ]
     ]

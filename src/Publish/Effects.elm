@@ -49,9 +49,15 @@ effectsPublish jsAddress action data =
         |> Effects.task
 
     PublishFollowBlock payload ->
-      Signal.send jsAddress (ActionForPublish <| PublishFollowBlock payload)
-        |> Task.map (always <| nextPublishFollowBlockAction payload.headHash data payload.followBlock)
-        |> Effects.task
+      Effects.batch
+        [ Signal.send jsAddress (ActionForPublish <| PublishFollowBlock payload)
+            |> Task.map (always <| nextPublishFollowBlockAction payload.headHash data payload.followBlock)
+            |> Effects.task
+        , if payload.headHash == data.hash then
+            publishFollowerEffect data payload.followBlock
+          else
+            Effects.none
+        ]
 
     DonePublishFollowBlock _ ->
       Task.succeed NoOp
@@ -101,3 +107,16 @@ nextPublishFollowBlockAction headHash =
     .followBlocks
     (\followBlock -> ActionForPublish (PublishFollowBlock { headHash = headHash, followBlock = followBlock }))
     headHash
+
+
+publishFollowerEffect : Data.Model -> Account.FollowBlock -> Effects RootAction.Action
+publishFollowerEffect data followBlock =
+  let
+    effectMap hash =
+      findAccount data (Just hash)
+        |> Maybe.map (Effects.task << Task.succeed << ActionForPublish << PublishHead << .head)
+        |> Maybe.withDefault Effects.none
+  in
+    followBlock.l
+      |> List.map effectMap
+      |> Effects.batch

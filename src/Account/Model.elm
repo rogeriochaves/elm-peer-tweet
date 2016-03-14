@@ -66,7 +66,7 @@ nextHash hash =
   hash `andThen` (List.head << .next)
 
 
-findItem : List { a | hash : Hash } -> Maybe TweetHash -> Maybe { a | hash : Hash }
+findItem : List { a | hash : Hash } -> Maybe Hash -> Maybe { a | hash : Hash }
 findItem list hash =
   case hash of
     Just hash ->

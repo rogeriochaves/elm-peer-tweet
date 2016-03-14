@@ -7,7 +7,7 @@ import Data.Model as Data exposing (getUserAccount, findAccount)
 import Publish.Model exposing (Model)
 import Effects exposing (Effects)
 import Task exposing (Task)
-import Account.Model exposing (HeadHash, TweetHash, FollowBlockHash, Hash, FollowBlock, nextHash, findTweet, findFollowBlock, firstFollowBlock)
+import Account.Model exposing (HeadHash, TweetHash, FollowBlockHash, Hash, FollowBlock, nextHash, findTweet, findFollowBlock, firstFollowBlock, findItem)
 import Maybe exposing (andThen)
 
 
@@ -76,7 +76,7 @@ effectsPublish jsAddress action data =
     PublishHead head ->
       Effects.batch
         [ Signal.send jsAddress (ActionForPublish <| PublishHead head)
-            |> Task.map (always <| nextPublishTweetAction data head.hash head)
+            |> Task.map (always <| nextPublishTweetAction head.hash data head)
             |> Effects.task
         , publishFirstFollowBlockEffect data head
         ]
@@ -87,7 +87,7 @@ effectsPublish jsAddress action data =
 
     PublishTweet payload ->
       Signal.send jsAddress (ActionForPublish <| PublishTweet payload)
-        |> Task.map (always <| nextPublishTweetAction data payload.headHash payload.tweet)
+        |> Task.map (always <| nextPublishTweetAction payload.headHash data payload.tweet)
         |> Effects.task
 
     DonePublishTweet _ ->
@@ -96,7 +96,7 @@ effectsPublish jsAddress action data =
 
     PublishFollowBlock payload ->
       Signal.send jsAddress (ActionForPublish <| PublishFollowBlock payload)
-        |> Task.map (always <| nextPublishFollowBlockAction data payload.headHash payload.followBlock)
+        |> Task.map (always <| nextPublishFollowBlockAction payload.headHash data payload.followBlock)
         |> Effects.task
 
     DonePublishFollowBlock _ ->
@@ -104,31 +104,11 @@ effectsPublish jsAddress action data =
         |> Effects.task
 
 
-nextPublishTweetAction : Data.Model -> HeadHash -> { a | next : List TweetHash } -> RootAction.Action
-nextPublishTweetAction data headHash item =
-  let
-    hash =
-      nextHash (Just item)
-
-    foundTweet =
-      findAccount data (Just headHash) `andThen` (\x -> findTweet x hash)
-  in
-    case foundTweet of
-      Just tweet ->
-        ActionForPublish (PublishTweet { headHash = headHash, tweet = tweet })
-
-      Nothing ->
-        NoOp
-
-
 publishFirstFollowBlockEffect : Data.Model -> Account.Head -> Effects RootAction.Action
 publishFirstFollowBlockEffect data head =
   let
-    account =
-      findAccount data (Just head.hash)
-
     foundFollowBlock =
-      account `andThen` firstFollowBlock
+      findAccount data (Just head.hash) `andThen` firstFollowBlock
   in
     case foundFollowBlock of
       Just followBlock ->
@@ -138,18 +118,32 @@ publishFirstFollowBlockEffect data head =
       Nothing ->
         Effects.none
 
-nextPublishFollowBlockAction : Data.Model -> HeadHash -> { a | next : List FollowBlockHash } -> RootAction.Action
-nextPublishFollowBlockAction data headHash item =
+
+nextItemAction : (Account.Model -> List { a | hash : Hash, next : List Hash }) -> ({ a | hash : Hash, next : List Hash } -> RootAction.Action) -> HeadHash -> Data.Model -> { b | next : List Hash } -> RootAction.Action
+nextItemAction listKey actionFn headHash data item =
   let
     hash =
       nextHash (Just item)
 
-    foundFollowBlock =
-      findAccount data (Just headHash) `andThen` (\x -> findFollowBlock x hash)
+    foundItem =
+      findAccount data (Just headHash) `andThen` (\account -> findItem (listKey account) hash)
   in
-    case foundFollowBlock of
-      Just followBlock ->
-        ActionForPublish (PublishFollowBlock { headHash = headHash, followBlock = followBlock })
+    foundItem
+      |> Maybe.map actionFn
+      |> Maybe.withDefault NoOp
 
-      Nothing ->
-        NoOp
+
+nextPublishTweetAction : HeadHash -> Data.Model -> { a | next : List TweetHash } -> RootAction.Action
+nextPublishTweetAction headHash =
+  nextItemAction
+    .tweets
+    (\tweet -> ActionForPublish (PublishTweet { headHash = headHash, tweet = tweet }))
+    headHash
+
+
+nextPublishFollowBlockAction : HeadHash -> Data.Model -> { a | next : List FollowBlockHash } -> RootAction.Action
+nextPublishFollowBlockAction headHash =
+  nextItemAction
+    .followBlocks
+    (\followBlock -> ActionForPublish (PublishFollowBlock { headHash = headHash, followBlock = followBlock }))
+    headHash

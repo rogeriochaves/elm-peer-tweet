@@ -1,6 +1,6 @@
-module Download.UpdateSpec (..) where
+module Download.EffectsSpec (..) where
 
-import Download.Update exposing (effects)
+import Download.Effects exposing (effects)
 import Data.Model as Data exposing (Model)
 import Account.Model as Account
 import Action exposing (..)
@@ -53,7 +53,7 @@ data =
 tests : Signal (Task Effects.Never Test)
 tests =
   signalDescribe
-    "Download.Update"
+    "Download.Effects"
     [ signalDescribe
         "Head Download"
         [ signalIt "forwards download head actions to javascript mailbox"

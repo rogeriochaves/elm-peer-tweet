@@ -1,6 +1,6 @@
-module Publish.UpdateSpec (..) where
+module Publish.EffectsSpec (..) where
 
-import Publish.Update exposing (effects)
+import Publish.Effects exposing (effects)
 import Data.Model as Data exposing (Model)
 import Account.Model as Account
 import Action exposing (..)
@@ -53,7 +53,7 @@ data =
 tests : Signal (Task Effects.Never Test)
 tests =
   signalDescribe
-    "Publish.Update"
+    "Publish.Effects"
     [ signalDescribe
         "Head Publish"
         [ signalIt "starts publishing from account head"

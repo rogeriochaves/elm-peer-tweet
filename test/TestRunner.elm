@@ -14,8 +14,8 @@ import SignalConcatMap exposing ((>>=))
 
 import Account.ModelSpec
 import DateTime.View.TimeDifferenceSpec
-import Download.UpdateSpec
-import Publish.UpdateSpec
+import Download.EffectsSpec
+import Publish.EffectsSpec
 
 
 simpleTests : List Test
@@ -28,8 +28,8 @@ simpleTests =
 
 effectsTests : List (Signal (Task Never Test))
 effectsTests =
-  [ Download.UpdateSpec.tests
-  , Publish.UpdateSpec.tests
+  [ Download.EffectsSpec.tests
+  , Publish.EffectsSpec.tests
   ]
 
 

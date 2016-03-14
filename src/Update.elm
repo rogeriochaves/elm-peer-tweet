@@ -4,9 +4,12 @@ import Action exposing (Action)
 import Model exposing (Model)
 import Effects exposing (Effects)
 import Data.Update as Data
+import Data.Effects as DataEffects
 import NewTweet.Update as NewTweet
 import Publish.Update as Publish
+import Publish.Effects as PublishEffects
 import Download.Update as Download
+import Download.Effects as DownloadEffects
 import DateTime.Update as DateTime
 
 
@@ -29,7 +32,7 @@ modelUpdate action model =
 effectsUpdate : Signal.Address Action -> Action -> Model -> Effects Action
 effectsUpdate jsAddress action model =
   Effects.batch
-    [ Data.effects jsAddress action model.data
-    , Publish.effects jsAddress action model.data
-    , Download.effects jsAddress action model.data
+    [ DataEffects.effects jsAddress action model.data
+    , PublishEffects.effects jsAddress action model.data
+    , DownloadEffects.effects jsAddress action model.data
     ]

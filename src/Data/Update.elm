@@ -1,4 +1,4 @@
-module Data.Update (..) where
+module Data.Update (update) where
 
 import Action as RootAction exposing (..)
 import Data.Action as DataAction exposing (..)
@@ -7,8 +7,6 @@ import Account.Update as AccountUpdate
 import Account.Model as AccountModel exposing (HeadHash)
 import Account.Action as AccountAction exposing (..)
 import Download.Action as DownloadAction exposing (..)
-import Task
-import Effects exposing (Effects)
 import List.Extra exposing (replaceIf)
 
 
@@ -60,15 +58,3 @@ updateAccount model hash action =
 
       Nothing ->
         AccountUpdate.update action AccountModel.initialModel :: model.accounts
-
-
-effects : Signal.Address RootAction.Action -> RootAction.Action -> Model -> Effects RootAction.Action
-effects jsAddress action _ =
-  case action of
-    ActionForData dataAction ->
-      Signal.send jsAddress (ActionForData dataAction)
-        |> Task.map (always RootAction.NoOp)
-        |> Effects.task
-
-    _ ->
-      Effects.none

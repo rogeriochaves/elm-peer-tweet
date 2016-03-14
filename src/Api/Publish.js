@@ -44,9 +44,11 @@ export const encodeItem = (hash, item) =>
   ({ v: encodeKeys(item), ...optionsFor(hash) });
 
 export const publish = (item, callback) => {
-  console.log('Publishing', item);
+  console.warn('Publishing', item);
 
-  dht.put(encodeItem(item.hash, item), (err) => {
+  dht.put(encodeItem(item.hash, item), (err, hash) => {
+    console.info('Published', item, hash.toString('hex'));
+
     callback(err, item.hash);
   });
 };

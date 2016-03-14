@@ -27,9 +27,11 @@ const decodeItem = (hash, item) =>
   ({ hash: hash, ...decodeKeys(addNext(item.v)) });
 
 export const download = (hash, callback) => {
-  console.log('Downloading', hash);
+  console.warn('Downloading', hash);
 
   dht.get(hash, (err, item) => {
+    console.info('Downloaded', hash, item && decodeItem(hash, item));
+
     callback(err, item && decodeItem(hash, item));
   });
 };

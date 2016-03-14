@@ -114,14 +114,14 @@ addTweet model tweet =
       { model | tweets = tweet :: model.tweets }
 
 
-nextFollowBlockHashToDownload : Model -> Hash -> Maybe Hash
-nextFollowBlockHashToDownload model =
-  nextItemToDownload model.followBlocks
-
-
 findFollowBlock : Model -> Maybe FollowBlockHash -> Maybe FollowBlock
 findFollowBlock model =
   findItem model.followBlocks
+
+
+nextFollowBlockHashToDownload : Model -> Hash -> Maybe Hash
+nextFollowBlockHashToDownload model =
+  nextItemToDownload model.followBlocks
 
 
 firstFollowBlock : Model -> Maybe FollowBlock

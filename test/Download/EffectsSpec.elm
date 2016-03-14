@@ -164,11 +164,35 @@ tests =
                     data
 
                   action =
-                    (ActionForDownload <| DoneDownloadFollowBlock { headHash = "user", followBlock = { hash = "uno", l = ["somebody"], next = [ "duo" ] } })
+                    (ActionForDownload <| DoneDownloadFollowBlock { headHash = "user", followBlock = { hash = "uno", l = [], next = [ "duo" ] } })
 
                   account =
                     setup model action
                  in
                   expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForDownload <| DownloadFollowBlock { headHash = "user", followBlockHash = "duo" }) ]
+          , signalIt "dispatches followers download after a user followBlock download is done"
+              <| let
+                  model =
+                    data
+
+                  action =
+                    (ActionForDownload <| DoneDownloadFollowBlock { headHash = "user", followBlock = { hash = "uno", l = ["batman"], next = [ "duo" ] } })
+
+                  account =
+                    setup model action
+                 in
+                  expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForDownload <| DownloadHead "batman") ]
+          , signalIt "does not dispatch followers download if the follow block is not for the logged in user"
+              <| let
+                  model =
+                    data
+
+                  action =
+                    (ActionForDownload <| DoneDownloadFollowBlock { headHash = "somebody", followBlock = { hash = "uno", l = ["robin"], next = [ ] } })
+
+                  account =
+                    setup model action
+                 in
+                  expectSignal ( account.actionsSignal, account.task ) toBe [ NoOp ]
           ]
     ]

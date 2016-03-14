@@ -6,6 +6,7 @@ import Publish.Action exposing (..)
 import Ports exposing (jsMailbox, isJust, filterEmpty)
 import Publish.Action exposing (..)
 import Time exposing (every, second)
+import Account.Action exposing (TweetIdentifier, TweetData, FollowBlockIdentifier, FollowBlockData)
 
 
 requestPublish : Signal RootAction.Action
@@ -37,10 +38,10 @@ publishHeadInput =
   Signal.map (Maybe.map (ActionForPublish << DonePublishHead) >> Maybe.withDefault NoOp) publishHeadStream
 
 
-port publishTweetStream : Signal (Maybe DonePublishTweetPayload)
+port publishTweetStream : Signal (Maybe TweetIdentifier)
 
 
-port requestPublishTweet : Signal (Maybe PublishTweetPayload)
+port requestPublishTweet : Signal (Maybe TweetData)
 port requestPublishTweet =
   let
     getRequest action =
@@ -61,10 +62,10 @@ publishTweetInput =
 
 
 
-port publishFollowBlockStream : Signal (Maybe DonePublishFollowBlockPayload)
+port publishFollowBlockStream : Signal (Maybe FollowBlockIdentifier)
 
 
-port requestPublishFollowBlock : Signal (Maybe PublishFollowBlockPayload)
+port requestPublishFollowBlock : Signal (Maybe FollowBlockData)
 port requestPublishFollowBlock =
   let
     getRequest action =

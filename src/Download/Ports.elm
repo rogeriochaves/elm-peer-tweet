@@ -6,6 +6,7 @@ import Download.Action exposing (..)
 import Ports exposing (jsMailbox, isJust, filterEmpty)
 import Download.Action exposing (..)
 import Time exposing (every, second)
+import Account.Action exposing (TweetIdentifier, TweetData, FollowBlockIdentifier, FollowBlockData)
 
 
 requestDownload : Signal RootAction.Action
@@ -37,10 +38,10 @@ downloadHeadInput =
   Signal.map (Maybe.map (ActionForDownload << DoneDownloadHead) >> Maybe.withDefault NoOp) downloadHeadStream
 
 
-port downloadTweetStream : Signal (Maybe DoneDownloadTweetPayload)
+port downloadTweetStream : Signal (Maybe TweetData)
 
 
-port requestDownloadTweet : Signal (Maybe DownloadTweetPayload)
+port requestDownloadTweet : Signal (Maybe TweetIdentifier)
 port requestDownloadTweet =
   let
     getRequest action =
@@ -62,10 +63,10 @@ downloadTweetInput =
     downloadTweetStream
 
 
-port downloadFollowBlockStream : Signal (Maybe DoneDownloadFollowBlockPayload)
+port downloadFollowBlockStream : Signal (Maybe FollowBlockData)
 
 
-port requestDownloadFollowBlock : Signal (Maybe DownloadFollowBlockPayload)
+port requestDownloadFollowBlock : Signal (Maybe FollowBlockIdentifier)
 port requestDownloadFollowBlock =
   let
     getRequest action =

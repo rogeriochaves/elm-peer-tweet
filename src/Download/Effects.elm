@@ -55,23 +55,14 @@ effectsDownload jsAddress action data =
         |> Effects.task
 
     DoneDownloadFollowBlock { headHash, followBlock } ->
-      Task.succeed (nextDownloadFollowBlockAction headHash data <| nextHash (Just followBlock))
-        |> Effects.task
-
-
-downloadFirstFollowBlockEffect : Account.Head -> Effects RootAction.Action
-downloadFirstFollowBlockEffect head =
-  let
-    foundFollowBlockHash =
-      List.head head.f
-  in
-    case foundFollowBlockHash of
-      Just followBlockHash ->
-        Task.succeed (ActionForDownload (DownloadFollowBlock { headHash = head.hash, followBlockHash = followBlockHash }))
-          |> Effects.task
-
-      Nothing ->
-        Effects.none
+      Effects.batch
+        [ Task.succeed (nextDownloadFollowBlockAction headHash data <| nextHash (Just followBlock))
+            |> Effects.task
+        , if headHash == data.hash then
+            downloadFollowerEffect followBlock
+          else
+            Effects.none
+        ]
 
 
 nextDownloadAction : (Account.Model -> List { a | hash : Hash, next : List Hash }) -> (Hash -> RootAction.Action) -> HeadHash -> Data.Model -> Maybe Hash -> RootAction.Action
@@ -101,3 +92,25 @@ nextDownloadFollowBlockAction headHash =
     .followBlocks
     (\hash -> ActionForDownload <| DownloadFollowBlock { headHash = headHash, followBlockHash = hash })
     headHash
+
+
+downloadFirstFollowBlockEffect : Account.Head -> Effects RootAction.Action
+downloadFirstFollowBlockEffect head =
+  let
+    foundFollowBlockHash =
+      List.head head.f
+  in
+    case foundFollowBlockHash of
+      Just followBlockHash ->
+        Task.succeed (ActionForDownload (DownloadFollowBlock { headHash = head.hash, followBlockHash = followBlockHash }))
+          |> Effects.task
+
+      Nothing ->
+        Effects.none
+
+
+downloadFollowerEffect : Account.FollowBlock -> Effects RootAction.Action
+downloadFollowerEffect followBlock =
+  followBlock.l
+    |> List.map (Effects.task << Task.succeed << ActionForDownload << DownloadHead)
+    |> Effects.batch

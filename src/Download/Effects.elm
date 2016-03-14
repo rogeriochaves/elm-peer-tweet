@@ -6,7 +6,7 @@ import Account.Model as Account
 import Data.Model as Data
 import Effects exposing (Effects)
 import Task exposing (Task)
-import Account.Model exposing (Hash, HeadHash, nextHash, nextItemToDownload)
+import Account.Model exposing (Hash, HeadHash, nextHash, nextHashToDownload)
 import Maybe exposing (andThen)
 import Data.Model as Data exposing (findAccount)
 
@@ -79,7 +79,7 @@ nextDownloadAction nextListKey actionFn headHash data followBlockHash =
   let
     nextItem =
       findAccount data (Just headHash)
-        |> Maybe.map (\account -> followBlockHash `andThen` nextItemToDownload (nextListKey account))
+        |> Maybe.map (\account -> followBlockHash `andThen` nextHashToDownload (nextListKey account))
         |> Maybe.withDefault followBlockHash
   in
     nextItem

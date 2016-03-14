@@ -77,8 +77,8 @@ findItem list hash =
       Nothing
 
 
-nextItemToDownload : List { a | hash : Hash, next : List Hash } -> Hash -> Maybe Hash
-nextItemToDownload list hash =
+nextHashToDownload : List { a | hash : Hash, next : List Hash } -> Hash -> Maybe Hash
+nextHashToDownload list hash =
   let
     item =
       findItem list (Just hash)
@@ -91,7 +91,7 @@ nextItemToDownload list hash =
         Just hash
 
       Just item ->
-        next `andThen` (nextItemToDownload list)
+        next `andThen` (nextHashToDownload list)
 
 
 addTweet : Model -> Tweet -> Model

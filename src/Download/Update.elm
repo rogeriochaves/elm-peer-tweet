@@ -7,7 +7,7 @@ import Data.Model as Data
 import Download.Model exposing (Model)
 import Effects exposing (Effects)
 import Task exposing (Task)
-import Account.Model exposing (Hash, HeadHash, TweetHash, FollowBlockHash, nextHash, nextHashToDownload, nextItemToDownload, findTweet)
+import Account.Model exposing (Hash, HeadHash, nextHash, nextItemToDownload)
 import Maybe exposing (andThen)
 import Data.Model as Data exposing (findAccount)
 

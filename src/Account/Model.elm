@@ -94,47 +94,27 @@ nextItemToDownload list hash =
         next `andThen` (nextItemToDownload list)
 
 
-findTweet : Model -> Maybe TweetHash -> Maybe Tweet
-findTweet model =
-  findItem model.tweets
-
-
-nextHashToDownload : Model -> Hash -> Maybe Hash
-nextHashToDownload model =
-  nextItemToDownload model.tweets
-
-
 addTweet : Model -> Tweet -> Model
-addTweet model tweet =
-  case (findTweet model (Just tweet.hash)) of
+addTweet account tweet =
+  case (findItem account.tweets (Just tweet.hash)) of
     Just _ ->
-      model
+      account
 
     Nothing ->
-      { model | tweets = tweet :: model.tweets }
-
-
-findFollowBlock : Model -> Maybe FollowBlockHash -> Maybe FollowBlock
-findFollowBlock model =
-  findItem model.followBlocks
-
-
-nextFollowBlockHashToDownload : Model -> Hash -> Maybe Hash
-nextFollowBlockHashToDownload model =
-  nextItemToDownload model.followBlocks
+      { account | tweets = tweet :: account.tweets }
 
 
 firstFollowBlock : Model -> Maybe FollowBlock
 firstFollowBlock account =
   List.head account.head.f
-    |> findFollowBlock account
+    |> findItem account.followBlocks
 
 
 addFollowBlock : Model -> FollowBlock -> Model
-addFollowBlock model followBlock =
-  case (findFollowBlock model (Just followBlock.hash)) of
+addFollowBlock account followBlock =
+  case (findItem account.followBlocks (Just followBlock.hash)) of
     Just _ ->
-      model
+      account
 
     Nothing ->
-      { model | followBlocks = followBlock :: model.followBlocks }
+      { account | followBlocks = followBlock :: account.followBlocks }

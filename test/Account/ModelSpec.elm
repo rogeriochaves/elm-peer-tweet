@@ -1,6 +1,6 @@
 module Account.ModelSpec where
 
-import Account.Model exposing (Model, initialModel, nextHash, nextHashToDownload, findTweet, addTweet)
+import Account.Model exposing (Model, initialModel, nextHash, nextItemToDownload, findItem, addTweet)
 import ElmTestBDDStyle exposing (..)
 
 setupModel : Model
@@ -21,26 +21,26 @@ tests =
           expect (nextHash <| Just { next = [] }) toBe Nothing
       ]
 
-    , describe "nextHashToDownload"
+    , describe "nextItemToDownload"
       [ it "returns the last not present hash" <|
-          expect (nextHashToDownload setupModel "bar") toBe <| Just "qux"
+          expect (nextItemToDownload setupModel.tweets "bar") toBe <| Just "qux"
 
       , it "returns the same hash if it is not there" <|
-          expect (nextHashToDownload setupModel "uno") toBe <| Just "uno"
+          expect (nextItemToDownload setupModel.tweets "uno") toBe <| Just "uno"
 
       , it "returns nothing if there is no next" <|
           let
             model = { setupModel | tweets = { hash = "baz", d = 1, t = "something", next = [] } :: setupModel.tweets }
           in
-            expect (nextHashToDownload model "bar") toBe <| Nothing
+            expect (nextItemToDownload model.tweets "bar") toBe <| Nothing
       ]
 
-    , describe "findTweet" <|
+    , describe "findItem" <|
       [ it "finds the tweet" <|
-          expect (findTweet setupModel <| Just "bar") toBe <| Just { hash = "bar", d = 1, t = "something", next = ["baz"] }
+          expect (findItem setupModel.tweets <| Just "bar") toBe <| Just { hash = "bar", d = 1, t = "something", next = ["baz"] }
 
       , it "returns empty when the tweet is not there" <|
-          expect (findTweet setupModel <| Just "uno") toBe Nothing
+          expect (findItem setupModel.tweets <| Just "uno") toBe Nothing
       ]
 
     , describe "addTweet" <|

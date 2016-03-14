@@ -7,7 +7,7 @@ import Data.Model as Data exposing (getUserAccount, findAccount)
 import Publish.Model exposing (Model)
 import Effects exposing (Effects)
 import Task exposing (Task)
-import Account.Model exposing (HeadHash, TweetHash, FollowBlockHash, Hash, FollowBlock, nextHash, findTweet, findFollowBlock, firstFollowBlock, findItem)
+import Account.Model exposing (HeadHash, TweetHash, FollowBlockHash, Hash, FollowBlock, nextHash, firstFollowBlock, findItem)
 import Maybe exposing (andThen)
 
 

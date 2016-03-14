@@ -23,7 +23,10 @@ update action model =
         updateIn hash accountAction
 
       ActionForData (UpdateUserAccount account) ->
-        updateIn model.hash (Update account)
+        { model
+          | hash = account.head.hash
+          , accounts = updateAccount model model.hash (Update account)
+        }
 
       ActionForDownload (DoneDownloadHead head) ->
         updateIn head.hash (UpdateHead head)

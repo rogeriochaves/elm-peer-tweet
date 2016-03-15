@@ -9,12 +9,18 @@ import Action exposing (Action)
 import Model exposing (Model)
 import Data.Model exposing (getUserAccount)
 import Account.Model as Account
+import Router.Model exposing (Page(Timeline))
 
 
 view : Signal.Address Action -> Model -> Html
 view address model =
-  Maybe.map (loggedInView address model) (getUserAccount model.data)
-    |> Maybe.withDefault (loggedOutView address model)
+  case model.router.page of
+    Timeline ->
+      Maybe.map (loggedInView address model) (getUserAccount model.data)
+        |> Maybe.withDefault (loggedOutView address model)
+
+    _ ->
+      text "Another page"
 
 
 loggedInView : Signal.Address Action -> Model -> Account.Model -> Html

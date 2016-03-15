@@ -36,7 +36,7 @@ inputs =
 app : StartApp.App Model
 app =
   StartApp.start
-    { init = initialModel
+    { init = initialModel path
     , update = update jsMailbox.address
     , view = view
     , inputs = inputs
@@ -51,3 +51,6 @@ main =
 port tasks : Signal (Task.Task Never ())
 port tasks =
   app.tasks
+
+
+port path : String

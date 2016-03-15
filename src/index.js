@@ -6,8 +6,11 @@ import { initialAccount } from './Api/Account';
 import { setup } from './Ports';
 
 const account = initialAccount();
+const path = window.location.pathname;
+
 const initialPorts =
-  { accountStream: account
+  { path: path
+  , accountStream: account
   , publishHeadStream: null
   , publishTweetStream: null
   , publishFollowBlockStream: null
@@ -15,6 +18,7 @@ const initialPorts =
   , downloadTweetStream: null
   , downloadFollowBlockStream: null
   };
+
 const App = Elm.embed(Elm.Main, document.getElementById('main'), initialPorts);
 
 setup(App.ports);

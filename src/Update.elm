@@ -11,6 +11,8 @@ import Publish.Effects as PublishEffects
 import Download.Update as Download
 import Download.Effects as DownloadEffects
 import DateTime.Update as DateTime
+import Router.Update as Router
+import Router.Effects as RouterEffects
 
 
 update : Signal.Address Action -> Action -> Model -> ( Model, Effects Action )
@@ -26,6 +28,7 @@ modelUpdate action model =
     , publish = Publish.update action model.publish
     , download = Download.update action model.download
     , dateTime = DateTime.update action model.dateTime
+    , router = Router.update action model.router
   }
 
 
@@ -35,4 +38,5 @@ effectsUpdate jsAddress action model =
     [ DataEffects.effects jsAddress action model.data
     , PublishEffects.effects jsAddress action model.data
     , DownloadEffects.effects jsAddress action model.data
+    , RouterEffects.effects action model.router
     ]

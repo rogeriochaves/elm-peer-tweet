@@ -2,32 +2,35 @@ module Model (Model, initialModel) where
 
 import Effects exposing (Effects)
 import Action exposing (Action)
+import Router.Model as Router
 import Data.Model as Data
 import NewTweet.Model as NewTweet
 import Publish.Model as Publish
 import Download.Model as Download
 import DateTime.Model as DateTime
-import Router.Model as Router
+import Search.Model as Search
 
 
 type alias Model =
-  { data : Data.Model
+  { router : Router.Model
+  , data : Data.Model
   , newTweet : NewTweet.Model
   , publish : Publish.Model
   , download : Download.Model
   , dateTime : DateTime.Model
-  , router : Router.Model
+  , search : Search.Model
   }
 
 
 initialModel : String -> ( Model, Effects Action )
 initialModel path =
-  ( { data = Data.initialModel
+  ( { router = Router.initialModel path
+    , data = Data.initialModel
     , newTweet = NewTweet.initialModel
     , publish = Publish.initialModel
     , download = Download.initialModel
     , dateTime = DateTime.initialModel
-    , router = Router.initialModel path
+    , search = Search.initialModel
     }
   , Effects.none
   )

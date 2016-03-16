@@ -5,6 +5,7 @@ import Html.Attributes exposing (class)
 import Sidebar.View.Sidebar as Sidebar
 import Topbar.View.Topbar as Topbar
 import Timeline.View.Timeline as Timeline
+import Search.View.Search as SearchView
 import Action exposing (Action)
 import Model exposing (Model)
 import Data.Model exposing (getUserAccount)
@@ -41,9 +42,7 @@ contentView address model account =
         ]
 
     Search ->
-      div
-        []
-        [ text "Search" ]
+      SearchView.view address model account
 
     NotFound ->
       div

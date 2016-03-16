@@ -2,8 +2,7 @@ module Account.UpdateSpec (..) where
 
 import Account.Update exposing (update)
 import Account.Model exposing (initialModel)
-import Action exposing (..)
-import Download.Action exposing (..)
+import Account.Action exposing (..)
 import ElmTestBDDStyle exposing (..)
 
 
@@ -22,7 +21,7 @@ tests =
                   initialModel
 
                 action =
-                  ActionForDownload (DoneDownloadTweet tweet)
+                  AddTweet tweet
                in
                 expect (update action model) toBe { initialModel | tweets = tweet :: initialModel.tweets }
         ]

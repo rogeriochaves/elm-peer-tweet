@@ -3,6 +3,7 @@ module Router.Update (..) where
 import Router.Action as Router exposing (Action(..))
 import Router.Model exposing (Model, Page(..), routeToPage, pathToPage)
 import Action as RootAction exposing (Action(..))
+import History
 
 
 update : RootAction.Action -> Model -> Model
@@ -23,3 +24,8 @@ updateRouter action model =
 
     UpdatePath route ->
       model
+
+
+routeInput : Signal RootAction.Action
+routeInput =
+  Signal.map (ActionForRouter << PathChange) History.hash

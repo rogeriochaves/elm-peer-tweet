@@ -6,7 +6,7 @@ import { initialAccount } from './Api/Account';
 import { setup } from './Ports';
 
 const account = initialAccount();
-const path = window.location.pathname;
+const path = window.location.hash || "#/";
 
 const initialPorts =
   { path: path

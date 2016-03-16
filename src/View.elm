@@ -9,18 +9,13 @@ import Action exposing (Action)
 import Model exposing (Model)
 import Data.Model exposing (getUserAccount)
 import Account.Model as Account
-import Router.Model exposing (Page(Timeline))
+import Router.Model exposing (Page(..))
 
 
 view : Signal.Address Action -> Model -> Html
 view address model =
-  case model.router.page of
-    Timeline ->
-      Maybe.map (loggedInView address model) (getUserAccount model.data)
-        |> Maybe.withDefault (loggedOutView address model)
-
-    _ ->
-      text "Another page"
+  Maybe.map (loggedInView address model) (getUserAccount model.data)
+    |> Maybe.withDefault (loggedOutView address model)
 
 
 loggedInView : Signal.Address Action -> Model -> Account.Model -> Html
@@ -30,11 +25,30 @@ loggedInView address model account =
     [ Sidebar.view address model
     , div
         [ class "flexbox-content" ]
+        [ contentView address model account ]
+    ]
+
+
+contentView : Signal.Address Action -> Model -> Account.Model -> Html
+contentView address model account =
+  case model.router.page of
+    Timeline ->
+      div
+        []
         [ text model.data.hash
         , Topbar.view address model account
         , Timeline.view model account
         ]
-    ]
+
+    Search ->
+      div
+        []
+        [ text "Search" ]
+
+    NotFound ->
+      div
+        []
+        [ text "NotFound" ]
 
 
 loggedOutView : Signal.Address Action -> Model -> Html

@@ -1,6 +1,7 @@
 module Router.Routes (Sitemap(..), match, route) where
 
 import Route exposing (..)
+import String
 
 
 type Sitemap
@@ -25,7 +26,7 @@ sitemap =
 
 match : String -> Maybe Sitemap
 match =
-  Route.match sitemap
+  String.dropLeft 1 >> Route.match sitemap
 
 
 route : Sitemap -> String

@@ -2,7 +2,8 @@ module Download.Update (update) where
 
 import Action as RootAction exposing (..)
 import Download.Action as Download exposing (..)
-import Download.Model exposing (Model)
+import Download.Model exposing (Model, Status(..), updateDownloadingItem)
+import Account.Model exposing (Hash)
 
 
 update : RootAction.Action -> Model -> Model
@@ -17,34 +18,38 @@ update action model =
 
 updateDownload : Download.Action -> Model -> Model
 updateDownload action model =
+  let
+    setLoading = incDownloadingCount model
+    setDone = decDownloadingCount model
+  in
   case action of
     BeginDownload ->
       model
 
-    DownloadHead _ ->
-      incDownloadingCount model
+    DownloadHead hash ->
+      setLoading hash
 
-    DoneDownloadHead _ ->
-      decDownloadingCount model
+    DoneDownloadHead { hash } ->
+      setDone hash
 
-    DownloadTweet _ ->
-      incDownloadingCount model
+    DownloadTweet { tweetHash } ->
+      setLoading tweetHash
 
-    DoneDownloadTweet _ ->
-      decDownloadingCount model
+    DoneDownloadTweet { tweet } ->
+      setDone tweet.hash
 
-    DownloadFollowBlock _ ->
-      incDownloadingCount model
+    DownloadFollowBlock { followBlockHash } ->
+      setLoading followBlockHash
 
-    DoneDownloadFollowBlock _ ->
-      decDownloadingCount model
-
-
-incDownloadingCount : Model -> Model
-incDownloadingCount model =
-  { model | downloadingCount = model.downloadingCount + 1 }
+    DoneDownloadFollowBlock { followBlock } ->
+      setDone followBlock.hash
 
 
-decDownloadingCount : Model -> Model
-decDownloadingCount model =
-  { model | downloadingCount = model.downloadingCount - 1 }
+incDownloadingCount : Model -> Hash -> Model
+incDownloadingCount model hash =
+  { model | downloadingItems = updateDownloadingItem model hash Loading }
+
+
+decDownloadingCount : Model -> Hash -> Model
+decDownloadingCount model hash =
+  { model | downloadingItems = updateDownloadingItem model hash Done }

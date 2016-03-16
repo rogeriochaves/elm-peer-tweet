@@ -1,4 +1,4 @@
-module Download.Model (Model, initialModel, Status(..), updateDownloadingItem, downloadingItemsCount) where
+module Download.Model (Model, initialModel, Status(..), updateDownloadingItem, downloadingItemsCount, isLoading) where
 
 import Account.Model exposing (Hash)
 
@@ -70,3 +70,10 @@ downloadingItemsCount model =
   in
     model.downloadingItems
       |> List.foldl addCount 0
+
+
+isLoading : Model -> Hash -> Bool
+isLoading model hash =
+  findDownloadingItem model hash
+    |> Maybe.map (toRecord >> .status >> (==) Loading)
+    |> Maybe.withDefault False

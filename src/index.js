@@ -5,12 +5,11 @@ import Elm from './Main';
 import { initialAccount } from './Api/Account';
 import { setup } from './Ports';
 
-const account = initialAccount();
 const path = window.location.hash || "#/";
 
 const initialPorts =
   { path: path
-  , accountStream: account
+  , accountStream: null
   , publishHeadStream: null
   , publishTweetStream: null
   , publishFollowBlockStream: null

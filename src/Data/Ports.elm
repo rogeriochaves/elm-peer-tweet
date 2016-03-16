@@ -6,7 +6,7 @@ import Data.Action exposing (..)
 import Ports exposing (jsMailbox, isJust, filterEmpty)
 
 
-port accountStream : Signal Account.Model
+port accountStream : Signal (Maybe Account.Model)
 
 
 port requestAddTweet : Signal (Maybe AddTweetRequestPayload)
@@ -41,4 +41,6 @@ port requestAddFollower =
 
 accountInput : Signal Action.Action
 accountInput =
-  Signal.map (ActionForData << UpdateUserAccount) accountStream
+  Signal.map
+    (Maybe.map (ActionForData << UpdateUserAccount) >> Maybe.withDefault Action.NoOp)
+    accountStream

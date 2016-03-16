@@ -1,7 +1,6 @@
-import { hash } from './Api/Account';
+import { initialAccount, hash } from './Api/Account';
 import Tweets from './Api/Tweets';
 import FollowBlocks from './Api/FollowBlocks';
-import { initialAccount } from './Api/Account';
 import { publish } from './Api/Publish';
 import { download } from './Api/Download';
 
@@ -27,7 +26,12 @@ const wirePublish = (hashKey, itemKey) => (data, resolve) =>
 export const setup = (ports) => {
   const pipe = pipePort(ports);
 
-  ports.accountStream.send(initialAccount());
+  download(hash(), (err, head) => {
+    ports.accountStream.send(initialAccount());
+    if (head) {
+      ports.downloadHeadStream.send(head);
+    }
+  });
 
   pipe('requestAddTweet', addTweet, 'accountStream');
   pipe('requestAddFollower', addFollower, 'accountStream');

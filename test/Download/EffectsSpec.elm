@@ -45,7 +45,7 @@ data : Model
 data =
   let
     initialModel =
-      Data.initialModel
+      Data.initialModel (Just "userhash")
   in
     { initialModel | hash = "user", accounts = [ userAccount ] }
 

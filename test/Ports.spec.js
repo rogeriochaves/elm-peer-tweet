@@ -66,12 +66,6 @@ describe('Ports', () => {
     };
   });
 
-  it('sets account as initial account on setup', () => {
-    Ports.setup(ports);
-
-    expect(receivedAccount).to.equal('initialAccount');
-  });
-
   it('adds a tweet, sending the account back to the accountStream port', () => {
     Ports.setup(ports);
 

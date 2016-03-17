@@ -3,15 +3,15 @@ import { spy } from 'sinon';
 import Publish from '../../src/Api/Publish';
 
 describe('Publish', () => {
-  let dht, dhtPutAccount, callback, head, tweet, followBlock;
+  let dht, dhtPutData, callback, head, tweet, followBlock;
 
   beforeEach(() => {
-    dhtPutAccount = [];
+    dhtPutData = [];
 
     let dht = {
-      put: (account, fn) => {
-        dhtPutAccount.push(account);
-        fn();
+      put: (data, fn) => {
+        dhtPutData.push(data);
+        fn(null, 'response-hash');
       }
     };
     Publish.__Rewire__('dht', dht);
@@ -39,16 +39,16 @@ describe('Publish', () => {
   });
 
   it('calls the callback without errors', () => {
-    expect(callback.getCall(0).args[0]).to.equal(undefined);
-    expect(callback.getCall(1).args[0]).to.equal(undefined);
-    expect(callback.getCall(2).args[0]).to.equal(undefined);
+    expect(callback.getCall(0).args[0]).to.equal(null);
+    expect(callback.getCall(1).args[0]).to.equal(null);
+    expect(callback.getCall(2).args[0]).to.equal(null);
   });
 
   it('calls the callback with an error when the dht gives an error', () => {
     callback.reset();
 
     Publish.__Rewire__('dht', {
-      put: (_, fn) => fn('404 DOGE NOT FOUND')
+      put: (_, fn) => fn('404 DOGE NOT FOUND', null)
     });
     Publish.publish(tweet, callback);
 
@@ -56,40 +56,40 @@ describe('Publish', () => {
   });
 
   it('publishes the head with the right options', () => {
-    let opts = dhtPutAccount[0];
+    let opts = dhtPutData[0];
 
     expect(opts.k.toString('hex')).to.equal('1b5a526a05953cff95dbf6c160cc3c621a4c12f360c111c5c44b01c925d24167');
     expect(opts.sign('foo').toString('hex')).to.equal('1805a5a2f4246eedba3655a66e0dbe52e43d749cfe819bab7788e6c4e4d40f486604b7b2b275385050bbbeb1062cf7b234216d3c7144a8a6f57f502b56535c0b');
   });
 
   it('removes hash key for publishing', () => {
-    expect(dhtPutAccount[0].v.hash).to.be.undefined;
-    expect(dhtPutAccount[1].v.hash).to.be.undefined;
-    expect(dhtPutAccount[2].v.hash).to.be.undefined;
+    expect(dhtPutData[0].v.hash).to.be.undefined;
+    expect(dhtPutData[1].v.hash).to.be.undefined;
+    expect(dhtPutData[2].v.hash).to.be.undefined;
   });
 
   it('publishes tweets with the right text', () => {
-    let tweetText = dhtPutAccount[1].v.t.toString();
+    let tweetText = dhtPutData[1].v.t.toString();
 
     expect(tweetText).to.equal("hello it's me you are looking for?");
   });
 
   it('publishes followBlock with the right hashes list', () => {
-    let hashesList = dhtPutAccount[2].v.l.toString();
+    let hashesList = dhtPutData[2].v.l.toString();
 
     expect(hashesList).to.equal('duotre');
   });
 
   it('publishes head with the right follow blocks hashes list', () => {
-    let followBlocksHashesList = dhtPutAccount[0].v.f.toString();
+    let followBlocksHashesList = dhtPutData[0].v.f.toString();
 
     expect(followBlocksHashesList).to.equal('unoquattro');
   });
 
   it('publishes the head, tweets and followBlocks with the right next hashes', () => {
-    let headNext = dhtPutAccount[0].v.next.toString();
-    let tweetNext = dhtPutAccount[1].v.next.toString();
-    let followBlockNext = dhtPutAccount[2].v.next.toString();
+    let headNext = dhtPutData[0].v.next.toString();
+    let tweetNext = dhtPutData[1].v.next.toString();
+    let followBlockNext = dhtPutData[2].v.next.toString();
 
     expect(headNext).to.equal('foo');
     expect(tweetNext).to.equal('bar');
@@ -97,8 +97,8 @@ describe('Publish', () => {
   });
 
   it('publishes the head and tweets with the right timestamps', () => {
-    let headTimestamp = dhtPutAccount[0].v.d.readIntBE(0, 6);
-    let tweetTimestamp = dhtPutAccount[1].v.d.readIntBE(0, 6);
+    let headTimestamp = dhtPutData[0].v.d.readIntBE(0, 6);
+    let tweetTimestamp = dhtPutData[1].v.d.readIntBE(0, 6);
 
     expect(headTimestamp).to.equal(1457409506204);
     expect(tweetTimestamp).to.equal(2457409506204);

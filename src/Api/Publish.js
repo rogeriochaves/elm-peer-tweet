@@ -47,7 +47,7 @@ export const publish = (item, callback) => {
   console.warn('Publishing', item);
 
   dht.put(encodeItem(item.hash, item), (err, hash) => {
-    console.info('Published', item, hash.toString('hex'));
+    if (hash) console.info('Published', item, hash.toString('hex'));
 
     callback(err, item.hash);
   });

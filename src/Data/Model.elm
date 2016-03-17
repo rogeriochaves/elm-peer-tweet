@@ -10,9 +10,9 @@ type alias Model =
   }
 
 
-initialModel : Model
-initialModel =
-  { hash = ""
+initialModel : Maybe String -> Model
+initialModel userHash =
+  { hash = Maybe.withDefault "" userHash
   , accounts = []
   }
 

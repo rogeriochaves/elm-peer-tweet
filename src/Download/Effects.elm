@@ -1,4 +1,4 @@
-module Download.Effects (effects) where
+module Download.Effects (effects, initialEffects) where
 
 import Action as RootAction exposing (..)
 import Download.Action as Download exposing (..)
@@ -63,6 +63,12 @@ effectsDownload jsAddress action data =
           else
             Effects.none
         ]
+
+
+initialEffects : Data.Model -> Effects RootAction.Action
+initialEffects data =
+  Task.succeed (ActionForDownload <| DownloadHead data.hash)
+    |> Effects.task
 
 
 nextDownloadAction : (Account.Model -> List { a | hash : Hash, next : List Hash }) -> (Hash -> RootAction.Action) -> HeadHash -> Data.Model -> Maybe Hash -> RootAction.Action

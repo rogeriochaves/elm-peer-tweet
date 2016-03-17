@@ -2,13 +2,14 @@
 
 import './Stylesheets/Main.scss';
 import Elm from './Main';
-import { initialAccount } from './Api/Account';
+import { hash } from './Api/Account';
 import { setup } from './Ports';
 
 const path = window.location.hash || "#/";
 
 const initialPorts =
   { path: path
+  , userHash: hash()
   , accountStream: null
   , publishHeadStream: null
   , publishTweetStream: null

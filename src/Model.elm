@@ -9,6 +9,7 @@ import Publish.Model as Publish
 import Download.Model as Download
 import DateTime.Model as DateTime
 import Search.Model as Search
+import Download.Effects as DownloadEffects
 
 
 type alias Model =
@@ -22,15 +23,17 @@ type alias Model =
   }
 
 
-initialModel : String -> ( Model, Effects Action )
-initialModel path =
-  ( { router = Router.initialModel path
-    , data = Data.initialModel
-    , newTweet = NewTweet.initialModel
-    , publish = Publish.initialModel
-    , download = Download.initialModel
-    , dateTime = DateTime.initialModel
-    , search = Search.initialModel
-    }
-  , Effects.none
-  )
+initialModel : String -> Maybe String -> ( Model, Effects Action )
+initialModel path userHash =
+  let
+    model =
+      { router = Router.initialModel path
+      , data = Data.initialModel userHash
+      , newTweet = NewTweet.initialModel
+      , publish = Publish.initialModel
+      , download = Download.initialModel
+      , dateTime = DateTime.initialModel
+      , search = Search.initialModel
+      }
+  in
+    ( model, DownloadEffects.initialEffects model.data )

@@ -38,7 +38,7 @@ inputs =
 app : StartApp.App Model
 app =
   StartApp.start
-    { init = initialModel path
+    { init = initialModel path userHash
     , update = update jsMailbox.address
     , view = view
     , inputs = inputs
@@ -56,3 +56,5 @@ port tasks =
 
 
 port path : String
+
+port userHash : Maybe String

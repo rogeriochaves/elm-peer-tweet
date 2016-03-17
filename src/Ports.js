@@ -7,6 +7,7 @@ import { download } from './Api/Download';
 const pipePort = (ports) => (input, transform, output) =>
   ports[input].subscribe((account) => {
     transform(account, (err, result) => {
+      if (err) console.error(err);
       ports[output].send(result);
     });
   });
@@ -25,13 +26,6 @@ const wirePublish = (hashKey, itemKey) => (data, resolve) =>
 
 export const setup = (ports) => {
   const pipe = pipePort(ports);
-
-  download(hash(), (err, head) => {
-    ports.accountStream.send(initialAccount());
-    if (head) {
-      ports.downloadHeadStream.send(head);
-    }
-  });
 
   pipe('requestAddTweet', addTweet, 'accountStream');
   pipe('requestAddFollower', addFollower, 'accountStream');

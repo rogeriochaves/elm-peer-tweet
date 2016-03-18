@@ -12,7 +12,7 @@ import Ports exposing (jsMailbox)
 import Router.Update exposing (routeInput)
 import Data.Ports exposing (accountInput)
 import Publish.Ports exposing (requestPublish, publishHeadInput, publishTweetInput, publishFollowBlockInput)
-import Download.Ports exposing (requestDownload, downloadHeadInput, downloadTweetInput, downloadFollowBlockInput)
+import Download.Ports exposing (requestDownload, downloadErrorInput, downloadHeadInput, downloadTweetInput, downloadFollowBlockInput)
 import DateTime.Signals exposing (updateDateTime)
 
 
@@ -28,6 +28,7 @@ inputs =
   , publishTweetInput
   , publishFollowBlockInput
   , requestDownload
+  , downloadErrorInput
   , downloadHeadInput
   , downloadTweetInput
   , downloadFollowBlockInput

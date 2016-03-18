@@ -4,11 +4,14 @@ import FollowBlocks from './Api/FollowBlocks';
 import { publish } from './Api/Publish';
 import { download } from './Api/Download';
 
-const pipePort = (ports) => (input, transform, output) =>
+const pipePort = (ports) => (input, transform, output, errorOutput = null) =>
   ports[input].subscribe((data) => {
     transform(data, (err, result) => {
-      if (err) console.error(err);
-      ports[output].send(result);
+      if (err && errorOutput)
+        ports[errorOutput].send([data, err]);
+
+      if (!err)
+        ports[output].send(result);
     });
   });
 
@@ -34,13 +37,9 @@ export const setup = (ports) => {
   pipe('requestPublishTweet', wirePublish('tweetHash', 'tweet'), 'publishTweetStream');
   pipe('requestPublishFollowBlock', wirePublish('followBlockHash', 'followBlock'), 'publishFollowBlockStream');
 
-  ports.requestDownloadHead.subscribe((hash) => {
-    download(hash, (err, result) => {
-      ports.downloadHeadStream.send([err && [hash, err], result]);
-    });
-  });
-  pipe('requestDownloadTweet', wireDownload('tweetHash', 'tweet'), 'downloadTweetStream');
-  pipe('requestDownloadFollowBlock', wireDownload('followBlockHash', 'followBlock'), 'downloadFollowBlockStream');
+  pipe('requestDownloadHead', download, 'downloadHeadStream', 'downloadErrorStream');
+  pipe('requestDownloadTweet', wireDownload('tweetHash', 'tweet'), 'downloadTweetStream', 'downloadErrorStream');
+  pipe('requestDownloadFollowBlock', wireDownload('followBlockHash', 'followBlock'), 'downloadFollowBlockStream', 'downloadErrorStream');
 };
 
 export default { setup };

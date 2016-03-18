@@ -5,7 +5,7 @@ import Ports from '../src/Ports';
 describe('Ports', () => {
   let ports, requestAddTweet, requestAddFollower, receivedAccount, requestPublishHead, receivedPublishHead, requestPublishTweet, receivedPublishTweet,
     requestPublishFollowBlock, receivedPublishFollowBlock, requestDownloadHead, receivedDownloadHead, requestDownloadTweet, receivedDownloadTweet,
-    requestDownloadFollowBlock, receivedDownloadFollowBlock;
+    requestDownloadFollowBlock, receivedDownloadFollowBlock, downloadErrorStream, receivedDownloadError;
 
   beforeEach(() => {
     global.localStorage = {
@@ -47,6 +47,9 @@ describe('Ports', () => {
       },
       requestDownloadHead: {
         subscribe: (fn) => { requestDownloadHead = fn }
+      },
+      downloadErrorStream: {
+        send: (data) => { receivedDownloadError = data }
       },
       downloadHeadStream: {
         send: (data) => { receivedDownloadHead = data }
@@ -125,16 +128,16 @@ describe('Ports', () => {
 
     requestDownloadHead('foo');
 
-    expect(receivedDownloadHead).to.deep.equal([ null, { hash: 'foo' } ]);
+    expect(receivedDownloadHead).to.deep.equal({ hash: 'foo' });
   });
 
   it('downloads head, sending error back when there is an error', () => {
-    Ports.setup(ports);
-
     Ports.__Rewire__('download', (hash, fn) => fn('DOGE NOT FOUND', null));
+
+    Ports.setup(ports);
     requestDownloadHead('foo');
 
-    expect(receivedDownloadHead).to.deep.equal([ [ 'foo', 'DOGE NOT FOUND' ], null ]);
+    expect(receivedDownloadError).to.deep.equal([ 'foo', 'DOGE NOT FOUND' ]);
   });
 
   it('downloads tweet by hash, sending tweet back', () => {

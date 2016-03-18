@@ -19,7 +19,8 @@ requestDownload =
     |> Signal.map (always <| ActionForDownload BeginDownload)
 
 
-port downloadHeadStream : Signal ( Maybe Error, Maybe Head )
+port downloadHeadStream : Signal (Maybe Head)
+port downloadErrorStream : Signal (Maybe Error)
 port requestDownloadHead : Signal (Maybe HeadHash)
 port requestDownloadHead =
   let
@@ -35,21 +36,20 @@ port requestDownloadHead =
       |> filterEmpty
 
 
+downloadErrorInput : Signal RootAction.Action
+downloadErrorInput =
+  let action ( hash, errorMessage ) =
+    ActionForDownload <| ErrorDownload hash errorMessage
+  in
+  Signal.map
+    (Maybe.map action >> Maybe.withDefault NoOp)
+    downloadErrorStream
+
 downloadHeadInput : Signal RootAction.Action
 downloadHeadInput =
-  let
-    action ( error, head ) =
-      case error of
-        Just ( hash, errorMessage ) ->
-          ActionForDownload <| ErrorDownload hash errorMessage
-
-        Nothing ->
-          head
-            |> Maybe.map (ActionForDownload << DoneDownloadHead)
-            |> Maybe.withDefault NoOp
-  in
-    Signal.map action downloadHeadStream
-
+  Signal.map
+    (Maybe.map (ActionForDownload << DoneDownloadHead) >> Maybe.withDefault NoOp)
+    downloadHeadStream
 
 port downloadTweetStream : Signal (Maybe TweetData)
 port requestDownloadTweet : Signal (Maybe TweetIdentifier)

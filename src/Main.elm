@@ -56,5 +56,4 @@ port tasks =
 
 
 port path : String
-
 port userHash : Maybe String

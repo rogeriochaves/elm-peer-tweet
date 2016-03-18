@@ -30,7 +30,8 @@ export const download = (hash, callback) => {
   console.warn('Downloading', hash);
 
   dht.get(hash, (err, item) => {
-    console.info('Downloaded', hash, item && decodeItem(hash, item));
+    if (err === null && item === null) err = 'Not Found';
+    err ? console.error('Download', hash, err) : console.info('Downloaded', hash, item && decodeItem(hash, item));
 
     callback(err, item && decodeItem(hash, item));
   });

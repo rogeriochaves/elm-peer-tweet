@@ -4,7 +4,7 @@ import Action as RootAction exposing (..)
 import Data.Action as DataAction exposing (..)
 import Data.Model exposing (Model, findAccount)
 import Account.Update as AccountUpdate
-import Account.Model as AccountModel exposing (HeadHash)
+import Account.Model as AccountModel exposing (HeadHash, initialModel)
 import Account.Action as AccountAction exposing (..)
 import Download.Action as DownloadAction exposing (..)
 import List.Extra exposing (replaceIf)
@@ -25,6 +25,16 @@ update action model =
           | hash = account.head.hash
           , accounts = updateAccount model model.hash (Update account)
         }
+
+      ActionForData CreateAccount ->
+        let
+          initialModel =
+            AccountModel.initialModel
+
+          head =
+            initialModel.head
+        in
+          updateIn model.hash (Update ({ initialModel | head = { head | hash = model.hash } }))
 
       ActionForDownload (DoneDownloadHead head) ->
         updateIn head.hash (UpdateHead head)

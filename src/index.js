@@ -14,7 +14,7 @@ const initialPorts =
   , publishHeadStream: null
   , publishTweetStream: null
   , publishFollowBlockStream: null
-  , downloadHeadStream: null
+  , downloadHeadStream: [null, null]
   , downloadTweetStream: null
   , downloadFollowBlockStream: null
   };

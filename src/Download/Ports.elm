@@ -1,6 +1,6 @@
 module Download.Ports (..) where
 
-import Account.Model as Account exposing (Head, Tweet, HeadHash, TweetHash)
+import Account.Model as Account exposing (Hash, Head, Tweet, HeadHash, TweetHash)
 import Action as RootAction exposing (..)
 import Download.Action exposing (..)
 import Ports exposing (jsMailbox, isJust, filterEmpty)
@@ -9,15 +9,17 @@ import Time exposing (every, second)
 import Account.Action exposing (TweetIdentifier, TweetData, FollowBlockIdentifier, FollowBlockData)
 
 
+type alias Error =
+  ( Hash, String )
+
+
 requestDownload : Signal RootAction.Action
 requestDownload =
   (every <| 30 * second)
     |> Signal.map (always <| ActionForDownload BeginDownload)
 
 
-port downloadHeadStream : Signal (Maybe Head)
-
-
+port downloadHeadStream : Signal ( Maybe Error, Maybe Head )
 port requestDownloadHead : Signal (Maybe HeadHash)
 port requestDownloadHead =
   let
@@ -35,12 +37,21 @@ port requestDownloadHead =
 
 downloadHeadInput : Signal RootAction.Action
 downloadHeadInput =
-  Signal.map (Maybe.map (ActionForDownload << DoneDownloadHead) >> Maybe.withDefault NoOp) downloadHeadStream
+  let
+    action ( error, head ) =
+      case error of
+        Just ( hash, errorMessage ) ->
+          ActionForDownload <| ErrorDownload hash errorMessage
+
+        Nothing ->
+          head
+            |> Maybe.map (ActionForDownload << DoneDownloadHead)
+            |> Maybe.withDefault NoOp
+  in
+    Signal.map action downloadHeadStream
 
 
 port downloadTweetStream : Signal (Maybe TweetData)
-
-
 port requestDownloadTweet : Signal (Maybe TweetIdentifier)
 port requestDownloadTweet =
   let
@@ -64,8 +75,6 @@ downloadTweetInput =
 
 
 port downloadFollowBlockStream : Signal (Maybe FollowBlockData)
-
-
 port requestDownloadFollowBlock : Signal (Maybe FollowBlockIdentifier)
 port requestDownloadFollowBlock =
   let

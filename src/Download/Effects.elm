@@ -8,7 +8,7 @@ import Effects exposing (Effects)
 import Task exposing (Task)
 import Account.Model exposing (Hash, HeadHash, nextHash, nextHashToDownload)
 import Maybe exposing (andThen)
-import Data.Model as Data exposing (findAccount)
+import Data.Model as Data exposing (findAccount, getUserAccount)
 
 
 effects : Signal.Address RootAction.Action -> RootAction.Action -> Data.Model -> Effects RootAction.Action
@@ -25,8 +25,9 @@ effectsDownload : Signal.Address RootAction.Action -> Download.Action -> Data.Mo
 effectsDownload jsAddress action data =
   case action of
     BeginDownload ->
-      Task.succeed (ActionForDownload <| DownloadHead data.hash)
-        |> Effects.task
+      getUserAccount data
+        |> Maybe.map (always <| Effects.task <| Task.succeed (ActionForDownload <| DownloadHead data.hash))
+        |> Maybe.withDefault Effects.none
 
     DownloadHead hash ->
       Signal.send jsAddress (ActionForDownload <| DownloadHead hash)
@@ -63,6 +64,9 @@ effectsDownload jsAddress action data =
           else
             Effects.none
         ]
+
+    ErrorDownload _ _ ->
+      Effects.none
 
 
 initialEffects : Data.Model -> Effects RootAction.Action

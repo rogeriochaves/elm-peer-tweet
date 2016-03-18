@@ -1,6 +1,7 @@
-module Download.Model (Model, initialModel, Status(..), updateDownloadingItem, downloadingItemsCount, isLoading) where
+module Download.Model (Model, initialModel, Status(..), updateDownloadingItem, downloadingItemsCount, isLoading, hasError, getError) where
 
 import Account.Model exposing (Hash)
+import Maybe exposing (andThen)
 
 
 type Status
@@ -77,3 +78,27 @@ isLoading model hash =
   findDownloadingItem model hash
     |> Maybe.map (toRecord >> .status >> (==) Loading)
     |> Maybe.withDefault False
+
+
+hasError : Model -> Hash -> Bool
+hasError model hash =
+  case getError model hash of
+    Just _ ->
+      True
+
+    Nothing ->
+      False
+
+
+getError : Model -> Hash -> Maybe String
+getError model hash =
+  let
+    errorMessage status =
+      case status of
+        Error message ->
+          Just message
+
+        _ ->
+          Nothing
+  in
+    findDownloadingItem model hash `andThen` (toRecord >> .status >> errorMessage)

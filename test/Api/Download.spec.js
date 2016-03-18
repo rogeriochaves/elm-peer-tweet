@@ -138,4 +138,16 @@ describe('Download', () => {
       next: []
     });
   });
+
+  it('returns a Not Found error when data is null and there is no error message', () => {
+    callback.reset();
+
+    Download.__Rewire__('dht', {
+      get: (_, fn) => fn(null, null)
+    });
+    Download.download('tweet', callback);
+
+    expect(callback.getCall(0).args[0]).to.equal('Not Found');
+    expect(callback.getCall(0).args[1]).to.equal(null);
+  });
 });

@@ -5,8 +5,8 @@ import { publish } from './Api/Publish';
 import { download } from './Api/Download';
 
 const pipePort = (ports) => (input, transform, output) =>
-  ports[input].subscribe((account) => {
-    transform(account, (err, result) => {
+  ports[input].subscribe((data) => {
+    transform(data, (err, result) => {
       if (err) console.error(err);
       ports[output].send(result);
     });
@@ -34,7 +34,11 @@ export const setup = (ports) => {
   pipe('requestPublishTweet', wirePublish('tweetHash', 'tweet'), 'publishTweetStream');
   pipe('requestPublishFollowBlock', wirePublish('followBlockHash', 'followBlock'), 'publishFollowBlockStream');
 
-  pipe('requestDownloadHead', download, 'downloadHeadStream');
+  ports.requestDownloadHead.subscribe((hash) => {
+    download(hash, (err, result) => {
+      ports.downloadHeadStream.send([err && [hash, err], result]);
+    });
+  });
   pipe('requestDownloadTweet', wireDownload('tweetHash', 'tweet'), 'downloadTweetStream');
   pipe('requestDownloadFollowBlock', wireDownload('followBlockHash', 'followBlock'), 'downloadFollowBlockStream');
 };

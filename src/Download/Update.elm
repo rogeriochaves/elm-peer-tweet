@@ -19,37 +19,51 @@ update action model =
 updateDownload : Download.Action -> Model -> Model
 updateDownload action model =
   let
-    setLoading = incDownloadingCount model
-    setDone = decDownloadingCount model
+    setLoading =
+      setDownloadLoading model
+
+    setDone =
+      setDownloadDone model
+
+    setError =
+      setDownloadError model
   in
-  case action of
-    BeginDownload ->
-      model
+    case action of
+      BeginDownload ->
+        model
 
-    DownloadHead hash ->
-      setLoading hash
+      DownloadHead hash ->
+        setLoading hash
 
-    DoneDownloadHead { hash } ->
-      setDone hash
+      DoneDownloadHead { hash } ->
+        setDone hash
 
-    DownloadTweet { tweetHash } ->
-      setLoading tweetHash
+      DownloadTweet { tweetHash } ->
+        setLoading tweetHash
 
-    DoneDownloadTweet { tweet } ->
-      setDone tweet.hash
+      DoneDownloadTweet { tweet } ->
+        setDone tweet.hash
 
-    DownloadFollowBlock { followBlockHash } ->
-      setLoading followBlockHash
+      DownloadFollowBlock { followBlockHash } ->
+        setLoading followBlockHash
 
-    DoneDownloadFollowBlock { followBlock } ->
-      setDone followBlock.hash
+      DoneDownloadFollowBlock { followBlock } ->
+        setDone followBlock.hash
+
+      ErrorDownload hash message ->
+        setError hash message
 
 
-incDownloadingCount : Model -> Hash -> Model
-incDownloadingCount model hash =
+setDownloadLoading : Model -> Hash -> Model
+setDownloadLoading model hash =
   { model | downloadingItems = updateDownloadingItem model hash Loading }
 
 
-decDownloadingCount : Model -> Hash -> Model
-decDownloadingCount model hash =
+setDownloadDone : Model -> Hash -> Model
+setDownloadDone model hash =
   { model | downloadingItems = updateDownloadingItem model hash Done }
+
+
+setDownloadError : Model -> Hash -> String -> Model
+setDownloadError model hash message =
+  { model | downloadingItems = updateDownloadingItem model hash <| Error message }

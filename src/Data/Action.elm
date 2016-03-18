@@ -13,8 +13,8 @@ type alias AddFollowerRequestPayload =
 
 
 type Action
-  = NoOp
-  | AddTweetRequest AddTweetRequestPayload
+  = AddTweetRequest AddTweetRequestPayload
   | AddFollowerRequest AddFollowerRequestPayload
   | UpdateUserAccount Account.Model
   | ActionForAccount HeadHash AccountAction.Action
+  | CreateAccount

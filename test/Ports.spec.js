@@ -120,12 +120,21 @@ describe('Ports', () => {
     expect(receivedPublishFollowBlock).to.deep.equal({ headHash: 'foo', followBlockHash: 'bar' });
   });
 
-  it('downloads head, sending account back', () => {
+  it('downloads head, sending account back when there is no error', () => {
     Ports.setup(ports);
 
     requestDownloadHead('foo');
 
-    expect(receivedDownloadHead).to.deep.equal({ hash: 'foo' });
+    expect(receivedDownloadHead).to.deep.equal([ null, { hash: 'foo' } ]);
+  });
+
+  it('downloads head, sending error back when there is an error', () => {
+    Ports.setup(ports);
+
+    Ports.__Rewire__('download', (hash, fn) => fn('DOGE NOT FOUND', null));
+    requestDownloadHead('foo');
+
+    expect(receivedDownloadHead).to.deep.equal([ [ 'foo', 'DOGE NOT FOUND' ], null ]);
   });
 
   it('downloads tweet by hash, sending tweet back', () => {

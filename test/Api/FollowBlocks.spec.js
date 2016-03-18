@@ -5,7 +5,7 @@ describe('FollowBlocks', () => {
   let currentAccount, result, followers;
 
   beforeEach(() => {
-    global.localStorage = {};
+    global.localStorage = { publicKey: '6393a821af08e151399a8df339d02a9e36134b3da5f893849673cf176810eb98', secretKey: 'foo' };
 
     Date.now = () => 1457409506204;
 

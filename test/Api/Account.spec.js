@@ -3,31 +3,39 @@ import { expect } from 'chai';
 import Account from '../../src/Api/Account';
 
 describe('Account', () => {
-  it('creates key if it is not on localstorage', () => {
-    global.localStorage = {};
+  describe('createKeys', () => {
+    it('creates key if it is not on localstorage', () => {
+      global.localStorage = {};
 
-    let { publicKey, secretKey } = Account.getKeys();
+      let { publicKey, secretKey } = Account.createKeys();
 
-    expect(publicKey).to.be.a('string');
-    expect(publicKey.length).to.equal(64);
+      expect(publicKey).to.be.a('string');
+      expect(publicKey.length).to.equal(64);
 
-    expect(secretKey).to.be.a('string');
-    expect(secretKey.length).to.equal(128);
-  });
+      expect(secretKey).to.be.a('string');
+      expect(secretKey.length).to.equal(128);
+    });
 
-  it('does not creates key if it is already there', () => {
-    global.localStorage = { publicKey: 'foo', secretKey: 'bar' };
+    it('does not creates key if it is already there', () => {
+      global.localStorage = { publicKey: 'foo', secretKey: 'bar' };
 
-    let { publicKey, secretKey } = Account.getKeys();
+      let { publicKey, secretKey } = Account.createKeys();
 
-    expect(publicKey).to.equal('foo');
-    expect(secretKey).to.equal('bar');
+      expect(publicKey).to.equal('foo');
+      expect(secretKey).to.equal('bar');
+    });
   });
 
   it('returns the right account hash', () => {
     global.localStorage = { publicKey: '6393a821af08e151399a8df339d02a9e36134b3da5f893849673cf176810eb98', secretKey: 'foo' };
 
     expect(Account.hash()).to.equal('9ef39f8b577cd867b2173e450e2cb30542cc1d98');
+  });
+
+  it('returns null if localStorage is empty', () => {
+    global.localStorage = { };
+
+    expect(Account.hash()).to.equal(null);
   });
 
   it('returns the initial account', () => {

@@ -2,7 +2,7 @@ import ed from 'ed25519-supercop';
 import crypto from 'crypto';
 import { getLocalStorage } from './Utils';
 
-export const getKeys = () => {
+export const createKeys = () => {
   if (!localStorage.publicKey || !localStorage.secretKey) {
     const keypair = ed.createKeyPair(ed.createSeed());
 
@@ -16,9 +16,15 @@ export const getKeys = () => {
 };
 
 export const hash = () => {
-  const k = Buffer(getKeys().publicKey, 'hex');
+  const { publicKey, secretKey } = getLocalStorage();
 
-  return crypto.createHash('sha1').update(k).digest('hex');
+  if (publicKey && secretKey) {
+    const k = Buffer(publicKey, 'hex');
+
+    return crypto.createHash('sha1').update(k).digest('hex');
+  }
+
+  return null;
 };
 
 export const initialAccount = () => ({
@@ -32,4 +38,4 @@ export const initialAccount = () => ({
   followBlocks: []
 });
 
-export default { getKeys, hash, initialAccount };
+export default { createKeys, hash, initialAccount };

@@ -22,8 +22,10 @@ update action model =
 
       ActionForData (UpdateUserAccount account) ->
         { model
-          | hash = account.head.hash
-          , accounts = updateAccount model model.hash (Update account)
+          | hash = (Just account.head.hash)
+          , accounts = model.hash
+                        |> Maybe.map (\hash -> updateAccount model hash (Update account))
+                        |> Maybe.withDefault model.accounts
         }
 
       ActionForData (CreateAccount timestamp) ->
@@ -33,8 +35,10 @@ update action model =
 
           head =
             initialModel.head
+
+          hash = model.hash |> Maybe.withDefault ""
         in
-          updateIn model.hash (Update ({ initialModel | head = { head | hash = model.hash, d = round <| inMilliseconds timestamp } }))
+          updateIn hash (Update ({ initialModel | head = { head | hash = hash, d = round <| inMilliseconds timestamp } }))
 
       ActionForDownload (DoneDownloadHead head) ->
         updateIn head.hash (UpdateHead head)
@@ -64,7 +68,7 @@ updateAccount model hash action =
   in
     case foundAccount of
       Just account ->
-        replaceIf (\x -> x.head.hash == hash) (AccountUpdate.update action account) model.accounts
+        replaceIf (\x -> (Just x.head.hash) == (Just hash)) (AccountUpdate.update action account) model.accounts
 
       Nothing ->
         AccountUpdate.update action AccountModel.initialModel :: model.accounts

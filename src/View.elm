@@ -16,8 +16,14 @@ import Router.Model exposing (Page(..))
 
 view : Signal.Address Action -> Model -> Html
 view address model =
-  Maybe.map (loggedInView address model) (getUserAccount model.data)
-    |> Maybe.withDefault (loggedOutView address model)
+  let userHash = model.data.hash
+      userAccount = getUserAccount model.data
+  in
+    case (userHash, userAccount) of
+      (Just hash, Just account) ->
+        loggedInView address model account
+      _ ->
+        loggedOutView address model
 
 
 loggedInView : Signal.Address Action -> Model -> Account.Model -> Html
@@ -37,7 +43,7 @@ contentView address model account =
     Timeline ->
       div
         []
-        [ text model.data.hash
+        [ text <| toString model.data.hash
         , Topbar.view address model account
         , Timeline.view model account
         ]

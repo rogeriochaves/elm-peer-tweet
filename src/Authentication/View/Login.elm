@@ -11,13 +11,17 @@ import Data.Action exposing (..)
 
 view : Signal.Address RootAction.Action -> Model -> Html
 view address { download, data, dateTime } =
-  if isLoading download data.hash then
-    text "Signing in..."
-  else if hasError download data.hash then
-    div
-      []
-      [ text "We could not retrieve account data from the network, do you want to start a new account? This means you will lost your old tweets"
-      , button [ onClick address <| ActionForData <| CreateAccount dateTime.timestamp ] [ text "Ok" ]
-      ]
-  else
-    text "You are not logged in"
+  case data.hash of
+    Just userHash ->
+      if isLoading download userHash then
+        text "Signing in..."
+      else if hasError download userHash then
+        div
+          []
+          [ text "We could not retrieve account data from the network, do you want to start a new account? This means you will lost your old tweets"
+          , button [ onClick address <| ActionForData <| CreateAccount dateTime.timestamp ] [ text "Ok" ]
+          ]
+      else
+        text "Sign in"
+    Nothing ->
+      text "You are not logged in"

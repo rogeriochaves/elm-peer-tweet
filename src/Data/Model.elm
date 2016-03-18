@@ -5,14 +5,14 @@ import Maybe exposing (andThen)
 
 
 type alias Model =
-  { hash : Account.HeadHash
+  { hash : Maybe Account.HeadHash
   , accounts : List Account.Model
   }
 
 
 initialModel : Maybe String -> Model
 initialModel userHash =
-  { hash = Maybe.withDefault "" userHash
+  { hash = userHash
   , accounts = []
   }
 
@@ -29,4 +29,4 @@ findAccount model hash =
 
 getUserAccount : Model -> Maybe Account.Model
 getUserAccount model =
-  findAccount model (Just model.hash)
+  findAccount model model.hash

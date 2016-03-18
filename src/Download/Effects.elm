@@ -25,8 +25,13 @@ effectsDownload : Signal.Address RootAction.Action -> Download.Action -> Data.Mo
 effectsDownload jsAddress action data =
   case action of
     BeginDownload ->
+      let action =
+        data.hash
+          |> Maybe.map (\hash -> Effects.task <| Task.succeed (ActionForDownload <| DownloadHead hash))
+          |> Maybe.withDefault Effects.none
+      in
       getUserAccount data
-        |> Maybe.map (always <| Effects.task <| Task.succeed (ActionForDownload <| DownloadHead data.hash))
+        |> Maybe.map (always action)
         |> Maybe.withDefault Effects.none
 
     DownloadHead hash ->
@@ -59,7 +64,7 @@ effectsDownload jsAddress action data =
       Effects.batch
         [ Task.succeed (nextDownloadFollowBlockAction headHash data <| nextHash (Just followBlock))
             |> Effects.task
-        , if headHash == data.hash then
+        , if (Just headHash) == data.hash then
             downloadFollowerEffect followBlock
           else
             Effects.none
@@ -71,8 +76,12 @@ effectsDownload jsAddress action data =
 
 initialEffects : Data.Model -> Effects RootAction.Action
 initialEffects data =
-  Task.succeed (ActionForDownload <| DownloadHead data.hash)
-    |> Effects.task
+  case data.hash of
+    Just hash ->
+      Task.succeed (ActionForDownload <| DownloadHead hash)
+        |> Effects.task
+    Nothing ->
+      Effects.none
 
 
 nextDownloadAction : (Account.Model -> List { a | hash : Hash, next : List Hash }) -> (Hash -> RootAction.Action) -> HeadHash -> Data.Model -> Maybe Hash -> RootAction.Action

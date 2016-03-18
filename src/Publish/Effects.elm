@@ -53,7 +53,7 @@ effectsPublish jsAddress action data =
         [ Signal.send jsAddress (ActionForPublish <| PublishFollowBlock payload)
             |> Task.map (always <| nextPublishFollowBlockAction payload.headHash data payload.followBlock)
             |> Effects.task
-        , if payload.headHash == data.hash then
+        , if (Just payload.headHash) == data.hash then
             publishFollowerEffect data payload.followBlock
           else
             Effects.none

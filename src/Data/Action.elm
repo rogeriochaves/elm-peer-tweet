@@ -2,6 +2,7 @@ module Data.Action (..) where
 
 import Account.Model as Account exposing (HeadHash)
 import Account.Action as AccountAction
+import Time exposing (Time)
 
 
 type alias AddTweetRequestPayload =
@@ -17,4 +18,4 @@ type Action
   | AddFollowerRequest AddFollowerRequestPayload
   | UpdateUserAccount Account.Model
   | ActionForAccount HeadHash AccountAction.Action
-  | CreateAccount
+  | CreateAccount Time

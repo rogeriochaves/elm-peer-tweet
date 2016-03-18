@@ -8,7 +8,7 @@ import Account.Model as AccountModel exposing (HeadHash, initialModel)
 import Account.Action as AccountAction exposing (..)
 import Download.Action as DownloadAction exposing (..)
 import List.Extra exposing (replaceIf)
-
+import Time exposing (inMilliseconds)
 
 update : RootAction.Action -> Model -> Model
 update action model =
@@ -26,7 +26,7 @@ update action model =
           , accounts = updateAccount model model.hash (Update account)
         }
 
-      ActionForData CreateAccount ->
+      ActionForData (CreateAccount timestamp) ->
         let
           initialModel =
             AccountModel.initialModel
@@ -34,7 +34,7 @@ update action model =
           head =
             initialModel.head
         in
-          updateIn model.hash (Update ({ initialModel | head = { head | hash = model.hash } }))
+          updateIn model.hash (Update ({ initialModel | head = { head | hash = model.hash, d = round <| inMilliseconds timestamp } }))
 
       ActionForDownload (DoneDownloadHead head) ->
         updateIn head.hash (UpdateHead head)

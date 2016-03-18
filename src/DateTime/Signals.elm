@@ -7,5 +7,5 @@ import DateTime.Action exposing (..)
 
 updateDateTime : Signal RootAction.Action
 updateDateTime =
-  (every <| 10 * second)
+  (every second)
     |> Signal.map (ActionForDateTime << Update)

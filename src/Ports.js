@@ -21,6 +21,9 @@ const addTweet = ({account, text}, resolve) =>
 const addFollower = ({account, hash}, resolve) =>
   resolve(null, FollowBlocks.add(account)(hash));
 
+const createKeys = (_, resolve) =>
+  resolve(null, createKeysWithHash());
+
 const wireDownload = (hashKey, itemKey) => (data, resolve) =>
   download(data[hashKey], (err, item) => resolve(err, { headHash: data.headHash, [itemKey]: item }));
 
@@ -41,7 +44,7 @@ export const setup = (ports) => {
   pipe('requestDownloadTweet', wireDownload('tweetHash', 'tweet'), 'downloadTweetStream', 'downloadErrorStream');
   pipe('requestDownloadFollowBlock', wireDownload('followBlockHash', 'followBlock'), 'downloadFollowBlockStream', 'downloadErrorStream');
 
-  pipe('requestCreateKeys', createKeysWithHash, 'createdKeysStream');
+  pipe('requestCreateKeys', createKeys, 'createdKeysStream');
 };
 
 export default { setup };

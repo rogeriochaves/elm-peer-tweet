@@ -4,7 +4,7 @@ import Account.Model exposing (HeadHash)
 
 
 type alias Keys =
-  { publicKey : String, privateKey : String }
+  { publicKey : String, secretKey : String }
 
 
 type alias Model =

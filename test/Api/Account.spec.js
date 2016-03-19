@@ -45,4 +45,21 @@ describe('Account', () => {
 
     expect(Account.initialAccount()).to.deep.equal({ head: { hash: '9ef39f8b577cd867b2173e450e2cb30542cc1d98', d: 1457409506204, next: [], f: [] }, tweets: [], followBlocks: [] });
   });
+
+  it('creates keys with hash', () => {
+    global.localStorage = {};
+
+    let keysWithHash = Account.createKeysWithHash();
+    let hash = keysWithHash[0];
+    let { publicKey, secretKey } = keysWithHash[1];
+
+    expect(hash).to.be.a('string');
+    expect(hash.length).to.equal(40);
+
+    expect(publicKey).to.be.a('string');
+    expect(publicKey.length).to.equal(64);
+
+    expect(secretKey).to.be.a('string');
+    expect(secretKey.length).to.equal(128);
+  });
 });

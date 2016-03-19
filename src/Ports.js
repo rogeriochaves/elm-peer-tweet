@@ -1,4 +1,4 @@
-import { initialAccount, hash } from './Api/Account';
+import { initialAccount, hash, createKeysWithHash } from './Api/Account';
 import Tweets from './Api/Tweets';
 import FollowBlocks from './Api/FollowBlocks';
 import { publish } from './Api/Publish';
@@ -40,6 +40,8 @@ export const setup = (ports) => {
   pipe('requestDownloadHead', download, 'downloadHeadStream', 'downloadErrorStream');
   pipe('requestDownloadTweet', wireDownload('tweetHash', 'tweet'), 'downloadTweetStream', 'downloadErrorStream');
   pipe('requestDownloadFollowBlock', wireDownload('followBlockHash', 'followBlock'), 'downloadFollowBlockStream', 'downloadErrorStream');
+
+  pipe('requestCreateKeys', createKeysWithHash, 'createdKeysStream');
 };
 
 export default { setup };

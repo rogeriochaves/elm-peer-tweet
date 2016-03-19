@@ -27,6 +27,12 @@ export const hash = () => {
   return null;
 };
 
+export const createKeysWithHash = () => {
+  let keys = createKeys();
+
+  return [hash(), keys];
+};
+
 export const initialAccount = () => ({
   head: {
     hash: hash(),
@@ -38,4 +44,4 @@ export const initialAccount = () => ({
   followBlocks: []
 });
 
-export default { createKeys, hash, initialAccount };
+export default { createKeys, hash, initialAccount, createKeysWithHash };

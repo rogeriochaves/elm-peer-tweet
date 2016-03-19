@@ -9,12 +9,12 @@ type alias Keys =
 
 type alias Model =
   { hash : Maybe HeadHash
-  , keys : Maybe Keys
+  , keys : Keys
   }
 
 
 initialModel : Model
 initialModel =
   { hash = Nothing
-  , keys = Nothing
+  , keys = { publicKey = "", secretKey = "" }
   }

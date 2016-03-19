@@ -9,7 +9,7 @@ update : RootAction.Action -> Model -> Model
 update action model =
   case action of
     ActionForAuthentication (DoneCreateKeys ( hash, keys )) ->
-      { model | hash = (Just hash), keys = (Just keys) }
+      { model | hash = (Just hash), keys = keys }
 
     _ ->
       model

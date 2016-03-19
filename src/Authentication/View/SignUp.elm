@@ -8,7 +8,6 @@ import Action as RootAction exposing (..)
 import Router.Routes exposing (Sitemap(..))
 import Router.Action exposing (Action(UpdatePath))
 import Authentication.Action exposing (Action(CreateKeys))
-import Authentication.Model exposing (Keys)
 import Account.Model exposing (HeadHash)
 import Data.Action exposing (Action(CreateAccount))
 
@@ -24,19 +23,14 @@ bold x =
 
 
 view : Signal.Address RootAction.Action -> Model -> Html
-view address data =
-  case data.authentication.keys of
-    Just keys ->
-      data.authentication.hash
-        |> Maybe.map (createdKeys address data keys)
-        |> Maybe.withDefault (newAccount address data)
-
-    Nothing ->
-      newAccount address data
+view address model =
+  model.authentication.hash
+    |> Maybe.map (createdKeys address model)
+    |> Maybe.withDefault (newAccount address model)
 
 
-createdKeys : Signal.Address RootAction.Action -> Model -> Keys -> HeadHash -> Html
-createdKeys address { dateTime } keys userHash =
+createdKeys : Signal.Address RootAction.Action -> Model -> HeadHash -> Html
+createdKeys address { dateTime, authentication } userHash =
   div
     []
     [ p
@@ -54,17 +48,17 @@ createdKeys address { dateTime } keys userHash =
         , text "This will only be shown once, so save it somewhere safe, specially the secret key"
         , break
         , bold "Public Key: "
-        , text keys.publicKey
+        , text authentication.keys.publicKey
         , break
         , bold "Secret Key: "
-        , text keys.secretKey
+        , text authentication.keys.secretKey
         ]
     , button [ onClick address <| ActionForData <| CreateAccount userHash dateTime.timestamp ] [ text "Continue" ]
     ]
 
 
 newAccount : Signal.Address RootAction.Action -> Model -> Html
-newAccount address data =
+newAccount address model =
   div
     []
     [ text "Do you want to create an account?"

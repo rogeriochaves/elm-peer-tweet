@@ -7,6 +7,8 @@ import Model exposing (Model)
 import Download.Model exposing (isLoading, hasError)
 import Action as RootAction exposing (..)
 import Data.Action exposing (..)
+import Router.Routes exposing (Sitemap(..))
+import Router.Action exposing (Action(UpdatePath))
 
 
 view : Signal.Address RootAction.Action -> Model -> Html
@@ -23,5 +25,10 @@ view address { download, data, dateTime } =
           ]
       else
         text "Sign in"
+
     Nothing ->
-      text "You are not logged in"
+      div
+        []
+        [ text "You are not logged in"
+        , button [ onClick address <| ActionForRouter <| UpdatePath <| CreateAccountRoute () ] [ text "Create Account" ]
+        ]

@@ -7,6 +7,7 @@ type Page
   = Timeline
   | Search
   | NotFound
+  | CreateAccount
 
 
 type alias Model =
@@ -22,6 +23,9 @@ routeToPage route =
 
     SearchRoute () ->
       Search
+
+    CreateAccountRoute () ->
+      CreateAccount
 
 
 pathToPage : String -> Page

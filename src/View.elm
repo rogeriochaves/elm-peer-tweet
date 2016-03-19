@@ -7,6 +7,7 @@ import Topbar.View.Topbar as Topbar
 import Timeline.View.Timeline as Timeline
 import Search.View.Search as SearchView
 import Authentication.View.Login as Login
+import Authentication.View.SignUp as SignUp
 import Action exposing (Action)
 import Model exposing (Model)
 import Data.Model exposing (getUserAccount)
@@ -16,12 +17,17 @@ import Router.Model exposing (Page(..))
 
 view : Signal.Address Action -> Model -> Html
 view address model =
-  let userHash = model.data.hash
-      userAccount = getUserAccount model.data
+  let
+    userHash =
+      model.data.hash
+
+    userAccount =
+      getUserAccount model.data
   in
-    case (userHash, userAccount) of
-      (Just hash, Just account) ->
+    case ( userHash, userAccount ) of
+      ( Just hash, Just account ) ->
         loggedInView address model account
+
       _ ->
         loggedOutView address model
 
@@ -51,7 +57,7 @@ contentView address model account =
     Search ->
       SearchView.view address model account
 
-    NotFound ->
+    _ ->
       div
         []
         [ text "NotFound" ]
@@ -59,4 +65,9 @@ contentView address model account =
 
 loggedOutView : Signal.Address Action -> Model -> Html
 loggedOutView address model =
-  Login.view address model
+  case model.router.page of
+    CreateAccount ->
+      SignUp.view address model
+
+    _ ->
+      Login.view address model

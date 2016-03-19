@@ -14,6 +14,7 @@ import Data.Ports exposing (accountInput)
 import Publish.Ports exposing (requestPublish, publishHeadInput, publishTweetInput, publishFollowBlockInput)
 import Download.Ports exposing (requestDownload, downloadErrorInput, downloadHeadInput, downloadTweetInput, downloadFollowBlockInput)
 import DateTime.Signals exposing (updateDateTime)
+import Authentication.Ports exposing (createdKeysInput)
 
 
 -- App starting
@@ -33,6 +34,7 @@ inputs =
   , downloadTweetInput
   , downloadFollowBlockInput
   , updateDateTime
+  , createdKeysInput
   ]
 
 

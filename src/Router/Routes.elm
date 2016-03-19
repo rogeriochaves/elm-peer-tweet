@@ -7,6 +7,7 @@ import String
 type Sitemap
   = TimelineRoute ()
   | SearchRoute ()
+  | CreateAccountRoute ()
 
 
 timelineRoute : Route Sitemap
@@ -19,9 +20,14 @@ searchRoute =
   SearchRoute := static "search"
 
 
+createAccountRoute : Route Sitemap
+createAccountRoute =
+  CreateAccountRoute := static "account" <> "create"
+
+
 sitemap : Router Sitemap
 sitemap =
-  router [ timelineRoute, searchRoute ]
+  router [ timelineRoute, searchRoute, createAccountRoute ]
 
 
 match : String -> Maybe Sitemap
@@ -39,5 +45,8 @@ route r =
 
         SearchRoute () ->
           reverse searchRoute []
+
+        CreateAccountRoute () ->
+          reverse createAccountRoute []
   in
     "#" ++ route

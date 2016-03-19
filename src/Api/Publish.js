@@ -1,15 +1,16 @@
 import { dht } from './Utils';
-import { getKeys, hash as head } from './Account';
+import { hash as head } from './Account';
 import ed from 'ed25519-supercop';
+import { getLocalStorage } from './Utils';
 
 const hexBuffer = (value) =>
   Buffer(value, 'hex');
 
 const optionsFor = (item) =>
-  item === head() ? { k: hexBuffer(getKeys().publicKey), sign, seq: 1 } : {};
+  item === head() ? { k: hexBuffer(getLocalStorage().publicKey), sign, seq: 1 } : {};
 
 const sign = (buf) =>
-  ed.sign(buf, hexBuffer(getKeys().publicKey), hexBuffer(getKeys().secretKey));
+  ed.sign(buf, hexBuffer(getLocalStorage().publicKey), hexBuffer(getLocalStorage().secretKey));
 
 const encodeTimestamp = (time) => {
   const length = Math.ceil(Math.log(time) / Math.log(2) / 8);

@@ -2,13 +2,15 @@ module Authentication.View.SignUp (view) where
 
 import Html exposing (Html, div, p, br, b, input, text, button)
 import Html.Events exposing (onClick)
-import Action as RootAction exposing (Action(ActionForAuthentication, ActionForRouter))
+import Action as RootAction exposing (Action(ActionForAuthentication, ActionForRouter, ActionForData))
 import Model exposing (Model)
 import Action as RootAction exposing (..)
 import Router.Routes exposing (Sitemap(..))
 import Router.Action exposing (Action(UpdatePath))
 import Authentication.Action exposing (Action(CreateKeys))
 import Authentication.Model exposing (Keys)
+import Account.Model exposing (HeadHash)
+import Data.Action exposing (Action(CreateAccount))
 
 
 break : Html
@@ -25,21 +27,23 @@ view : Signal.Address RootAction.Action -> Model -> Html
 view address data =
   case data.authentication.keys of
     Just keys ->
-      createdKeys address data keys
+      data.authentication.hash
+        |> Maybe.map (createdKeys address data keys)
+        |> Maybe.withDefault (newAccount address data)
 
     Nothing ->
       newAccount address data
 
 
-createdKeys : Signal.Address RootAction.Action -> Model -> Keys -> Html
-createdKeys address { authentication } keys =
+createdKeys : Signal.Address RootAction.Action -> Model -> Keys -> HeadHash -> Html
+createdKeys address { dateTime } keys userHash =
   div
     []
     [ p
         []
         [ text "Congratulations, your account hash is:"
         , break
-        , text <| Maybe.withDefault "" authentication.hash
+        , text userHash
         , break
         , text "Share this hash so people can follow you"
         ]
@@ -55,7 +59,7 @@ createdKeys address { authentication } keys =
         , bold "Secret Key: "
         , text keys.secretKey
         ]
-    , button [ onClick address <| NoOp ] [ text "Continue" ]
+    , button [ onClick address <| ActionForData <| CreateAccount userHash dateTime.timestamp ] [ text "Continue" ]
     ]
 
 

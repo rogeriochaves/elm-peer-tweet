@@ -18,4 +18,4 @@ type Action
   | AddFollowerRequest AddFollowerRequestPayload
   | UpdateUserAccount Account.Model
   | ActionForAccount HeadHash AccountAction.Action
-  | CreateAccount Time
+  | CreateAccount HeadHash Time

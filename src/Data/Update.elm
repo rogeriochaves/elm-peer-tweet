@@ -10,6 +10,7 @@ import Download.Action as DownloadAction exposing (..)
 import List.Extra exposing (replaceIf)
 import Time exposing (inMilliseconds)
 
+
 update : RootAction.Action -> Model -> Model
 update action model =
   let
@@ -23,12 +24,13 @@ update action model =
       ActionForData (UpdateUserAccount account) ->
         { model
           | hash = (Just account.head.hash)
-          , accounts = model.hash
-                        |> Maybe.map (\hash -> updateAccount model hash (Update account))
-                        |> Maybe.withDefault model.accounts
+          , accounts =
+              model.hash
+                |> Maybe.map (\hash -> updateAccount model hash (Update account))
+                |> Maybe.withDefault model.accounts
         }
 
-      ActionForData (CreateAccount timestamp) ->
+      ActionForData (CreateAccount hash timestamp) ->
         let
           initialModel =
             AccountModel.initialModel
@@ -36,9 +38,10 @@ update action model =
           head =
             initialModel.head
 
-          hash = model.hash |> Maybe.withDefault ""
+          updatedModel =
+            updateIn hash (Update ({ initialModel | head = { head | hash = hash, d = round <| inMilliseconds timestamp } }))
         in
-          updateIn hash (Update ({ initialModel | head = { head | hash = hash, d = round <| inMilliseconds timestamp } }))
+          { updatedModel | hash = (Just hash) }
 
       ActionForDownload (DoneDownloadHead head) ->
         updateIn head.hash (UpdateHead head)

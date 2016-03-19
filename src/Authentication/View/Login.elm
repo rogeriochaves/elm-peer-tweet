@@ -21,7 +21,7 @@ view address { download, data, dateTime } =
         div
           []
           [ text "We could not retrieve account data from the network, do you want to start a new account? This means you will lost your old tweets"
-          , button [ onClick address <| ActionForData <| CreateAccount dateTime.timestamp ] [ text "Ok" ]
+          , button [ onClick address <| ActionForData <| CreateAccount userHash dateTime.timestamp ] [ text "Ok" ]
           ]
       else
         text "Sign in"

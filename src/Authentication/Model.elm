@@ -13,8 +13,8 @@ type alias Model =
   }
 
 
-initialModel : Maybe String -> Model
-initialModel userHash =
+initialModel : Model
+initialModel =
   { hash = Nothing
   , keys = Nothing
   }

@@ -14,6 +14,8 @@ import Download.Update as Download
 import Download.Effects as DownloadEffects
 import DateTime.Update as DateTime
 import Search.Update as Search
+import Authentication.Update as Authentication
+import Authentication.Effects as AuthenticationEffects
 
 
 update : Signal.Address Action -> Action -> Model -> ( Model, Effects Action )
@@ -31,6 +33,7 @@ modelUpdate action model =
     , download = Download.update action model.download
     , dateTime = DateTime.update action model.dateTime
     , search = Search.update action model.search
+    , authentication = Authentication.update action model.authentication
   }
 
 
@@ -41,4 +44,5 @@ effectsUpdate jsAddress action model =
     , DataEffects.effects jsAddress action model.data
     , PublishEffects.effects jsAddress action model.data
     , DownloadEffects.effects jsAddress action model.data
+    , AuthenticationEffects.effects jsAddress action
     ]

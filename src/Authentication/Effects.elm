@@ -1,14 +1,13 @@
 module Authentication.Effects (effects) where
 
 import Action as RootAction exposing (..)
-import Authentication.Model exposing (Model)
 import Authentication.Action exposing (Action(CreateKeys))
 import Task
 import Effects exposing (Effects)
 
 
-effects : Signal.Address RootAction.Action -> RootAction.Action -> Model -> Effects RootAction.Action
-effects jsAddress action _ =
+effects : Signal.Address RootAction.Action -> RootAction.Action -> Effects RootAction.Action
+effects jsAddress action =
   case action of
     ActionForAuthentication CreateKeys ->
       Signal.send jsAddress (ActionForAuthentication CreateKeys)

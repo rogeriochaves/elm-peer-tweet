@@ -18,6 +18,7 @@ const initialPorts =
   , downloadHeadStream: null
   , downloadTweetStream: null
   , downloadFollowBlockStream: null
+  , createdKeysStream: null
   };
 
 const App = Elm.embed(Elm.Main, document.getElementById('main'), initialPorts);

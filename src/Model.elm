@@ -10,6 +10,7 @@ import Download.Model as Download
 import DateTime.Model as DateTime
 import Search.Model as Search
 import Download.Effects as DownloadEffects
+import Authentication.Model as Authentication
 
 
 type alias Model =
@@ -20,6 +21,7 @@ type alias Model =
   , download : Download.Model
   , dateTime : DateTime.Model
   , search : Search.Model
+  , authentication : Authentication.Model
   }
 
 
@@ -34,6 +36,7 @@ initialModel path userHash =
       , download = Download.initialModel
       , dateTime = DateTime.initialModel
       , search = Search.initialModel
+      , authentication = Authentication.initialModel
       }
   in
     ( model, DownloadEffects.initialEffects model.data )

@@ -33,6 +33,13 @@ export const createKeysWithHash = () => {
   return [hash(), keys];
 };
 
+export const setKeys = ({ publicKey, secretKey }) => {
+  getLocalStorage().publicKey = publicKey;
+  getLocalStorage().secretKey = secretKey;
+
+  return hash();
+};
+
 export const initialAccount = () => ({
   head: {
     hash: hash(),
@@ -44,4 +51,4 @@ export const initialAccount = () => ({
   followBlocks: []
 });
 
-export default { createKeys, hash, initialAccount, createKeysWithHash };
+export default { createKeys, hash, initialAccount, createKeysWithHash, setKeys };

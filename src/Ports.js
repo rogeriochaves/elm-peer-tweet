@@ -1,4 +1,4 @@
-import { initialAccount, hash, createKeysWithHash } from './Api/Account';
+import { initialAccount, hash, createKeysWithHash, setKeys } from './Api/Account';
 import Tweets from './Api/Tweets';
 import FollowBlocks from './Api/FollowBlocks';
 import { publish } from './Api/Publish';
@@ -24,6 +24,9 @@ const addFollower = ({account, hash}, resolve) =>
 const createKeys = (_, resolve) =>
   resolve(null, createKeysWithHash());
 
+const login = (keys, resolve) =>
+  resolve(null, setKeys(keys));
+
 const wireDownload = (hashKey, itemKey) => (data, resolve) =>
   download(data[hashKey], (err, item) => resolve(err, { headHash: data.headHash, [itemKey]: item }));
 
@@ -45,6 +48,7 @@ export const setup = (ports) => {
   pipe('requestDownloadFollowBlock', wireDownload('followBlockHash', 'followBlock'), 'downloadFollowBlockStream', 'downloadErrorStream');
 
   pipe('requestCreateKeys', createKeys, 'createdKeysStream');
+  pipe('requestLogin', login, 'doneLoginStream');
 };
 
 export default { setup };

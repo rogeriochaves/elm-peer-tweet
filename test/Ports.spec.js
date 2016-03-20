@@ -5,7 +5,8 @@ import Ports from '../src/Ports';
 describe('Ports', () => {
   let ports, requestAddTweet, requestAddFollower, receivedAccount, requestPublishHead, receivedPublishHead, requestPublishTweet, receivedPublishTweet,
     requestPublishFollowBlock, receivedPublishFollowBlock, requestDownloadHead, receivedDownloadHead, requestDownloadTweet, receivedDownloadTweet,
-    requestDownloadFollowBlock, receivedDownloadFollowBlock, downloadErrorStream, receivedDownloadError;
+    requestDownloadFollowBlock, receivedDownloadFollowBlock, downloadErrorStream, receivedDownloadError, requestCreateKeys,
+    receivedCreatedKeys, requestLogin, receivedDoneLogin;
 
   beforeEach(() => {
     global.localStorage = {
@@ -65,6 +66,18 @@ describe('Ports', () => {
       },
       downloadFollowBlockStream: {
         send: (data) => { receivedDownloadFollowBlock = data }
+      },
+      requestCreateKeys: {
+        subscribe: (fn) => { requestCreateKeys = fn }
+      },
+      createdKeysStream: {
+        send: (data) => { receivedCreatedKeys = data }
+      },
+      requestLogin: {
+        subscribe: (fn) => { requestLogin = fn }
+      },
+      doneLoginStream: {
+        send: (data) => { receivedDoneLogin = data }
       }
     };
   });
@@ -148,11 +161,19 @@ describe('Ports', () => {
     expect(receivedDownloadTweet).to.deep.equal({ headHash: 'foo', tweet: { hash:'bar' } });
   });
 
-  it('downloads followBlock by hash, sending followBlock back', () => {
+  it('creates keys, sending the hash and the keys back', () => {
     Ports.setup(ports);
 
-    requestDownloadFollowBlock({ headHash: 'foo', followBlockHash: 'bar' });
+    requestCreateKeys();
 
-    expect(receivedDownloadFollowBlock).to.deep.equal({ headHash: 'foo', followBlock: { hash:'bar' } });
+    expect(receivedCreatedKeys).to.deep.equal(['31af8c3a1793759dbe962450f5453f88720ab017', global.localStorage]);
+  });
+
+  it('request login, setting the public and secret keys, and sending the hash back', () => {
+    Ports.setup(ports);
+
+    requestLogin({publicKey: '4ab783316d341ebcfc4476fafb5d6b330faf61ece2932f77f82b08d9768da81a', secretKey: '08a3287eebbe8dada17052020d409e4e9c3974ba3722f913744a9b819650e0688d65631fdc1042bd22127dcd9ea69bd990af8d1eda378bb083d5fb76b60304cd'});
+
+    expect(receivedDoneLogin).to.deep.equal('61d323b6e262992538cc514c2d209deec0c519fe');
   });
 });

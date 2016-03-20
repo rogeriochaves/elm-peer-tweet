@@ -11,7 +11,7 @@
     "test": "npm run test-elm && npm run test-js",
     "test-js": "./node_modules/mocha/bin/mocha --compilers js:babel-core/register test/*.js test/**/*.js",
     "test-elm": "./node_modules/elm-test/bin/elm-test test/TestRunner.elm",
-    "build-ports": "elm-make src/**/Ports.elm --output /dev/null"
+    "build-ports": "rm -r elm-stuff/build-artifacts; elm-make src/**/Ports.elm --output /dev/null"
   },
   "author": "",
   "license": "ISC",

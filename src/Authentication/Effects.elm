@@ -9,8 +9,8 @@ import Effects exposing (Effects)
 effects : Signal.Address RootAction.Action -> RootAction.Action -> Effects RootAction.Action
 effects jsAddress action =
   case action of
-    ActionForAuthentication CreateKeys ->
-      Signal.send jsAddress (ActionForAuthentication CreateKeys)
+    ActionForAuthentication authenticationAction ->
+      Signal.send jsAddress (ActionForAuthentication authenticationAction)
         |> Task.map (always RootAction.NoOp)
         |> Effects.task
 

@@ -30,13 +30,13 @@ initialModel path userHash =
   let
     model =
       { router = Router.initialModel path
-      , accounts = Accounts.initialModel userHash
+      , accounts = Accounts.initialModel
       , newTweet = NewTweet.initialModel
       , publish = Publish.initialModel
       , download = Download.initialModel
       , dateTime = DateTime.initialModel
       , search = Search.initialModel
-      , authentication = Authentication.initialModel
+      , authentication = Authentication.initialModel userHash
       }
   in
     ( model, DownloadEffects.initialEffects model.authentication )

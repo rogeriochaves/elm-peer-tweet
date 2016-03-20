@@ -9,8 +9,8 @@ type alias Model =
   List Account.Model
 
 
-initialModel : Maybe String -> Model
-initialModel userHash =
+initialModel : Model
+initialModel =
   []
 
 

@@ -13,8 +13,8 @@ type alias Model =
   }
 
 
-initialModel : Model
-initialModel =
-  { hash = Nothing
+initialModel : Maybe String -> Model
+initialModel hash =
+  { hash = hash
   , keys = { publicKey = "", secretKey = "" }
   }

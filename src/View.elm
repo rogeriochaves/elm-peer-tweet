@@ -19,10 +19,10 @@ view : Signal.Address Action -> Model -> Html
 view address model =
   let
     userHash =
-      model.data.hash
+      model.authentication.hash
 
     userAccount =
-      getUserAccount model.data
+      getUserAccount model
   in
     case ( userHash, userAccount ) of
       ( Just hash, Just account ) ->
@@ -49,7 +49,7 @@ contentView address model account =
     Timeline ->
       div
         []
-        [ text <| toString model.data.hash
+        [ text <| toString model.authentication.hash
         , Topbar.view address model account
         , Timeline.view model account
         ]

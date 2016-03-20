@@ -42,7 +42,7 @@ effectsUpdate jsAddress action model =
   Effects.batch
     [ RouterEffects.effects action model.router
     , DataEffects.effects jsAddress action model.data
-    , PublishEffects.effects jsAddress action model.data
-    , DownloadEffects.effects jsAddress action model.data
+    , PublishEffects.effects jsAddress action model
+    , DownloadEffects.effects jsAddress action model
     , AuthenticationEffects.effects jsAddress action
     ]

@@ -39,4 +39,4 @@ initialModel path userHash =
       , authentication = Authentication.initialModel
       }
   in
-    ( model, DownloadEffects.initialEffects model.data )
+    ( model, DownloadEffects.initialEffects model.authentication )

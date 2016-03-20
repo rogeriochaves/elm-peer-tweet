@@ -15,20 +15,14 @@ update : RootAction.Action -> Model -> Model
 update action model =
   let
     updateIn =
-      updateAccounts model
+      updateAccount model
   in
     case action of
       ActionForData (ActionForAccount hash accountAction) ->
         updateIn hash accountAction
 
       ActionForData (UpdateUserAccount account) ->
-        { model
-          | hash = (Just account.head.hash)
-          , accounts =
-              model.hash
-                |> Maybe.map (\hash -> updateAccount model hash (Update account))
-                |> Maybe.withDefault model.accounts
-        }
+        updateAccount model account.head.hash (Update account)
 
       ActionForData (CreateAccount hash timestamp) ->
         let
@@ -37,11 +31,8 @@ update action model =
 
           head =
             initialModel.head
-
-          updatedModel =
-            updateIn hash (Update ({ initialModel | head = { head | hash = hash, d = round <| inMilliseconds timestamp } }))
         in
-          { updatedModel | hash = (Just hash) }
+          updateIn hash (Update ({ initialModel | head = { head | hash = hash, d = round <| inMilliseconds timestamp } }))
 
       ActionForDownload (DoneDownloadHead head) ->
         updateIn head.hash (UpdateHead head)
@@ -56,22 +47,15 @@ update action model =
         model
 
 
-updateAccounts : Model -> HeadHash -> AccountAction.Action -> Model
-updateAccounts model hash action =
-  { model
-    | accounts = updateAccount model hash action
-  }
-
-
 updateAccount : Model -> HeadHash -> AccountAction.Action -> List AccountModel.Model
-updateAccount model hash action =
+updateAccount accounts hash action =
   let
     foundAccount =
-      findAccount model (Just hash)
+      findAccount accounts (Just hash)
   in
     case foundAccount of
       Just account ->
-        replaceIf (\x -> (Just x.head.hash) == (Just hash)) (AccountUpdate.update action account) model.accounts
+        replaceIf (\x -> (Just x.head.hash) == (Just hash)) (AccountUpdate.update action account) accounts
 
       Nothing ->
-        AccountUpdate.update action AccountModel.initialModel :: model.accounts
+        AccountUpdate.update action AccountModel.initialModel :: accounts

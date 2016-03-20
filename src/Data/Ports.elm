@@ -7,8 +7,6 @@ import Ports exposing (jsMailbox, isJust, filterEmpty)
 
 
 port accountStream : Signal (Maybe Account.Model)
-
-
 port requestAddTweet : Signal (Maybe AddTweetRequestPayload)
 port requestAddTweet =
   let

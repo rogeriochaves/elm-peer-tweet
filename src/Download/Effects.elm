@@ -3,36 +3,37 @@ module Download.Effects (effects, initialEffects) where
 import Action as RootAction exposing (..)
 import Download.Action as Download exposing (..)
 import Account.Model as Account
-import Data.Model as Data
 import Effects exposing (Effects)
 import Task exposing (Task)
 import Account.Model exposing (Hash, HeadHash, nextHash, nextHashToDownload)
 import Maybe exposing (andThen)
 import Data.Model as Data exposing (findAccount, getUserAccount)
+import Authentication.Model as Authentication
 
 
-effects : Signal.Address RootAction.Action -> RootAction.Action -> Data.Model -> Effects RootAction.Action
-effects jsAddress action account =
+effects : Signal.Address RootAction.Action -> RootAction.Action -> { a | data : Data.Model, authentication : Authentication.Model } -> Effects RootAction.Action
+effects jsAddress action model =
   case action of
     ActionForDownload syncAction ->
-      effectsDownload jsAddress syncAction account
+      effectsDownload jsAddress syncAction model
 
     _ ->
       Effects.none
 
 
-effectsDownload : Signal.Address RootAction.Action -> Download.Action -> Data.Model -> Effects RootAction.Action
-effectsDownload jsAddress action data =
+effectsDownload : Signal.Address RootAction.Action -> Download.Action -> { a | data : Data.Model, authentication : Authentication.Model } -> Effects RootAction.Action
+effectsDownload jsAddress action model =
   case action of
     BeginDownload ->
-      let action =
-        data.hash
-          |> Maybe.map (\hash -> Effects.task <| Task.succeed (ActionForDownload <| DownloadHead hash))
-          |> Maybe.withDefault Effects.none
+      let
+        action =
+          model.authentication.hash
+            |> Maybe.map (\hash -> Effects.task <| Task.succeed (ActionForDownload <| DownloadHead hash))
+            |> Maybe.withDefault Effects.none
       in
-      getUserAccount data
-        |> Maybe.map (always action)
-        |> Maybe.withDefault Effects.none
+        getUserAccount model
+          |> Maybe.map (always action)
+          |> Maybe.withDefault Effects.none
 
     DownloadHead hash ->
       Signal.send jsAddress (ActionForDownload <| DownloadHead hash)
@@ -41,30 +42,30 @@ effectsDownload jsAddress action data =
 
     DoneDownloadHead head ->
       Effects.batch
-        [ Task.succeed (nextDownloadTweetAction head.hash data <| nextHash (Just head))
+        [ Task.succeed (nextDownloadTweetAction head.hash model.data <| nextHash (Just head))
             |> Effects.task
         , downloadFirstFollowBlockEffect head
         ]
 
     DownloadTweet { headHash, tweetHash } ->
-      Signal.send jsAddress (nextDownloadTweetAction headHash data <| Just tweetHash)
+      Signal.send jsAddress (nextDownloadTweetAction headHash model.data <| Just tweetHash)
         |> Task.map (always NoOp)
         |> Effects.task
 
     DoneDownloadTweet { headHash, tweet } ->
-      Task.succeed (nextDownloadTweetAction headHash data <| nextHash (Just tweet))
+      Task.succeed (nextDownloadTweetAction headHash model.data <| nextHash (Just tweet))
         |> Effects.task
 
     DownloadFollowBlock { headHash, followBlockHash } ->
-      Signal.send jsAddress (nextDownloadFollowBlockAction headHash data <| Just followBlockHash)
+      Signal.send jsAddress (nextDownloadFollowBlockAction headHash model.data <| Just followBlockHash)
         |> Task.map (always NoOp)
         |> Effects.task
 
     DoneDownloadFollowBlock { headHash, followBlock } ->
       Effects.batch
-        [ Task.succeed (nextDownloadFollowBlockAction headHash data <| nextHash (Just followBlock))
+        [ Task.succeed (nextDownloadFollowBlockAction headHash model.data <| nextHash (Just followBlock))
             |> Effects.task
-        , if (Just headHash) == data.hash then
+        , if (Just headHash) == model.authentication.hash then
             downloadFollowerEffect followBlock
           else
             Effects.none
@@ -74,12 +75,13 @@ effectsDownload jsAddress action data =
       Effects.none
 
 
-initialEffects : Data.Model -> Effects RootAction.Action
+initialEffects : Authentication.Model -> Effects RootAction.Action
 initialEffects data =
   case data.hash of
     Just hash ->
       Task.succeed (ActionForDownload <| DownloadHead hash)
         |> Effects.task
+
     Nothing ->
       Effects.none
 

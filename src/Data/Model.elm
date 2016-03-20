@@ -2,31 +2,28 @@ module Data.Model (..) where
 
 import Account.Model as Account
 import Maybe exposing (andThen)
+import Authentication.Model as AuthenticationModel
 
 
 type alias Model =
-  { hash : Maybe Account.HeadHash
-  , accounts : List Account.Model
-  }
+  List Account.Model
 
 
 initialModel : Maybe String -> Model
 initialModel userHash =
-  { hash = userHash
-  , accounts = []
-  }
+  []
 
 
 findAccount : Model -> Maybe Account.HeadHash -> Maybe Account.Model
 findAccount model hash =
   let
     find hash =
-      List.filter (\a -> a.head.hash == hash) model.accounts
+      List.filter (\a -> a.head.hash == hash) model
         |> List.head
   in
     hash `andThen` find
 
 
-getUserAccount : Model -> Maybe Account.Model
+getUserAccount : { a | authentication : AuthenticationModel.Model, data : Model } -> Maybe Account.Model
 getUserAccount model =
-  findAccount model model.hash
+  findAccount model.data model.authentication.hash

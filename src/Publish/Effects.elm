@@ -8,31 +8,32 @@ import Effects exposing (Effects)
 import Task exposing (Task)
 import Account.Model exposing (HeadHash, TweetHash, FollowBlockHash, Hash, FollowBlock, nextHash, firstFollowBlock, findItem)
 import Maybe exposing (andThen)
+import Authentication.Model as Authentication
 
 
-effects : Signal.Address RootAction.Action -> RootAction.Action -> Data.Model -> Effects RootAction.Action
-effects jsAddress action data =
+effects : Signal.Address RootAction.Action -> RootAction.Action -> { a | data : Data.Model, authentication : Authentication.Model } -> Effects RootAction.Action
+effects jsAddress action model =
   case action of
     ActionForPublish syncAction ->
-      effectsPublish jsAddress syncAction data
+      effectsPublish jsAddress syncAction model
 
     _ ->
       Effects.none
 
 
-effectsPublish : Signal.Address RootAction.Action -> Publish.Action -> Data.Model -> Effects RootAction.Action
-effectsPublish jsAddress action data =
+effectsPublish : Signal.Address RootAction.Action -> Publish.Action -> { a | data : Data.Model, authentication : Authentication.Model } -> Effects RootAction.Action
+effectsPublish jsAddress action model =
   case action of
     BeginPublish ->
-      Task.succeed (Maybe.withDefault NoOp <| Maybe.map (ActionForPublish << PublishHead << .head) (getUserAccount data))
+      Task.succeed (Maybe.withDefault NoOp <| Maybe.map (ActionForPublish << PublishHead << .head) (getUserAccount model))
         |> Effects.task
 
     PublishHead head ->
       Effects.batch
         [ Signal.send jsAddress (ActionForPublish <| PublishHead head)
-            |> Task.map (always <| nextPublishTweetAction head.hash data head)
+            |> Task.map (always <| nextPublishTweetAction head.hash model.data head)
             |> Effects.task
-        , publishFirstFollowBlockEffect data head
+        , publishFirstFollowBlockEffect model.data head
         ]
 
     DonePublishHead _ ->
@@ -41,7 +42,7 @@ effectsPublish jsAddress action data =
 
     PublishTweet payload ->
       Signal.send jsAddress (ActionForPublish <| PublishTweet payload)
-        |> Task.map (always <| nextPublishTweetAction payload.headHash data payload.tweet)
+        |> Task.map (always <| nextPublishTweetAction payload.headHash model.data payload.tweet)
         |> Effects.task
 
     DonePublishTweet _ ->
@@ -51,10 +52,10 @@ effectsPublish jsAddress action data =
     PublishFollowBlock payload ->
       Effects.batch
         [ Signal.send jsAddress (ActionForPublish <| PublishFollowBlock payload)
-            |> Task.map (always <| nextPublishFollowBlockAction payload.headHash data payload.followBlock)
+            |> Task.map (always <| nextPublishFollowBlockAction payload.headHash model.data payload.followBlock)
             |> Effects.task
-        , if (Just payload.headHash) == data.hash then
-            publishFollowerEffect data payload.followBlock
+        , if (Just payload.headHash) == model.authentication.hash then
+            publishFollowerEffect model.data payload.followBlock
           else
             Effects.none
         ]

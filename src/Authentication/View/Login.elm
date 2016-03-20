@@ -15,7 +15,7 @@ import Authentication.Action exposing (Action(UpdatePublicKey, UpdateSecretKey, 
 
 view : Signal.Address RootAction.Action -> Model -> Html
 view address model =
-  case model.data.hash of
+  case model.authentication.hash of
     Just userHash ->
       if isLoading model.download userHash then
         text "Signing in..."

@@ -38,18 +38,21 @@ port requestDownloadHead =
 
 downloadErrorInput : Signal RootAction.Action
 downloadErrorInput =
-  let action ( hash, errorMessage ) =
-    ActionForDownload <| ErrorDownload hash errorMessage
+  let
+    action ( hash, errorMessage ) =
+      ActionForDownload <| ErrorDownload hash errorMessage
   in
-  Signal.map
-    (Maybe.map action >> Maybe.withDefault NoOp)
-    downloadErrorStream
+    Signal.map
+      (Maybe.map action >> Maybe.withDefault NoOp)
+      downloadErrorStream
+
 
 downloadHeadInput : Signal RootAction.Action
 downloadHeadInput =
   Signal.map
     (Maybe.map (ActionForDownload << DoneDownloadHead) >> Maybe.withDefault NoOp)
     downloadHeadStream
+
 
 port downloadTweetStream : Signal (Maybe TweetData)
 port requestDownloadTweet : Signal (Maybe TweetIdentifier)

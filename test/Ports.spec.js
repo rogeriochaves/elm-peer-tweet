@@ -3,10 +3,7 @@ import { spy } from 'sinon';
 import Ports from '../src/Ports';
 
 describe('Ports', () => {
-  let ports, requestAddTweet, requestAddFollower, receivedAccount, requestPublishHead, receivedPublishHead, requestPublishTweet, receivedPublishTweet,
-    requestPublishFollowBlock, receivedPublishFollowBlock, requestDownloadHead, receivedDownloadHead, requestDownloadTweet, receivedDownloadTweet,
-    requestDownloadFollowBlock, receivedDownloadFollowBlock, downloadErrorStream, receivedDownloadError, requestCreateKeys,
-    receivedCreatedKeys, requestLogin, receivedDoneLogin;
+  let ports, requests, responses;
 
   beforeEach(() => {
     global.localStorage = {
@@ -18,68 +15,23 @@ describe('Ports', () => {
     Ports.__Rewire__('publish', (item, fn) => fn(null, item.hash));
     Ports.__Rewire__('download', (hash, fn) => fn(null, { hash: hash } ));
 
-    ports = {
-      requestAddTweet: {
-        subscribe: (fn) => { requestAddTweet = fn }
-      },
-      requestAddFollower: {
-        subscribe: (fn) => { requestAddFollower = fn }
-      },
-      accountStream: {
-        send: (data) => { receivedAccount = data }
-      },
-      requestPublishHead: {
-        subscribe: (fn) => { requestPublishHead = fn }
-      },
-      publishHeadStream: {
-        send: (data) => { receivedPublishHead = data }
-      },
-      requestPublishTweet: {
-        subscribe: (fn) => { requestPublishTweet = fn }
-      },
-      publishTweetStream: {
-        send: (data) => { receivedPublishTweet = data }
-      },
-      requestPublishFollowBlock: {
-        subscribe: (fn) => { requestPublishFollowBlock = fn }
-      },
-      publishFollowBlockStream: {
-        send: (data) => { receivedPublishFollowBlock = data }
-      },
-      requestDownloadHead: {
-        subscribe: (fn) => { requestDownloadHead = fn }
-      },
-      downloadErrorStream: {
-        send: (data) => { receivedDownloadError = data }
-      },
-      downloadHeadStream: {
-        send: (data) => { receivedDownloadHead = data }
-      },
-      requestDownloadTweet: {
-        subscribe: (fn) => { requestDownloadTweet = fn }
-      },
-      downloadTweetStream: {
-        send: (data) => { receivedDownloadTweet = data }
-      },
-      requestDownloadFollowBlock: {
-        subscribe: (fn) => { requestDownloadFollowBlock = fn }
-      },
-      downloadFollowBlockStream: {
-        send: (data) => { receivedDownloadFollowBlock = data }
-      },
-      requestCreateKeys: {
-        subscribe: (fn) => { requestCreateKeys = fn }
-      },
-      createdKeysStream: {
-        send: (data) => { receivedCreatedKeys = data }
-      },
-      requestLogin: {
-        subscribe: (fn) => { requestLogin = fn }
-      },
-      doneLoginStream: {
-        send: (data) => { receivedDoneLogin = data }
-      }
-    };
+    requests = {};
+    responses = {};
+    ports = {};
+
+    const addInboundPort = (name) =>
+      ports[name] = {subscribe: (fn) => { requests[name] = fn }};
+
+    const addOutboundPort = (name) =>
+      ports[name] = {send: (data) => { responses[name] = data }};
+
+    [ 'requestAddTweet', 'requestAddFollower', 'requestPublishHead', 'requestPublishTweet', 'requestPublishFollowBlock'
+    , 'requestDownloadHead', 'requestDownloadTweet', 'requestDownloadFollowBlock', 'requestCreateKeys', 'requestLogin' ].
+      forEach(addInboundPort);
+
+    [ 'accountStream', 'publishHeadStream', 'publishTweetStream', 'publishFollowBlockStream', 'downloadErrorStream'
+    , 'downloadHeadStream', 'downloadTweetStream', 'downloadFollowBlockStream', 'createdKeysStream', 'doneLoginStream' ].
+      forEach(addOutboundPort);
   });
 
   it('adds a tweet, sending the account back to the accountStream port', () => {
@@ -87,9 +39,9 @@ describe('Ports', () => {
 
     Date.now = () => 1457409506204;
 
-    requestAddTweet({ account: { head: { hash: 'myhash', next: [] }, tweets: [] }, text: 'hello world' });
+    requests['requestAddTweet']({ account: { head: { hash: 'myhash', next: [] }, tweets: [] }, text: 'hello world' });
 
-    expect(receivedAccount).to.deep.equal({
+    expect(responses['accountStream']).to.deep.equal({
       head: { hash: 'myhash', d: 1457409506204, next: ['6048a8a05b82c3ad229e897788f339c02449660e'] },
       tweets: [
         { hash: '6048a8a05b82c3ad229e897788f339c02449660e', d: 1457409506204, t: 'hello world', next: [] }
@@ -102,9 +54,9 @@ describe('Ports', () => {
 
     Date.now = () => 1457409506204;
 
-    requestAddFollower({ account: { head: { hash: 'myhash', next: [], f: [] }, followBlocks: [] }, hash: '6048a8a05b82c3ad229e897788f339c02449660e' });
+    requests['requestAddFollower']({ account: { head: { hash: 'myhash', next: [], f: [] }, followBlocks: [] }, hash: '6048a8a05b82c3ad229e897788f339c02449660e' });
 
-    expect(receivedAccount).to.deep.equal({
+    expect(responses['accountStream']).to.deep.equal({
       head: { hash: 'myhash', d: 1457409506204, next: [], f: ['d703c79f640a8443d288e58d9f31dae2df4a3179'] },
       followBlocks: [
         { hash: 'd703c79f640a8443d288e58d9f31dae2df4a3179', l: ['6048a8a05b82c3ad229e897788f339c02449660e'], next: [] }
@@ -115,65 +67,65 @@ describe('Ports', () => {
   it('publishes head, sending the hashes of account being published back', () => {
     Ports.setup(ports);
 
-    requestPublishHead({ hash: 'foo' });
+    requests['requestPublishHead']({ hash: 'foo' });
 
-    expect(receivedPublishHead).to.equal('foo');
+    expect(responses['publishHeadStream']).to.equal('foo');
   });
 
   it('publishes tweet, sending the hashes of account being published back', () => {
     Ports.setup(ports);
 
-    requestPublishTweet({ headHash: 'foo', tweet: {hash: 'bar'} });
+    requests['requestPublishTweet']({ headHash: 'foo', tweet: {hash: 'bar'} });
 
-    expect(receivedPublishTweet).to.deep.equal({ headHash: 'foo', tweetHash: 'bar' });
+    expect(responses['publishTweetStream']).to.deep.equal({ headHash: 'foo', tweetHash: 'bar' });
   });
 
   it('publishes followBlock, sending the hashes of account being published back', () => {
     Ports.setup(ports);
 
-    requestPublishFollowBlock({ headHash: 'foo', followBlock: {hash: 'bar'} });
+    requests['requestPublishFollowBlock']({ headHash: 'foo', followBlock: {hash: 'bar'} });
 
-    expect(receivedPublishFollowBlock).to.deep.equal({ headHash: 'foo', followBlockHash: 'bar' });
+    expect(responses['publishFollowBlockStream']).to.deep.equal({ headHash: 'foo', followBlockHash: 'bar' });
   });
 
   it('downloads head, sending account back when there is no error', () => {
     Ports.setup(ports);
 
-    requestDownloadHead('foo');
+    requests['requestDownloadHead']('foo');
 
-    expect(receivedDownloadHead).to.deep.equal({ hash: 'foo' });
+    expect(responses['downloadHeadStream']).to.deep.equal({ hash: 'foo' });
   });
 
   it('downloads head, sending error back when there is an error', () => {
     Ports.__Rewire__('download', (hash, fn) => fn('DOGE NOT FOUND', null));
 
     Ports.setup(ports);
-    requestDownloadHead('foo');
+    requests['requestDownloadHead']('foo');
 
-    expect(receivedDownloadError).to.deep.equal([ 'foo', 'DOGE NOT FOUND' ]);
+    expect(responses['downloadErrorStream']).to.deep.equal([ 'foo', 'DOGE NOT FOUND' ]);
   });
 
   it('downloads tweet by hash, sending tweet back', () => {
     Ports.setup(ports);
 
-    requestDownloadTweet({ headHash: 'foo', tweetHash: 'bar' });
+    requests['requestDownloadTweet']({ headHash: 'foo', tweetHash: 'bar' });
 
-    expect(receivedDownloadTweet).to.deep.equal({ headHash: 'foo', tweet: { hash:'bar' } });
+    expect(responses['downloadTweetStream']).to.deep.equal({ headHash: 'foo', tweet: { hash:'bar' } });
   });
 
   it('creates keys, sending the hash and the keys back', () => {
     Ports.setup(ports);
 
-    requestCreateKeys();
+    requests['requestCreateKeys']();
 
-    expect(receivedCreatedKeys).to.deep.equal({ hash: '31af8c3a1793759dbe962450f5453f88720ab017', keys: global.localStorage });
+    expect(responses['createdKeysStream']).to.deep.equal({ hash: '31af8c3a1793759dbe962450f5453f88720ab017', keys: global.localStorage });
   });
 
   it('request login, setting the public and secret keys, and sending the hash back', () => {
     Ports.setup(ports);
 
-    requestLogin({publicKey: '4ab783316d341ebcfc4476fafb5d6b330faf61ece2932f77f82b08d9768da81a', secretKey: '08a3287eebbe8dada17052020d409e4e9c3974ba3722f913744a9b819650e0688d65631fdc1042bd22127dcd9ea69bd990af8d1eda378bb083d5fb76b60304cd'});
+    requests['requestLogin']({publicKey: '4ab783316d341ebcfc4476fafb5d6b330faf61ece2932f77f82b08d9768da81a', secretKey: '08a3287eebbe8dada17052020d409e4e9c3974ba3722f913744a9b819650e0688d65631fdc1042bd22127dcd9ea69bd990af8d1eda378bb083d5fb76b60304cd'});
 
-    expect(receivedDoneLogin).to.deep.equal('61d323b6e262992538cc514c2d209deec0c519fe');
+    expect(responses['doneLoginStream']).to.deep.equal('61d323b6e262992538cc514c2d209deec0c519fe');
   });
 });

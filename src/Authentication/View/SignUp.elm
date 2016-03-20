@@ -11,6 +11,7 @@ import Router.Action exposing (Action(UpdatePath))
 import Authentication.Action exposing (Action(CreateKeys, UpdateName))
 import Account.Model exposing (HeadHash)
 import Accounts.Action exposing (Action(CreateAccount))
+import String
 
 
 break : Html
@@ -25,9 +26,12 @@ bold x =
 
 view : Signal.Address RootAction.Action -> Model -> Html
 view address model =
-  model.authentication.hash
-    |> Maybe.map (createdKeys address model)
-    |> Maybe.withDefault (newAccount address model)
+  if String.isEmpty model.authentication.keys.publicKey then
+    newAccount address model
+  else
+    model.authentication.hash
+      |> Maybe.map (createdKeys address model)
+      |> Maybe.withDefault (newAccount address model)
 
 
 card : String -> String -> Html

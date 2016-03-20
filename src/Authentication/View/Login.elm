@@ -7,7 +7,7 @@ import Action as RootAction exposing (Action(ActionForSearch, ActionForDownload)
 import Model exposing (Model)
 import Download.Model exposing (isLoading, hasError)
 import Action as RootAction exposing (..)
-import Data.Action exposing (..)
+import Accounts.Action exposing (..)
 import Router.Routes exposing (Sitemap(..))
 import Router.Action exposing (Action(UpdatePath))
 import Authentication.Action exposing (Action(UpdatePublicKey, UpdateSecretKey, Login))
@@ -23,7 +23,7 @@ view address model =
         div
           []
           [ text "We could not retrieve account data from the network, do you want to start a new account? This means you will lost your old tweets"
-          , button [ onClick address <| ActionForData <| CreateAccount userHash model.dateTime.timestamp ] [ text "Ok" ]
+          , button [ onClick address <| ActionForAccounts <| CreateAccount userHash model.dateTime.timestamp ] [ text "Ok" ]
           ]
       else
         signIn address model

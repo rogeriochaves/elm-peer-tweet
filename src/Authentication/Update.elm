@@ -3,7 +3,7 @@ module Authentication.Update (update) where
 import Action as RootAction exposing (..)
 import Authentication.Action as Authentication exposing (Action(..))
 import Authentication.Model exposing (Model)
-import Data.Action exposing (Action(CreateAccount, UpdateUserAccount))
+import Accounts.Action exposing (Action(CreateAccount, UpdateUserAccount))
 
 
 update : RootAction.Action -> Model -> Model
@@ -12,10 +12,10 @@ update action model =
     ActionForAuthentication authenticationAction ->
       updateAuthentication authenticationAction model
 
-    ActionForData (UpdateUserAccount account) ->
+    ActionForAccounts (UpdateUserAccount account) ->
       { model | hash = (Just account.head.hash) }
 
-    ActionForData (CreateAccount hash _) ->
+    ActionForAccounts (CreateAccount hash _) ->
       { model | hash = (Just hash) }
 
     _ ->

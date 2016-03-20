@@ -1,8 +1,8 @@
-module Data.Ports (..) where
+module Accounts.Ports (..) where
 
 import Account.Model as Account
 import Action exposing (..)
-import Data.Action exposing (..)
+import Accounts.Action exposing (..)
 import Ports exposing (jsMailbox, isJust, filterEmpty)
 
 
@@ -12,7 +12,7 @@ port requestAddTweet =
   let
     getRequest action =
       case action of
-        ActionForData (AddTweetRequest req) ->
+        ActionForAccounts (AddTweetRequest req) ->
           Just req
 
         _ ->
@@ -27,7 +27,7 @@ port requestAddFollower =
   let
     getRequest action =
       case action of
-        ActionForData (AddFollowerRequest req) ->
+        ActionForAccounts (AddFollowerRequest req) ->
           Just req
 
         _ ->
@@ -40,5 +40,5 @@ port requestAddFollower =
 accountInput : Signal Action.Action
 accountInput =
   Signal.map
-    (Maybe.map (ActionForData << UpdateUserAccount) >> Maybe.withDefault Action.NoOp)
+    (Maybe.map (ActionForAccounts << UpdateUserAccount) >> Maybe.withDefault Action.NoOp)
     accountStream

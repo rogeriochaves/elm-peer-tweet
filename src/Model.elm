@@ -3,7 +3,7 @@ module Model (Model, initialModel) where
 import Effects exposing (Effects)
 import Action exposing (Action)
 import Router.Model as Router
-import Data.Model as Data
+import Accounts.Model as Accounts
 import NewTweet.Model as NewTweet
 import Publish.Model as Publish
 import Download.Model as Download
@@ -15,7 +15,7 @@ import Authentication.Model as Authentication
 
 type alias Model =
   { router : Router.Model
-  , data : Data.Model
+  , accounts : Accounts.Model
   , newTweet : NewTweet.Model
   , publish : Publish.Model
   , download : Download.Model
@@ -30,7 +30,7 @@ initialModel path userHash =
   let
     model =
       { router = Router.initialModel path
-      , data = Data.initialModel userHash
+      , accounts = Accounts.initialModel userHash
       , newTweet = NewTweet.initialModel
       , publish = Publish.initialModel
       , download = Download.initialModel

@@ -1,4 +1,4 @@
-module Data.Model (..) where
+module Accounts.Model (..) where
 
 import Account.Model as Account
 import Maybe exposing (andThen)
@@ -24,6 +24,6 @@ findAccount model hash =
     hash `andThen` find
 
 
-getUserAccount : { a | authentication : AuthenticationModel.Model, data : Model } -> Maybe Account.Model
+getUserAccount : { a | authentication : AuthenticationModel.Model, accounts : Model } -> Maybe Account.Model
 getUserAccount model =
-  findAccount model.data model.authentication.hash
+  findAccount model.accounts model.authentication.hash

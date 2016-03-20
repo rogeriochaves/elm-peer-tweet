@@ -10,7 +10,7 @@ import Authentication.View.Login as Login
 import Authentication.View.SignUp as SignUp
 import Action exposing (Action)
 import Model exposing (Model)
-import Data.Model exposing (getUserAccount)
+import Accounts.Model exposing (getUserAccount)
 import Account.Model as Account
 import Router.Model exposing (Page(..))
 

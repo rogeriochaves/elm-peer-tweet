@@ -7,7 +7,7 @@ import Download.Action exposing (Action(DownloadHead))
 import Search.Action exposing (Action(Update))
 import Model exposing (Model)
 import Account.Model as Account exposing (Hash)
-import Data.Model exposing (findAccount)
+import Accounts.Model exposing (findAccount)
 import Timeline.View.Timeline as Timeline
 import Download.Model as Download exposing (isLoading, hasError, getError)
 
@@ -17,7 +17,7 @@ view address model account =
   div
     []
     [ searchBar address model account
-    , findAccount model.data (Just model.search.query)
+    , findAccount model.accounts (Just model.search.query)
         |> Maybe.map (Timeline.view model)
         |> Maybe.withDefault (text <| searchStatus model.download model.search.query)
     ]

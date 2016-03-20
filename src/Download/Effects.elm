@@ -7,11 +7,11 @@ import Effects exposing (Effects)
 import Task exposing (Task)
 import Account.Model exposing (Hash, HeadHash, nextHash, nextHashToDownload)
 import Maybe exposing (andThen)
-import Data.Model as Data exposing (findAccount, getUserAccount)
+import Accounts.Model as Accounts exposing (findAccount, getUserAccount)
 import Authentication.Model as Authentication
 
 
-effects : Signal.Address RootAction.Action -> RootAction.Action -> { a | data : Data.Model, authentication : Authentication.Model } -> Effects RootAction.Action
+effects : Signal.Address RootAction.Action -> RootAction.Action -> { a | accounts : Accounts.Model, authentication : Authentication.Model } -> Effects RootAction.Action
 effects jsAddress action model =
   case action of
     ActionForDownload syncAction ->
@@ -21,7 +21,7 @@ effects jsAddress action model =
       Effects.none
 
 
-effectsDownload : Signal.Address RootAction.Action -> Download.Action -> { a | data : Data.Model, authentication : Authentication.Model } -> Effects RootAction.Action
+effectsDownload : Signal.Address RootAction.Action -> Download.Action -> { a | accounts : Accounts.Model, authentication : Authentication.Model } -> Effects RootAction.Action
 effectsDownload jsAddress action model =
   case action of
     BeginDownload ->
@@ -42,28 +42,28 @@ effectsDownload jsAddress action model =
 
     DoneDownloadHead head ->
       Effects.batch
-        [ Task.succeed (nextDownloadTweetAction head.hash model.data <| nextHash (Just head))
+        [ Task.succeed (nextDownloadTweetAction head.hash model.accounts <| nextHash (Just head))
             |> Effects.task
         , downloadFirstFollowBlockEffect head
         ]
 
     DownloadTweet { headHash, tweetHash } ->
-      Signal.send jsAddress (nextDownloadTweetAction headHash model.data <| Just tweetHash)
+      Signal.send jsAddress (nextDownloadTweetAction headHash model.accounts <| Just tweetHash)
         |> Task.map (always NoOp)
         |> Effects.task
 
     DoneDownloadTweet { headHash, tweet } ->
-      Task.succeed (nextDownloadTweetAction headHash model.data <| nextHash (Just tweet))
+      Task.succeed (nextDownloadTweetAction headHash model.accounts <| nextHash (Just tweet))
         |> Effects.task
 
     DownloadFollowBlock { headHash, followBlockHash } ->
-      Signal.send jsAddress (nextDownloadFollowBlockAction headHash model.data <| Just followBlockHash)
+      Signal.send jsAddress (nextDownloadFollowBlockAction headHash model.accounts <| Just followBlockHash)
         |> Task.map (always NoOp)
         |> Effects.task
 
     DoneDownloadFollowBlock { headHash, followBlock } ->
       Effects.batch
-        [ Task.succeed (nextDownloadFollowBlockAction headHash model.data <| nextHash (Just followBlock))
+        [ Task.succeed (nextDownloadFollowBlockAction headHash model.accounts <| nextHash (Just followBlock))
             |> Effects.task
         , if (Just headHash) == model.authentication.hash then
             downloadFollowerEffect followBlock
@@ -76,8 +76,8 @@ effectsDownload jsAddress action model =
 
 
 initialEffects : Authentication.Model -> Effects RootAction.Action
-initialEffects data =
-  case data.hash of
+initialEffects accounts =
+  case accounts.hash of
     Just hash ->
       Task.succeed (ActionForDownload <| DownloadHead hash)
         |> Effects.task
@@ -86,11 +86,11 @@ initialEffects data =
       Effects.none
 
 
-nextDownloadAction : (Account.Model -> List { a | hash : Hash, next : List Hash }) -> (Hash -> RootAction.Action) -> HeadHash -> Data.Model -> Maybe Hash -> RootAction.Action
-nextDownloadAction nextListKey actionFn headHash data followBlockHash =
+nextDownloadAction : (Account.Model -> List { a | hash : Hash, next : List Hash }) -> (Hash -> RootAction.Action) -> HeadHash -> Accounts.Model -> Maybe Hash -> RootAction.Action
+nextDownloadAction nextListKey actionFn headHash accounts followBlockHash =
   let
     nextItem =
-      findAccount data (Just headHash)
+      findAccount accounts (Just headHash)
         |> Maybe.map (\account -> followBlockHash `andThen` nextHashToDownload (nextListKey account))
         |> Maybe.withDefault followBlockHash
   in
@@ -99,7 +99,7 @@ nextDownloadAction nextListKey actionFn headHash data followBlockHash =
       |> Maybe.withDefault NoOp
 
 
-nextDownloadTweetAction : HeadHash -> Data.Model -> Maybe Hash -> RootAction.Action
+nextDownloadTweetAction : HeadHash -> Accounts.Model -> Maybe Hash -> RootAction.Action
 nextDownloadTweetAction headHash =
   nextDownloadAction
     .tweets
@@ -107,7 +107,7 @@ nextDownloadTweetAction headHash =
     headHash
 
 
-nextDownloadFollowBlockAction : HeadHash -> Data.Model -> Maybe Hash -> RootAction.Action
+nextDownloadFollowBlockAction : HeadHash -> Accounts.Model -> Maybe Hash -> RootAction.Action
 nextDownloadFollowBlockAction headHash =
   nextDownloadAction
     .followBlocks

@@ -2,14 +2,14 @@ module Authentication.View.SignUp (view) where
 
 import Html exposing (Html, div, p, br, b, input, text, button)
 import Html.Events exposing (onClick)
-import Action as RootAction exposing (Action(ActionForAuthentication, ActionForRouter, ActionForData))
+import Action as RootAction exposing (Action(ActionForAuthentication, ActionForRouter, ActionForAccounts))
 import Model exposing (Model)
 import Action as RootAction exposing (..)
 import Router.Routes exposing (Sitemap(..))
 import Router.Action exposing (Action(UpdatePath))
 import Authentication.Action exposing (Action(CreateKeys))
 import Account.Model exposing (HeadHash)
-import Data.Action exposing (Action(CreateAccount))
+import Accounts.Action exposing (Action(CreateAccount))
 
 
 break : Html
@@ -53,7 +53,7 @@ createdKeys address { dateTime, authentication } userHash =
         , bold "Secret Key: "
         , text authentication.keys.secretKey
         ]
-    , button [ onClick address <| ActionForData <| CreateAccount userHash dateTime.timestamp ] [ text "Continue" ]
+    , button [ onClick address <| ActionForAccounts <| CreateAccount userHash dateTime.timestamp ] [ text "Continue" ]
     ]
 
 

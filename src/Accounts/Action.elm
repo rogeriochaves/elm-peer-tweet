@@ -1,4 +1,4 @@
-module Data.Action (..) where
+module Accounts.Action (..) where
 
 import Account.Model as Account exposing (HeadHash)
 import Account.Action as AccountAction

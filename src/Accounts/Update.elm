@@ -1,8 +1,8 @@
-module Data.Update (update) where
+module Accounts.Update (update) where
 
 import Action as RootAction exposing (..)
-import Data.Action as DataAction exposing (..)
-import Data.Model exposing (Model, findAccount)
+import Accounts.Action as AccountsAction exposing (..)
+import Accounts.Model exposing (Model, findAccount)
 import Account.Update as AccountUpdate
 import Account.Model as AccountModel exposing (HeadHash, initialModel)
 import Account.Action as AccountAction exposing (..)
@@ -18,13 +18,13 @@ update action model =
       updateAccount model
   in
     case action of
-      ActionForData (ActionForAccount hash accountAction) ->
+      ActionForAccounts (ActionForAccount hash accountAction) ->
         updateIn hash accountAction
 
-      ActionForData (UpdateUserAccount account) ->
+      ActionForAccounts (UpdateUserAccount account) ->
         updateAccount model account.head.hash (Update account)
 
-      ActionForData (CreateAccount hash timestamp) ->
+      ActionForAccounts (CreateAccount hash timestamp) ->
         let
           initialModel =
             AccountModel.initialModel

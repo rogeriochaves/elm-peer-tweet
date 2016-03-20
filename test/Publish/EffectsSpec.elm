@@ -1,7 +1,7 @@
 module Publish.EffectsSpec (..) where
 
 import Publish.Effects exposing (effects)
-import Data.Model as Data exposing (Model)
+import Model as RootModel
 import Account.Model as Account
 import Action exposing (..)
 import Publish.Action exposing (..)
@@ -11,7 +11,7 @@ import Task exposing (Task, andThen, sequence)
 import TestHelpers exposing (expectSignal, signalIt, signalDescribe, expectTask)
 
 
-setup : Model -> Action.Action -> { jsSignal : Signal Action.Action, actionsSignal : Signal (List Action.Action), task : Task Effects.Never () }
+setup : RootModel.Model -> Action.Action -> { jsSignal : Signal Action.Action, actionsSignal : Signal (List Action.Action), task : Task Effects.Never () }
 setup model action =
   let
     jsMailbox =
@@ -41,13 +41,13 @@ userAccount =
     { initialModel | head = { head | hash = "user" } }
 
 
-data : Model
-data =
+model : RootModel.Model
+model =
   let
     initialModel =
-      Data.initialModel (Just "hash")
+      fst <| RootModel.initialModel "/" (Just "user")
   in
-    { initialModel | hash = "user", accounts = [ userAccount ] }
+    { initialModel | accounts = [ userAccount ] }
 
 
 tests : Signal (Task Effects.Never Test)
@@ -62,7 +62,7 @@ tests =
                   ActionForPublish BeginPublish
 
                 account =
-                  setup data action
+                  setup model action
                in
                 expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForPublish <| PublishHead userAccount.head) ]
         , signalIt "forwards publish head actions to javascript mailbox"
@@ -74,7 +74,7 @@ tests =
                   (ActionForPublish <| PublishHead head)
 
                 account =
-                  setup data action
+                  setup model action
                in
                 expectSignal ( account.jsSignal, account.task ) toBe (ActionForPublish <| PublishHead head)
         , signalIt "dispatches publish action for the next tweets"
@@ -86,7 +86,7 @@ tests =
                   { hash = "foo", d = 2, t = "something", next = [] }
 
                 model =
-                  { data | accounts = [ { userAccount | head = head, tweets = [ nextTweet ] } ] }
+                  { model | accounts = [ { userAccount | head = head, tweets = [ nextTweet ] } ] }
 
                 action =
                   (ActionForPublish <| PublishHead head)
@@ -104,7 +104,7 @@ tests =
                   { hash = "foo", l = [ "somebody" ], next = [] }
 
                 model =
-                  { data | accounts = [ { userAccount | head = head, followBlocks = [ nextFollowBlock ] } ] }
+                  { model | accounts = [ { userAccount | head = head, followBlocks = [ nextFollowBlock ] } ] }
 
                 action =
                   (ActionForPublish <| PublishHead head)
@@ -125,7 +125,7 @@ tests =
                   (ActionForPublish <| PublishTweet { headHash = "user", tweet = tweet })
 
                 account =
-                  setup data action
+                  setup model action
                in
                 expectSignal ( account.jsSignal, account.task ) toBe action
         , signalIt "dispatches publish action for the next item"
@@ -137,7 +137,7 @@ tests =
                   { hash = "bar", d = 2, t = "something else", next = [] }
 
                 model =
-                  { data | accounts = [ { userAccount | tweets = [ tweet, nextTweet ] } ] }
+                  { model | accounts = [ { userAccount | tweets = [ tweet, nextTweet ] } ] }
 
                 action =
                   (ActionForPublish <| PublishTweet { headHash = "user", tweet = tweet })
@@ -158,7 +158,7 @@ tests =
                   (ActionForPublish <| PublishFollowBlock { headHash = "user", followBlock = followBlock })
 
                 account =
-                  setup data action
+                  setup model action
                in
                 expectSignal ( account.jsSignal, account.task ) toBe action
         , signalIt "dispatches publish action for the next item"
@@ -170,7 +170,7 @@ tests =
                   { hash = "bar", l = [ "duo" ], next = [] }
 
                 model =
-                  { data | accounts = [ { userAccount | followBlocks = [ followBlock, nextFollowBlock ] } ] }
+                  { model | accounts = [ { userAccount | followBlocks = [ followBlock, nextFollowBlock ] } ] }
 
                 action =
                   (ActionForPublish <| PublishFollowBlock { headHash = "user", followBlock = followBlock })
@@ -191,7 +191,7 @@ tests =
                   Account.initialModel
 
                 model =
-                  { data | accounts = [ { initialAccount | head = batman } ] }
+                  { model | accounts = [ { initialAccount | head = batman } ] }
 
                 action =
                   (ActionForPublish <| PublishFollowBlock { headHash = "user", followBlock = followBlock })
@@ -212,7 +212,7 @@ tests =
                   Account.initialModel
 
                 model =
-                  { data | accounts = [ { initialAccount | head = batman } ] }
+                  { model | accounts = [ { initialAccount | head = batman } ] }
 
                 action =
                   (ActionForPublish <| PublishFollowBlock { headHash = "somebody else", followBlock = followBlock })

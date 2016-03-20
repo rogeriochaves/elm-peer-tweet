@@ -1,8 +1,8 @@
-module Data.Effects (effects) where
+module Accounts.Effects (effects) where
 
 import Action as RootAction exposing (..)
-import Data.Model exposing (Model, findAccount)
-import Data.Action exposing (Action(CreateAccount))
+import Accounts.Model exposing (Model, findAccount)
+import Accounts.Action exposing (Action(CreateAccount))
 import Task
 import Effects exposing (Effects)
 import Router.Routes exposing (Sitemap(TimelineRoute))
@@ -12,12 +12,12 @@ import Router.Action exposing (Action(UpdatePath))
 effects : Signal.Address RootAction.Action -> RootAction.Action -> Model -> Effects RootAction.Action
 effects jsAddress action _ =
   case action of
-    ActionForData (CreateAccount _ _) ->
+    ActionForAccounts (CreateAccount _ _) ->
       Task.succeed (ActionForRouter <| UpdatePath <| TimelineRoute ())
         |> Effects.task
 
-    ActionForData dataAction ->
-      Signal.send jsAddress (ActionForData dataAction)
+    ActionForAccounts accountsAction ->
+      Signal.send jsAddress (ActionForAccounts accountsAction)
         |> Task.map (always RootAction.NoOp)
         |> Effects.task
 

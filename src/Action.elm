@@ -2,7 +2,7 @@ module Action (..) where
 
 import Router.Action as Router
 import NewTweet.Action as NewTweet
-import Data.Action as Data
+import Accounts.Action as Accounts
 import Publish.Action as Publish
 import Download.Action as Download
 import DateTime.Action as DateTime
@@ -14,7 +14,7 @@ type Action
   = NoOp
   | ActionForRouter Router.Action
   | ActionForNewTweet NewTweet.Action
-  | ActionForData Data.Action
+  | ActionForAccounts Accounts.Action
   | ActionForPublish Publish.Action
   | ActionForDownload Download.Action
   | ActionForDateTime DateTime.Action

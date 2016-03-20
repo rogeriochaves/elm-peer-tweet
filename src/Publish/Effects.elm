@@ -3,7 +3,7 @@ module Publish.Effects (effects) where
 import Action as RootAction exposing (..)
 import Publish.Action as Publish exposing (..)
 import Account.Model as Account
-import Data.Model as Data exposing (getUserAccount, findAccount)
+import Accounts.Model as Accounts exposing (getUserAccount, findAccount)
 import Effects exposing (Effects)
 import Task exposing (Task)
 import Account.Model exposing (HeadHash, TweetHash, FollowBlockHash, Hash, FollowBlock, nextHash, firstFollowBlock, findItem)
@@ -11,7 +11,7 @@ import Maybe exposing (andThen)
 import Authentication.Model as Authentication
 
 
-effects : Signal.Address RootAction.Action -> RootAction.Action -> { a | data : Data.Model, authentication : Authentication.Model } -> Effects RootAction.Action
+effects : Signal.Address RootAction.Action -> RootAction.Action -> { a | accounts : Accounts.Model, authentication : Authentication.Model } -> Effects RootAction.Action
 effects jsAddress action model =
   case action of
     ActionForPublish syncAction ->
@@ -21,7 +21,7 @@ effects jsAddress action model =
       Effects.none
 
 
-effectsPublish : Signal.Address RootAction.Action -> Publish.Action -> { a | data : Data.Model, authentication : Authentication.Model } -> Effects RootAction.Action
+effectsPublish : Signal.Address RootAction.Action -> Publish.Action -> { a | accounts : Accounts.Model, authentication : Authentication.Model } -> Effects RootAction.Action
 effectsPublish jsAddress action model =
   case action of
     BeginPublish ->
@@ -31,9 +31,9 @@ effectsPublish jsAddress action model =
     PublishHead head ->
       Effects.batch
         [ Signal.send jsAddress (ActionForPublish <| PublishHead head)
-            |> Task.map (always <| nextPublishTweetAction head.hash model.data head)
+            |> Task.map (always <| nextPublishTweetAction head.hash model.accounts head)
             |> Effects.task
-        , publishFirstFollowBlockEffect model.data head
+        , publishFirstFollowBlockEffect model.accounts head
         ]
 
     DonePublishHead _ ->
@@ -42,7 +42,7 @@ effectsPublish jsAddress action model =
 
     PublishTweet payload ->
       Signal.send jsAddress (ActionForPublish <| PublishTweet payload)
-        |> Task.map (always <| nextPublishTweetAction payload.headHash model.data payload.tweet)
+        |> Task.map (always <| nextPublishTweetAction payload.headHash model.accounts payload.tweet)
         |> Effects.task
 
     DonePublishTweet _ ->
@@ -52,10 +52,10 @@ effectsPublish jsAddress action model =
     PublishFollowBlock payload ->
       Effects.batch
         [ Signal.send jsAddress (ActionForPublish <| PublishFollowBlock payload)
-            |> Task.map (always <| nextPublishFollowBlockAction payload.headHash model.data payload.followBlock)
+            |> Task.map (always <| nextPublishFollowBlockAction payload.headHash model.accounts payload.followBlock)
             |> Effects.task
         , if (Just payload.headHash) == model.authentication.hash then
-            publishFollowerEffect model.data payload.followBlock
+            publishFollowerEffect model.accounts payload.followBlock
           else
             Effects.none
         ]
@@ -65,11 +65,11 @@ effectsPublish jsAddress action model =
         |> Effects.task
 
 
-publishFirstFollowBlockEffect : Data.Model -> Account.Head -> Effects RootAction.Action
-publishFirstFollowBlockEffect data head =
+publishFirstFollowBlockEffect : Accounts.Model -> Account.Head -> Effects RootAction.Action
+publishFirstFollowBlockEffect accounts head =
   let
     foundFollowBlock =
-      findAccount data (Just head.hash) `andThen` firstFollowBlock
+      findAccount accounts (Just head.hash) `andThen` firstFollowBlock
   in
     case foundFollowBlock of
       Just followBlock ->
@@ -80,21 +80,21 @@ publishFirstFollowBlockEffect data head =
         Effects.none
 
 
-nextItemAction : (Account.Model -> List { a | hash : Hash, next : List Hash }) -> ({ a | hash : Hash, next : List Hash } -> RootAction.Action) -> HeadHash -> Data.Model -> { b | next : List Hash } -> RootAction.Action
-nextItemAction listKey actionFn headHash data item =
+nextItemAction : (Account.Model -> List { a | hash : Hash, next : List Hash }) -> ({ a | hash : Hash, next : List Hash } -> RootAction.Action) -> HeadHash -> Accounts.Model -> { b | next : List Hash } -> RootAction.Action
+nextItemAction listKey actionFn headHash accounts item =
   let
     hash =
       nextHash (Just item)
 
     foundItem =
-      findAccount data (Just headHash) `andThen` (\account -> findItem (listKey account) hash)
+      findAccount accounts (Just headHash) `andThen` (\account -> findItem (listKey account) hash)
   in
     foundItem
       |> Maybe.map actionFn
       |> Maybe.withDefault NoOp
 
 
-nextPublishTweetAction : HeadHash -> Data.Model -> { a | next : List TweetHash } -> RootAction.Action
+nextPublishTweetAction : HeadHash -> Accounts.Model -> { a | next : List TweetHash } -> RootAction.Action
 nextPublishTweetAction headHash =
   nextItemAction
     .tweets
@@ -102,7 +102,7 @@ nextPublishTweetAction headHash =
     headHash
 
 
-nextPublishFollowBlockAction : HeadHash -> Data.Model -> { a | next : List FollowBlockHash } -> RootAction.Action
+nextPublishFollowBlockAction : HeadHash -> Accounts.Model -> { a | next : List FollowBlockHash } -> RootAction.Action
 nextPublishFollowBlockAction headHash =
   nextItemAction
     .followBlocks
@@ -110,11 +110,11 @@ nextPublishFollowBlockAction headHash =
     headHash
 
 
-publishFollowerEffect : Data.Model -> Account.FollowBlock -> Effects RootAction.Action
-publishFollowerEffect data followBlock =
+publishFollowerEffect : Accounts.Model -> Account.FollowBlock -> Effects RootAction.Action
+publishFollowerEffect accounts followBlock =
   let
     effectMap hash =
-      findAccount data (Just hash)
+      findAccount accounts (Just hash)
         |> Maybe.map (Effects.task << Task.succeed << ActionForPublish << PublishHead << .head)
         |> Maybe.withDefault Effects.none
   in

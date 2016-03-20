@@ -28,6 +28,9 @@ export const hash = () => {
 };
 
 export const createKeysWithHash = () => {
+  delete getLocalStorage().publicKey;
+  delete getLocalStorage().secretKey;
+
   let keys = createKeys();
 
   return { hash: hash(), keys: keys };

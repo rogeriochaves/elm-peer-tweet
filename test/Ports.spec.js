@@ -118,7 +118,8 @@ describe('Ports', () => {
 
     requests['requestCreateKeys']();
 
-    expect(responses['createdKeysStream']).to.deep.equal({ hash: '31af8c3a1793759dbe962450f5453f88720ab017', keys: global.localStorage });
+    expect(responses['createdKeysStream'].keys).to.deep.equal(global.localStorage);
+    expect(responses['createdKeysStream'].hash.length).to.equal(40);
   });
 
   it('request login, setting the public and secret keys, and sending the hash back', () => {

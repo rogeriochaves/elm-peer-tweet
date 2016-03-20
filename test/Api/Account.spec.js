@@ -46,8 +46,8 @@ describe('Account', () => {
     expect(Account.initialAccount()).to.deep.equal({ head: { hash: '9ef39f8b577cd867b2173e450e2cb30542cc1d98', d: 1457409506204, next: [], f: [], n: "" }, tweets: [], followBlocks: [] });
   });
 
-  it('creates keys with hash', () => {
-    global.localStorage = {};
+  it('creates new keys with hash, erasing the current ones', () => {
+    global.localStorage = { publicKey: '6393a821af08e151399a8df339d02a9e36134b3da5f893849673cf176810eb98', secretKey: 'foo' };
 
     let keysWithHash = Account.createKeysWithHash();
     let hash = keysWithHash.hash;
@@ -61,6 +61,9 @@ describe('Account', () => {
 
     expect(secretKey).to.be.a('string');
     expect(secretKey.length).to.equal(128);
+
+    expect(publicKey).not.to.equal('6393a821af08e151399a8df339d02a9e36134b3da5f893849673cf176810eb98');
+    expect(secretKey).not.to.equal('foo');
   });
 
   it('sets the keys on the localStorage, returning the hash', () => {

@@ -16,9 +16,6 @@
   margin-bottom: 30px;
   width: 100%;
 
-  .btn {
-    width: 100%;
-  }
   .no-account {
     text-align: center;
     margin-top: 50px;
@@ -27,4 +24,42 @@
 
 .login-signing-in {
   margin: 0 auto;
+}
+
+.info-credentials {
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+.card-hash {
+  .card-content .card-title {
+    line-height: 1.4em;
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+}
+
+.chip-key {
+  margin-top: 20px;
+  margin-bottom: 10px;
+
+  i.material-icons {
+    float: none;
+    display: inline-block;
+    padding: 0 8px 0 0;
+  }
+  input.chip-text, input.chip-text:focus {
+    width: 250px;
+    border: none;
+    box-shadow: none;
+    height: auto;
+    margin: 0;
+    line-height: 32px;
+    vertical-align: top;
+  }
+  .chip-title {
+    position: absolute;
+    margin-top: -22px;
+    font-weight: bold;
+  }
 }

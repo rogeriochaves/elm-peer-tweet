@@ -16,17 +16,23 @@ import Account.Model exposing (HeadHash)
 
 view : Signal.Address RootAction.Action -> Model -> Html
 view address model =
-  case model.authentication.hash of
-    Just userHash ->
-      if isLoading model.download userHash then
-        signingIn
-      else if hasError model.download userHash then
-        signInError address model userHash
-      else
-        signIn address model
+  let
+    content =
+      case model.authentication.hash of
+        Just userHash ->
+          if isLoading model.download userHash then
+            signingIn
+          else if hasError model.download userHash then
+            signInError address model userHash
+          else
+            signIn address model
 
-    Nothing ->
-      signIn address model
+        Nothing ->
+          signIn address model
+  in
+    div
+      [ class "container" ]
+      [ content ]
 
 
 signingIn : Html
@@ -69,14 +75,16 @@ signInError address model userHash =
     [ class "login" ]
     [ loginLogo
     , div
-      [ class "card-panel white" ]
-      [ p [] [ text "We could not retrieve account data from the network for this public/secret key pairs" ]
-      , p [] [ text "This means that thoses keys are invalid or your data is not longer present on the DHT network." ]
-      , p [] [ text "Do you want to start a new account using those keys? "
-             , span [ class "red-text" ] [ text "This means you will lose your old tweets if there were any" ]
-             ]
-      , button [ class "btn green", onClick address <| ActionForAccounts <| CreateAccount userHash model.dateTime.timestamp ] [ text "Ok" ]
-      ]
+        [ class "card-panel white" ]
+        [ p [] [ text "We could not retrieve account data from the network for this public/secret key pairs" ]
+        , p [] [ text "This means that thoses keys are invalid or your data is not longer present on the DHT network." ]
+        , p
+            []
+            [ text "Do you want to start a new account using those keys? "
+            , span [ class "red-text" ] [ text "This means you will lose your old tweets if there were any" ]
+            ]
+        , button [ class "btn green", onClick address <| ActionForAccounts <| CreateAccount userHash "Unknown" model.dateTime.timestamp ] [ text "Ok" ]
+        ]
     , loginContainer address model
     ]
 
@@ -86,6 +94,7 @@ loginLogo =
   div
     [ class "login-logo" ]
     [ b [] [ text "Peer Tweet" ] ]
+
 
 loginContainer : Signal.Address RootAction.Action -> Model -> Html
 loginContainer address { authentication } =
@@ -116,7 +125,7 @@ loginContainer address { authentication } =
             [ text "Secret Key" ]
         ]
     , button
-        [ class "waves-effect waves-light btn blue lighten-1"
+        [ class "waves-effect waves-light btn btn-full blue lighten-1"
         , onClick address <| ActionForAuthentication <| Login authentication.keys
         ]
         [ text "Login" ]
@@ -124,7 +133,8 @@ loginContainer address { authentication } =
         [ class "no-account" ]
         [ text "Don't have an account yet? "
         , a
-            [ onClick address <| ActionForRouter <| UpdatePath <| CreateAccountRoute ()
+            [ class "link"
+            , onClick address <| ActionForRouter <| UpdatePath <| CreateAccountRoute ()
             ]
             [ text "Create Account" ]
         ]

@@ -1,6 +1,14 @@
 @import 'Authentication';
 
-a:hover { text-decoration: underline; cursor: pointer; }
+.link:hover { text-decoration: underline; cursor: pointer; }
+
+.btn-full {
+  width: 100%;
+}
+
+.card-content {
+  word-wrap: break-word;
+}
 
 .container {
   height: 100%;

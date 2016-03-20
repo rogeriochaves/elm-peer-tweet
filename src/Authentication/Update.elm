@@ -32,7 +32,7 @@ updateAuthentication action model =
       CreateKeys ->
         model
 
-      DoneCreateKeys ( hash, keys ) ->
+      DoneCreateKeys { hash, keys } ->
         { model | hash = (Just hash), keys = keys }
 
       UpdatePublicKey publicKey ->

@@ -6,7 +6,7 @@ import Account.Model exposing (HeadHash)
 
 type Action
   = CreateKeys
-  | DoneCreateKeys ( HeadHash, Keys )
+  | DoneCreateKeys { hash : HeadHash, keys : Keys }
   | UpdatePublicKey String
   | UpdateSecretKey String
   | Login Keys

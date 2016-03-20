@@ -7,7 +7,7 @@ import Authentication.Model exposing (Keys)
 import Ports exposing (jsMailbox, isJust, filterEmpty)
 
 
-port createdKeysStream : Signal (Maybe ( HeadHash, Keys ))
+port createdKeysStream : Signal (Maybe { hash : HeadHash, keys : Keys })
 port requestCreateKeys : Signal (Maybe ())
 port requestCreateKeys =
   let

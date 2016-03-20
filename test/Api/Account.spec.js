@@ -50,8 +50,8 @@ describe('Account', () => {
     global.localStorage = {};
 
     let keysWithHash = Account.createKeysWithHash();
-    let hash = keysWithHash[0];
-    let { publicKey, secretKey } = keysWithHash[1];
+    let hash = keysWithHash.hash;
+    let { publicKey, secretKey } = keysWithHash.keys;
 
     expect(hash).to.be.a('string');
     expect(hash.length).to.equal(40);

@@ -30,7 +30,7 @@ export const hash = () => {
 export const createKeysWithHash = () => {
   let keys = createKeys();
 
-  return [hash(), keys];
+  return { hash: hash(), keys: keys };
 };
 
 export const setKeys = ({ publicKey, secretKey }) => {

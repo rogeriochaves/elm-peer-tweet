@@ -85,14 +85,14 @@ tests =
                 nextTweet =
                   { hash = "foo", d = 2, t = "something", next = [] }
 
-                model =
+                setupModel =
                   { model | accounts = [ { userAccount | head = head, tweets = [ nextTweet ] } ] }
 
                 action =
                   (ActionForPublish <| PublishHead head)
 
                 account =
-                  setup model action
+                  setup setupModel action
                in
                 expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForPublish <| PublishTweet { headHash = "uno", tweet = nextTweet }) ]
         , signalIt "dispatches publish action for the next followBlocks"
@@ -103,14 +103,14 @@ tests =
                 nextFollowBlock =
                   { hash = "foo", l = [ "somebody" ], next = [] }
 
-                model =
+                setupModel =
                   { model | accounts = [ { userAccount | head = head, followBlocks = [ nextFollowBlock ] } ] }
 
                 action =
                   (ActionForPublish <| PublishHead head)
 
                 account =
-                  setup model action
+                  setup setupModel action
                in
                 expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForPublish <| PublishFollowBlock { headHash = "uno", followBlock = nextFollowBlock }) ]
         ]
@@ -136,14 +136,14 @@ tests =
                 nextTweet =
                   { hash = "bar", d = 2, t = "something else", next = [] }
 
-                model =
+                setupModel =
                   { model | accounts = [ { userAccount | tweets = [ tweet, nextTweet ] } ] }
 
                 action =
                   (ActionForPublish <| PublishTweet { headHash = "user", tweet = tweet })
 
                 account =
-                  setup model action
+                  setup setupModel action
                in
                 expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForPublish <| PublishTweet { headHash = "user", tweet = nextTweet }) ]
         ]
@@ -169,14 +169,14 @@ tests =
                 nextFollowBlock =
                   { hash = "bar", l = [ "duo" ], next = [] }
 
-                model =
+                setupModel =
                   { model | accounts = [ { userAccount | followBlocks = [ followBlock, nextFollowBlock ] } ] }
 
                 action =
                   (ActionForPublish <| PublishFollowBlock { headHash = "user", followBlock = followBlock })
 
                 account =
-                  setup model action
+                  setup setupModel action
                in
                 expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForPublish <| PublishFollowBlock { headHash = "user", followBlock = nextFollowBlock }) ]
         , signalIt "publishes the user followers"
@@ -190,14 +190,14 @@ tests =
                 initialAccount =
                   Account.initialModel
 
-                model =
+                setupModel =
                   { model | accounts = [ { initialAccount | head = batman } ] }
 
                 action =
                   (ActionForPublish <| PublishFollowBlock { headHash = "user", followBlock = followBlock })
 
                 account =
-                  setup model action
+                  setup setupModel action
                in
                 expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForPublish <| PublishHead batman) ]
         , signalIt "does not publish follower if it is not being followed by the user"
@@ -211,14 +211,14 @@ tests =
                 initialAccount =
                   Account.initialModel
 
-                model =
+                setupModel =
                   { model | accounts = [ { initialAccount | head = batman } ] }
 
                 action =
                   (ActionForPublish <| PublishFollowBlock { headHash = "somebody else", followBlock = followBlock })
 
                 account =
-                  setup model action
+                  setup setupModel action
                in
                 expectSignal ( account.actionsSignal, account.task ) toBe [ NoOp ]
         ]

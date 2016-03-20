@@ -88,26 +88,26 @@ tests =
         "Tweet Download"
         [ signalIt "forwards download tweets actions to javascript mailbox"
             <| let
-                model =
+                setupModel =
                   { model | accounts = [ { userAccount | tweets = [ { hash = "foo", d = 1, t = "something", next = [ "bar" ] } ] } ] }
 
                 action =
                   (ActionForDownload <| DownloadTweet { headHash = "user", tweetHash = "foo" })
 
                 account =
-                  setup model action
+                  setup setupModel action
                in
                 expectSignal ( account.jsSignal, account.task ) toBe (ActionForDownload <| DownloadTweet { headHash = "user", tweetHash = "bar" })
         , signalIt "forwards NoOp actions when there is no next hash"
             <| let
-                model =
+                setupModel =
                   { model | accounts = [ { userAccount | tweets = [ { hash = "foo", d = 1, t = "something", next = [] } ] } ] }
 
                 action =
                   (ActionForDownload <| DownloadTweet { headHash = "user", tweetHash = "foo" })
 
                 account =
-                  setup model action
+                  setup setupModel action
                in
                 expectSignal ( account.jsSignal, account.task ) toBe (NoOp)
         , signalIt "dispatches next tweet download after a tweet download is done"
@@ -124,26 +124,26 @@ tests =
         "FollowBlock Download"
         [ signalIt "forwards download followBlocks actions to javascript mailbox"
             <| let
-                model =
+                setupModel =
                   { model | accounts = [ { userAccount | followBlocks = [ { hash = "foo", l = [ "somebody" ], next = [ "bar" ] } ] } ] }
 
                 action =
                   (ActionForDownload <| DownloadFollowBlock { headHash = "user", followBlockHash = "foo" })
 
                 account =
-                  setup model action
+                  setup setupModel action
                in
                 expectSignal ( account.jsSignal, account.task ) toBe (ActionForDownload <| DownloadFollowBlock { headHash = "user", followBlockHash = "bar" })
         , signalIt "forwards NoOp actions when there is no next hash"
             <| let
-                model =
+                setupModel =
                   { model | accounts = [ { userAccount | followBlocks = [ { hash = "foo", l = [ "somebody" ], next = [] } ] } ] }
 
                 action =
                   (ActionForDownload <| DownloadFollowBlock { headHash = "user", followBlockHash = "foo" })
 
                 account =
-                  setup model action
+                  setup setupModel action
                in
                 expectSignal ( account.jsSignal, account.task ) toBe (NoOp)
         , signalIt "dispatches next followBlock download after a followBlock download is done"

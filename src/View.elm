@@ -66,10 +66,8 @@ contentView address model account =
 loggedOutView : Signal.Address Action -> Model -> Html
 loggedOutView address model =
   div
-    [ class "mdl-layout" ]
-    [ div
-        [ class "mdl-layout__content" ]
-        [ loggedOutContentView address model ]
+    [ class "container" ]
+    [ loggedOutContentView address model
     ]
 
 

@@ -1,7 +1,7 @@
 module Authentication.View.Login (view) where
 
-import Html exposing (Html, div, input, label, p, text, button)
-import Html.Attributes exposing (value, class, type')
+import Html exposing (..)
+import Html.Attributes exposing (value, class, type', href)
 import Html.Events exposing (onClick, on, targetValue)
 import Action as RootAction exposing (Action(ActionForSearch, ActionForDownload))
 import Model exposing (Model)
@@ -35,31 +35,48 @@ view address model =
 signIn : Signal.Address RootAction.Action -> Model -> Html
 signIn address { authentication } =
   div
-    []
+    [ class "login" ]
     [ div
-        [ class "input-field" ]
-        [ input
-            [ type' "text"
-            , value authentication.keys.publicKey
-            , on "input" targetValue (Signal.message address << ActionForAuthentication << UpdatePublicKey)
-            ]
-            []
-        , label
-            []
-            [ text "Public Key" ]
-        ]
+        [ class "login-logo" ]
+        [ b [] [ text "Peer Tweet" ] ]
     , div
-        [ class "input-field" ]
-        [ input
-            [ type' "text"
-            , value authentication.keys.secretKey
-            , on "input" targetValue (Signal.message address << ActionForAuthentication << UpdateSecretKey)
+        [ class "login-container" ]
+        [ div
+            [ class "input-field" ]
+            [ input
+                [ type' "text"
+                , value authentication.keys.publicKey
+                , on "input" targetValue (Signal.message address << ActionForAuthentication << UpdatePublicKey)
+                ]
+                []
+            , label
+                []
+                [ text "Public Key" ]
             ]
-            []
-        , label
-            []
-            [ text "Secret Key" ]
+        , div
+            [ class "input-field" ]
+            [ input
+                [ type' "text"
+                , value authentication.keys.secretKey
+                , on "input" targetValue (Signal.message address << ActionForAuthentication << UpdateSecretKey)
+                ]
+                []
+            , label
+                []
+                [ text "Secret Key" ]
+            ]
+        , button
+            [ class "waves-effect waves-light btn blue lighten-1"
+            , onClick address <| ActionForAuthentication <| Login authentication.keys
+            ]
+            [ text "Login" ]
+        , div
+            [ class "no-account" ]
+            [ text "Don't have an account yet? "
+            , a
+              [ onClick address <| ActionForRouter <| UpdatePath <| CreateAccountRoute ()
+              ]
+              [ text "Create Account" ]
+            ]
         ]
-    , button [ onClick address <| ActionForAuthentication <| Login authentication.keys ] [ text "Login" ]
-    , button [ onClick address <| ActionForRouter <| UpdatePath <| CreateAccountRoute () ] [ text "Create Account" ]
     ]

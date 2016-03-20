@@ -1,0 +1,26 @@
+.login {
+  display:flex;
+  height: 100%;
+  flex-flow: row wrap;
+}
+
+.login-logo {
+  align-self: center;
+  text-align: center;
+  width: 100%;
+  font-size: 30px
+}
+
+.login-container {
+  align-self: flex-end;
+  margin-bottom: 30px;
+  width: 100%;
+
+  .btn {
+    width: 100%;
+  }
+  .no-account {
+    text-align: center;
+    margin-top: 50px;
+  }
+}

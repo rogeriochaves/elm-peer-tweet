@@ -23,7 +23,7 @@ describe('Publish', () => {
 
     callback = spy();
 
-    head = { hash: 'myhead', d: 1457409506204, next: ['foo'], f: ['uno', 'quattro'] };
+    head = { hash: 'myhead', d: 1457409506204, next: ['foo'], f: ['uno', 'quattro'], n: 'Mr Foo' };
     tweet = { hash: 'foo', d: 2457409506204, t: "hello it's me you are looking for?", next: ['bar'] };
     followBlock = { hash: 'uno', d: 3457409506204, l: ['duo', 'tre'], next: ['quattro'] };
 
@@ -84,6 +84,12 @@ describe('Publish', () => {
     let followBlocksHashesList = dhtPutData[0].v.f.toString();
 
     expect(followBlocksHashesList).to.equal('unoquattro');
+  });
+
+  it('publishes head with the right name', () => {
+    let followBlocksHashesList = dhtPutData[0].v.n.toString();
+
+    expect(followBlocksHashesList).to.equal('Mr Foo');
   });
 
   it('publishes the head, tweets and followBlocks with the right next hashes', () => {

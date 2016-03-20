@@ -6,6 +6,7 @@ const decodeHashesArray = (value) =>
 const decodeKey = (key, value) => {
   switch (key) {
     case 't': return { [key]: value.toString() };
+    case 'n': return { [key]: value.toString() };
     case 'd': return { [key]: value.readIntBE(0, value.length) };
     case 'l': return { [key]: decodeHashesArray(value) };
     case 'f': return { [key]: decodeHashesArray(value) };

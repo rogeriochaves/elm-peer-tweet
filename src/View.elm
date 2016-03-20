@@ -50,6 +50,7 @@ contentView address model account =
       div
         []
         [ text <| toString model.authentication.hash
+        , div [] [text <| "Name: " ++ account.head.n]
         , Topbar.view address model account
         , Timeline.view model account
         ]

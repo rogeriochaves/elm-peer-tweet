@@ -68,7 +68,7 @@ tests =
         , signalIt "dispatches next tweet download after a head download is done"
             <| let
                 action =
-                  (ActionForDownload <| DoneDownloadHead { hash = "uno", d = 1, next = [ "duo" ], f = [] })
+                  (ActionForDownload <| DoneDownloadHead { hash = "uno", d = 1, next = [ "duo" ], f = [], n = "Mr Foo" })
 
                 account =
                   setup model action
@@ -77,7 +77,7 @@ tests =
         , signalIt "dispatches next followBlock download after a head download is done"
             <| let
                 action =
-                  (ActionForDownload <| DoneDownloadHead { hash = "uno", d = 1, next = [], f = [ "tre" ] })
+                  (ActionForDownload <| DoneDownloadHead { hash = "uno", d = 1, next = [], f = [ "tre" ], n = "Mr Foo" })
 
                 account =
                   setup model action

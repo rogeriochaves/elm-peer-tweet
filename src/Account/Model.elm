@@ -23,11 +23,16 @@ type alias Timestamp =
   Int
 
 
+type alias Name =
+  String
+
+
 type alias Head =
   { hash : HeadHash
   , d : Timestamp
   , next : List TweetHash
   , f : List FollowBlockHash
+  , n : Name
   }
 
 
@@ -55,7 +60,7 @@ type alias Model =
 
 initialModel : Model
 initialModel =
-  { head = { hash = "", d = 0, next = [], f = [] }
+  { head = { hash = "", d = 0, next = [], f = [], n = "" }
   , tweets = []
   , followBlocks = []
   }

@@ -26,6 +26,7 @@ const encodeArray = (value) =>
 const encodeKey = (key, value) => {
   switch (key) {
     case 't': return new Buffer(value);
+    case 'n': return new Buffer(value);
     case 'd': return encodeTimestamp(value);
     case 'l': return encodeArray(value);
     case 'f': return encodeArray(value);

@@ -1,6 +1,6 @@
 module Authentication.Model (..) where
 
-import Account.Model exposing (HeadHash)
+import Account.Model exposing (HeadHash, Name)
 
 
 type alias Keys =
@@ -10,6 +10,7 @@ type alias Keys =
 type alias Model =
   { hash : Maybe HeadHash
   , keys : Keys
+  , name : Name
   }
 
 
@@ -17,4 +18,5 @@ initialModel : Maybe String -> Model
 initialModel hash =
   { hash = hash
   , keys = { publicKey = "", secretKey = "" }
+  , name = ""
   }

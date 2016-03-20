@@ -41,6 +41,9 @@ updateAuthentication action model =
       UpdateSecretKey secretKey ->
         { model | keys = { keys | secretKey = secretKey } }
 
+      UpdateName name ->
+        { model | name = name }
+
       Login _ ->
         model
 

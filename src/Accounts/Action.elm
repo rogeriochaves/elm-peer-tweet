@@ -1,6 +1,6 @@
 module Accounts.Action (..) where
 
-import Account.Model as Account exposing (HeadHash)
+import Account.Model as Account exposing (HeadHash, Name)
 import Account.Action as AccountAction
 import Time exposing (Time)
 
@@ -18,4 +18,4 @@ type Action
   | AddFollowerRequest AddFollowerRequestPayload
   | UpdateUserAccount Account.Model
   | ActionForAccount HeadHash AccountAction.Action
-  | CreateAccount HeadHash Time
+  | CreateAccount HeadHash Name Time

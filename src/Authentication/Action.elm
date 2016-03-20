@@ -9,5 +9,6 @@ type Action
   | DoneCreateKeys { hash : HeadHash, keys : Keys }
   | UpdatePublicKey String
   | UpdateSecretKey String
+  | UpdateName String
   | Login Keys
   | DoneLogin HeadHash

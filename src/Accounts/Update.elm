@@ -24,15 +24,22 @@ update action model =
       ActionForAccounts (UpdateUserAccount account) ->
         updateAccount model account.head.hash (Update account)
 
-      ActionForAccounts (CreateAccount hash timestamp) ->
+      ActionForAccounts (CreateAccount hash name timestamp) ->
         let
           initialModel =
             AccountModel.initialModel
 
           head =
             initialModel.head
+
+          newHead =
+            { head
+              | hash = hash
+              , n = name
+              , d = round <| inMilliseconds timestamp
+            }
         in
-          updateIn hash (Update ({ initialModel | head = { head | hash = hash, d = round <| inMilliseconds timestamp } }))
+          updateIn hash <| Update { initialModel | head = newHead }
 
       ActionForDownload (DoneDownloadHead head) ->
         updateIn head.hash (UpdateHead head)

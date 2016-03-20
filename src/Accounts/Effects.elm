@@ -12,7 +12,7 @@ import Router.Action exposing (Action(UpdatePath))
 effects : Signal.Address RootAction.Action -> RootAction.Action -> Model -> Effects RootAction.Action
 effects jsAddress action _ =
   case action of
-    ActionForAccounts (CreateAccount _ _) ->
+    ActionForAccounts (CreateAccount _ _ _) ->
       Task.succeed (ActionForRouter <| UpdatePath <| TimelineRoute ())
         |> Effects.task
 

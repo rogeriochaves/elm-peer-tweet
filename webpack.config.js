@@ -38,7 +38,7 @@ var options = {
         loader: 'elm-webpack'
       },
       {
-        test: /\.scss$/,
+        test: /\.s?css$/,
         loaders: ['style', 'css', 'sass']
       },
       {

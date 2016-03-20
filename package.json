@@ -42,7 +42,8 @@
     "bencode": "^0.7.0",
     "bittorrent-dht": "^6.4.1",
     "crypto": "0.0.3",
-    "ed25519-supercop": "^1.0.2"
+    "ed25519-supercop": "^1.0.2",
+    "materialize-css": "^0.97.5"
   },
   "devEngines": {
     "node": "5.x",

@@ -1,7 +1,7 @@
 module Authentication.View.Login (view) where
 
 import Html exposing (Html, div, input, label, p, text, button)
-import Html.Attributes exposing (value, class)
+import Html.Attributes exposing (value, class, type')
 import Html.Events exposing (onClick, on, targetValue)
 import Action as RootAction exposing (Action(ActionForSearch, ActionForDownload))
 import Model exposing (Model)
@@ -37,27 +37,27 @@ signIn address { authentication } =
   div
     []
     [ div
-        [ class "mdl-textfield mdl-js-textfield mdl-textfield--floating-label" ]
+        [ class "input-field" ]
         [ input
-            [ value authentication.keys.publicKey
+            [ type' "text"
+            , value authentication.keys.publicKey
             , on "input" targetValue (Signal.message address << ActionForAuthentication << UpdatePublicKey)
-            , class "mdl-textfield__input"
             ]
             []
         , label
-            [ class "mdl-textfield__label" ]
+            []
             [ text "Public Key" ]
         ]
     , div
-        [ class "mdl-textfield mdl-js-textfield mdl-textfield--floating-label" ]
+        [ class "input-field" ]
         [ input
-            [ value authentication.keys.secretKey
+            [ type' "text"
+            , value authentication.keys.secretKey
             , on "input" targetValue (Signal.message address << ActionForAuthentication << UpdateSecretKey)
-            , class "mdl-textfield__input"
             ]
             []
         , label
-            [ class "mdl-textfield__label" ]
+            []
             [ text "Secret Key" ]
         ]
     , button [ onClick address <| ActionForAuthentication <| Login authentication.keys ] [ text "Login" ]

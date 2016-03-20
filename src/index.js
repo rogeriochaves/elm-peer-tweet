@@ -1,7 +1,8 @@
 'use strict';
 
+import 'materialize-css/bin/materialize.css';
+import 'materialize-css/bin/materialize.js';
 import './Stylesheets/Main.scss';
-import Material from './Stylesheets/Material.js';
 import Elm from './Main';
 import { hash } from './Api/Account';
 import { setup } from './Ports';

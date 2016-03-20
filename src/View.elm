@@ -65,6 +65,16 @@ contentView address model account =
 
 loggedOutView : Signal.Address Action -> Model -> Html
 loggedOutView address model =
+  div
+    [ class "mdl-layout" ]
+    [ div
+        [ class "mdl-layout__content" ]
+        [ loggedOutContentView address model ]
+    ]
+
+
+loggedOutContentView : Signal.Address Action -> Model -> Html
+loggedOutContentView address model =
   case model.router.page of
     CreateAccount ->
       SignUp.view address model

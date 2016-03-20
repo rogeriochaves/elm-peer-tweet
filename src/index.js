@@ -1,6 +1,7 @@
 'use strict';
 
 import './Stylesheets/Main.scss';
+import Material from './Stylesheets/Material.js';
 import Elm from './Main';
 import { hash } from './Api/Account';
 import { setup } from './Ports';

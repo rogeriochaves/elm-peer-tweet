@@ -1,7 +1,7 @@
 module Authentication.View.Login (view) where
 
-import Html exposing (Html, div, input, p, text, button)
-import Html.Attributes exposing (value)
+import Html exposing (Html, div, input, label, p, text, button)
+import Html.Attributes exposing (value, class)
 import Html.Events exposing (onClick, on, targetValue)
 import Action as RootAction exposing (Action(ActionForSearch, ActionForDownload))
 import Model exposing (Model)
@@ -36,24 +36,29 @@ signIn : Signal.Address RootAction.Action -> Model -> Html
 signIn address { authentication } =
   div
     []
-    [ text "Sign in"
-    , p
-        []
-        [ text "Public Key"
-        , input
+    [ div
+        [ class "mdl-textfield mdl-js-textfield mdl-textfield--floating-label" ]
+        [ input
             [ value authentication.keys.publicKey
             , on "input" targetValue (Signal.message address << ActionForAuthentication << UpdatePublicKey)
+            , class "mdl-textfield__input"
             ]
             []
+        , label
+            [ class "mdl-textfield__label" ]
+            [ text "Public Key" ]
         ]
-    , p
-        []
-        [ text "Secret Key"
-        , input
+    , div
+        [ class "mdl-textfield mdl-js-textfield mdl-textfield--floating-label" ]
+        [ input
             [ value authentication.keys.secretKey
             , on "input" targetValue (Signal.message address << ActionForAuthentication << UpdateSecretKey)
+            , class "mdl-textfield__input"
             ]
             []
+        , label
+            [ class "mdl-textfield__label" ]
+            [ text "Secret Key" ]
         ]
     , button [ onClick address <| ActionForAuthentication <| Login authentication.keys ] [ text "Login" ]
     , button [ onClick address <| ActionForRouter <| UpdatePath <| CreateAccountRoute () ] [ text "Create Account" ]

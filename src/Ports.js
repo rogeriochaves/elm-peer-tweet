@@ -8,7 +8,7 @@ const pipePort = (ports) => (input, transform, output, errorOutput = null) =>
   ports[input].subscribe((data) => {
     transform(data, (err, result) => {
       if (err && errorOutput)
-        ports[errorOutput].send([data, err]);
+        ports[errorOutput].send([data.headHash ? data.headHash : data, err]);
 
       if (!err)
         ports[output].send(result);

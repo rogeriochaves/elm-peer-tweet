@@ -105,6 +105,15 @@ describe('Ports', () => {
     expect(responses['downloadErrorStream']).to.deep.equal([ 'foo', 'DOGE NOT FOUND' ]);
   });
 
+  it('downloads tweet, sending the hash with error back when there is an error', () => {
+    Ports.__Rewire__('download', (hash, fn) => fn('DOGE NOT FOUND', null));
+
+    Ports.setup(ports);
+    requests['requestDownloadHead']({ headHash: 'bar', tweetHash: 'baz' });
+
+    expect(responses['downloadErrorStream']).to.deep.equal([ 'bar', 'DOGE NOT FOUND' ]);
+  });
+
   it('downloads tweet by hash, sending tweet back', () => {
     Ports.setup(ports);
 

@@ -13,7 +13,7 @@ import Account.Model as Account
 view : Signal.Address RootAction.Action -> Model -> Account.Model -> Html
 view address model account =
   div
-    []
+    [ class "container" ]
     [ textarea
         [ class "materialize-textarea new-tweet"
         , on "input" targetValue (Signal.message address << ActionForNewTweet << Update)

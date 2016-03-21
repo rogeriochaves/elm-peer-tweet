@@ -17,7 +17,5 @@ view address model content =
             [ text "Timeline"
             ]
         ]
-    , div
-        [ class "container" ]
-        [ content ]
+    , content
     ]

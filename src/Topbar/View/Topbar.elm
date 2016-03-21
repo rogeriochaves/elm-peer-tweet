@@ -6,16 +6,12 @@ import Action exposing (Action)
 import Model exposing (Model)
 
 
-view : Signal.Address Action -> Model -> Html -> Html
-view address model content =
-  div
+view : Signal.Address Action -> Model -> String -> Html
+view address model title =
+  nav
     []
-    [ nav
-        []
-        [ div
-            [ class "nav-wrapper grey lighten-5 black-text" ]
-            [ text "Timeline"
-            ]
+    [ div
+        [ class "nav-wrapper grey lighten-5 black-text" ]
+        [ text title
         ]
-    , content
     ]

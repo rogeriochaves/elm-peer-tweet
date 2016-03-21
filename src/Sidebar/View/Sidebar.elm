@@ -19,6 +19,7 @@ view address model =
       [ class "sidebar-items" ]
       [ button [ class "sidebar-button material-icons", onClick address (ActionForRouter <| UpdatePath <| TimelineRoute ()) ] [ text "home" ]
       , button [ class "sidebar-button material-icons", onClick address (ActionForRouter <| UpdatePath <| SearchRoute ()) ] [ text "search" ]
+      , button [ class "sidebar-button material-icons", onClick address (ActionForRouter <| UpdatePath <| FollowingListRoute ()) ] [ text "group" ]
       , div [ class "sidebar-space" ] []
       , PublishProgress.view address model.publish
       , DownloadProgress.view address model.download

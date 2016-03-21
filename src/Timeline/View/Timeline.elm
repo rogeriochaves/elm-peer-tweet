@@ -22,11 +22,9 @@ view address model account =
     followBlocks =
       account.followBlocks
   in
-    Topbar.view address model <|
     div
       []
-      [ NewTweet.view address model account
+      [ Topbar.view address model "Timeline"
+      , NewTweet.view address model account
       , ul [ class "collection" ] (List.map (Tweet.view timestamp) tweets)
-      , div [] [ text "following:" ]
-      , div [] (List.map (text << toString << .l) followBlocks)
       ]

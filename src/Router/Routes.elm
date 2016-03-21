@@ -8,6 +8,7 @@ type Sitemap
   = TimelineRoute ()
   | SearchRoute ()
   | CreateAccountRoute ()
+  | FollowingListRoute ()
 
 
 timelineRoute : Route Sitemap
@@ -25,9 +26,14 @@ createAccountRoute =
   CreateAccountRoute := static "account" <> "create"
 
 
+followingListRoute : Route Sitemap
+followingListRoute =
+  FollowingListRoute := static "following"
+
+
 sitemap : Router Sitemap
 sitemap =
-  router [ timelineRoute, searchRoute, createAccountRoute ]
+  router [ timelineRoute, searchRoute, createAccountRoute, followingListRoute ]
 
 
 match : String -> Maybe Sitemap
@@ -48,5 +54,8 @@ route r =
 
         CreateAccountRoute () ->
           reverse createAccountRoute []
+
+        FollowingListRoute () ->
+          reverse followingListRoute []
   in
     "#" ++ route

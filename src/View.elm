@@ -5,6 +5,7 @@ import Html.Attributes exposing (class)
 import Sidebar.View.Sidebar as Sidebar
 import Timeline.View.Timeline as Timeline
 import Search.View.Search as SearchView
+import FollowingList.View.FollowingList as FollowingListView
 import Authentication.View.Login as Login
 import Authentication.View.SignUp as SignUp
 import Action exposing (Action)
@@ -48,6 +49,9 @@ contentView address model account =
 
     Search ->
       SearchView.view address model account
+
+    FollowingList ->
+      FollowingListView.view address model account
 
     _ ->
       div

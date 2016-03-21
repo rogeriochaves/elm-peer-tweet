@@ -123,3 +123,8 @@ addFollowBlock account followBlock =
 
     Nothing ->
       { account | followBlocks = followBlock :: account.followBlocks }
+
+
+followList : Model -> List HeadHash
+followList account =
+  List.concatMap .l account.followBlocks

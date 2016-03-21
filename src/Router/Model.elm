@@ -8,6 +8,7 @@ type Page
   | Search
   | NotFound
   | CreateAccount
+  | FollowingList
 
 
 type alias Model =
@@ -26,6 +27,9 @@ routeToPage route =
 
     CreateAccountRoute () ->
       CreateAccount
+
+    FollowingListRoute () ->
+      FollowingList
 
 
 pathToPage : String -> Page

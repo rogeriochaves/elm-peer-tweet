@@ -9,7 +9,7 @@ import DateTime.View.TimeDifference exposing (formatTimeDifference)
 
 view : Time -> Tweet -> Html
 view timestamp tweet =
-  ul
+  li
     [ class "collection-item avatar" ]
     [ i [ class "material-icons circle red" ] [ text "play_arrow" ]
     , span [ class "title" ] [ text "Fulano" ]

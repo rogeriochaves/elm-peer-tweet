@@ -8,7 +8,7 @@ import Search.Action exposing (Action(Update))
 import Model exposing (Model)
 import Account.Model as Account exposing (Hash)
 import Accounts.Model exposing (findAccount)
-import Timeline.View.Timeline as Timeline
+import Timeline.View.Feed as Feed
 import Download.Model as Download exposing (isLoading, hasError, getError)
 
 
@@ -18,7 +18,7 @@ view address model account =
     []
     [ searchBar address model account
     , findAccount model.accounts (Just model.search.query)
-        |> Maybe.map (Timeline.view address model)
+        |> Maybe.map (Feed.view address model)
         |> Maybe.withDefault (text <| searchStatus model.download model.search.query)
     ]
 

@@ -1,13 +1,17 @@
 module Timeline.View.Timeline (..) where
 
-import Html exposing (Html, div, text)
+import Html exposing (..)
+import Html.Attributes exposing (class)
 import Model exposing (Model)
 import Account.Model as Account
 import Timeline.View.Tweet as Tweet
+import Topbar.View.Topbar as Topbar
+import Action exposing (Action)
+import NewTweet.View.NewTweet as NewTweet
 
 
-view : Model -> Account.Model -> Html
-view model account =
+view : Signal.Address Action -> Model -> Account.Model -> Html
+view address model account =
   let
     timestamp =
       model.dateTime.timestamp
@@ -18,9 +22,11 @@ view model account =
     followBlocks =
       account.followBlocks
   in
+    Topbar.view address model <|
     div
       []
-      [ div [] (List.map (Tweet.view timestamp) tweets)
+      [ NewTweet.view address model account
+      , ul [ class "collection" ] (List.map (Tweet.view timestamp) tweets)
       , div [] [ text "following:" ]
       , div [] (List.map (text << toString << .l) followBlocks)
       ]

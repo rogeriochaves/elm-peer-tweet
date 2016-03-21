@@ -8,6 +8,14 @@ html, body, #main {
 .flexbox-container {
   display:flex;
   height: 100%;
+
+  .nav-wrapper {
+    text-align: center;
+  }
+}
+
+.flexbox-contents {
+  flex-grow: 1;
 }
 
 .timeline-container {
@@ -33,7 +41,12 @@ html, body, #main {
   height: 100%;
 }
 
-.new-tweet {
+textarea.materialize-textarea.new-tweet {
   width: 100%;
-  height: 40px;
+  min-height: 0;
+  height: 22px;
+}
+
+.secondary-content {
+  top: 10px;
 }

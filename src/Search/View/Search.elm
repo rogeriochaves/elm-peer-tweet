@@ -18,7 +18,7 @@ view address model account =
     []
     [ searchBar address model account
     , findAccount model.accounts (Just model.search.query)
-        |> Maybe.map (Timeline.view model)
+        |> Maybe.map (Timeline.view address model)
         |> Maybe.withDefault (text <| searchStatus model.download model.search.query)
     ]
 

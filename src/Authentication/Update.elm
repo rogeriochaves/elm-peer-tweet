@@ -15,7 +15,7 @@ update action model =
     ActionForAccounts (UpdateUserAccount account) ->
       { model | hash = (Just account.head.hash) }
 
-    ActionForAccounts (CreateAccount hash _) ->
+    ActionForAccounts (CreateAccount hash _ _) ->
       { model | hash = (Just hash) }
 
     _ ->

@@ -15,17 +15,17 @@ view address model account =
   div
     []
     [ textarea
-        [ class "new-tweet"
+        [ class "materialize-textarea new-tweet"
         , on "input" targetValue (Signal.message address << ActionForNewTweet << Update)
         ]
         [ text model.newTweet.text
         ]
     , button
-        [ onClick address (ActionForAccounts <| AddTweetRequest { account = account, text = model.newTweet.text }) ]
+        [ class "btn", onClick address (ActionForAccounts <| AddTweetRequest { account = account, text = model.newTweet.text }) ]
         [ text "Tweet"
         ]
     , button
-        [ onClick address (ActionForAccounts <| AddFollowerRequest { account = account, hash = model.newTweet.text }) ]
+        [ class "btn", onClick address (ActionForAccounts <| AddFollowerRequest { account = account, hash = model.newTweet.text }) ]
         [ text "Follow"
         ]
     ]

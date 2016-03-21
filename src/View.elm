@@ -3,7 +3,6 @@ module View (..) where
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (class)
 import Sidebar.View.Sidebar as Sidebar
-import Topbar.View.Topbar as Topbar
 import Timeline.View.Timeline as Timeline
 import Search.View.Search as SearchView
 import Authentication.View.Login as Login
@@ -37,9 +36,7 @@ loggedInView address model account =
   div
     [ class "flexbox-container" ]
     [ Sidebar.view address model
-    , div
-        [ class "timeline-container" ]
-        [ contentView address model account ]
+    , div [ class "flexbox-contents" ] [ contentView address model account ]
     ]
 
 
@@ -47,13 +44,7 @@ contentView : Signal.Address Action -> Model -> Account.Model -> Html
 contentView address model account =
   case model.router.page of
     Timeline ->
-      div
-        []
-        [ text <| toString model.authentication.hash
-        , div [] [text <| "Name: " ++ account.head.n]
-        , Topbar.view address model account
-        , Timeline.view model account
-        ]
+      Timeline.view address model account
 
     Search ->
       SearchView.view address model account

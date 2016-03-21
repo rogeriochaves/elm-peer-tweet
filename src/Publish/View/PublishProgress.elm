@@ -7,7 +7,7 @@ import Publish.Model exposing (Model)
 
 view : Signal.Address RootAction.Action -> Model -> Html
 view address model =
-  div [class "sidebar-item ion-upload down"] [
+  div [class "sidebar-status ion-upload down"] [
     model.publishingCount
       |> toString
       |> text

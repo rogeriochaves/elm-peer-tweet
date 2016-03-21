@@ -1,0 +1,41 @@
+.sidebar {
+  min-width: 80px;
+  height: 100%;
+
+  .sidebar-items {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+  }
+
+  .material-icons {
+    font-size: 40px;
+    text-align: center;
+    color: #bbdefb;
+    width: 100%;
+  }
+
+  button.sidebar-button {
+    background: none;
+    border: none;
+    height: 60px;
+    width: 100%;
+    align-self: flex-start;
+
+    &:hover {
+      color: #2196f3;
+    }
+  }
+
+  .sidebar-space {
+    flex-grow: 1;
+  }
+
+  .sidebar-status {
+    align-self: flex-end;
+    height: 30px;
+    width: 100%;
+    text-align: center;
+    color: #bbdefb;
+  }
+}

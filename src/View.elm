@@ -38,7 +38,7 @@ loggedInView address model account =
     [ class "flexbox-container" ]
     [ Sidebar.view address model
     , div
-        [ class "flexbox-content" ]
+        [ class "timeline-container" ]
         [ contentView address model account ]
     ]
 

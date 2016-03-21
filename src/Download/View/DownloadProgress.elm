@@ -7,7 +7,7 @@ import Download.Model exposing (Model, downloadingItemsCount)
 
 view : Signal.Address RootAction.Action -> Model -> Html
 view address model =
-  div [class "sidebar-item ion-ios-cloud-download down"] [
+  div [class "sidebar-status ion-ios-cloud-download down"] [
     downloadingItemsCount model
       |> toString
       |> text

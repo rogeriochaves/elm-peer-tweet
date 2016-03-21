@@ -1,6 +1,25 @@
 @import 'Authentication';
+@import 'Sidebar';
 
-.link:hover { text-decoration: underline; cursor: pointer; }
+html, body, #main {
+  height: 100%;
+}
+
+.flexbox-container {
+  display:flex;
+  height: 100%;
+}
+
+.timeline-container {
+  padding: 20px;
+  word-wrap: break-word;
+  min-width: 0;
+}
+
+.link:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
 
 .btn-full {
   width: 100%;

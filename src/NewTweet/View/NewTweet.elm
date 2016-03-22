@@ -24,8 +24,4 @@ view address model account =
         [ class "btn", onClick address (ActionForAccounts <| AddTweetRequest { account = account, text = model.newTweet.text }) ]
         [ text "Tweet"
         ]
-    , button
-        [ class "btn", onClick address (ActionForAccounts <| AddFollowerRequest { account = account, hash = model.newTweet.text }) ]
-        [ text "Follow"
-        ]
     ]

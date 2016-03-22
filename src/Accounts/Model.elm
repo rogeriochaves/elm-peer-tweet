@@ -1,6 +1,6 @@
 module Accounts.Model (..) where
 
-import Account.Model as Account
+import Account.Model as Account exposing (HeadHash)
 import Maybe exposing (andThen)
 import Authentication.Model as AuthenticationModel
 
@@ -27,3 +27,10 @@ findAccount model hash =
 getUserAccount : { a | authentication : AuthenticationModel.Model, accounts : Model } -> Maybe Account.Model
 getUserAccount model =
   findAccount model.accounts model.authentication.hash
+
+
+isFollowing : { a | authentication : AuthenticationModel.Model, accounts : Model } -> HeadHash -> Bool
+isFollowing data hash =
+  getUserAccount data
+    |> Maybe.map (Account.isFollowing hash)
+    |> Maybe.withDefault False

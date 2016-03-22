@@ -1,6 +1,7 @@
 module Account.Model (..) where
 
 import Maybe exposing (andThen, map, withDefault)
+import Utils exposing (isJust)
 
 
 type alias Hash =
@@ -128,3 +129,10 @@ addFollowBlock account followBlock =
 followList : Model -> List HeadHash
 followList account =
   List.concatMap .l account.followBlocks
+
+
+isFollowing : HeadHash -> Model -> Bool
+isFollowing hash account =
+  List.filter ((==) hash) (followList account)
+    |> List.head
+    |> isJust

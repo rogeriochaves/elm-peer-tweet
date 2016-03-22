@@ -9,7 +9,7 @@ import Search.Action exposing (Action(Update))
 import Model exposing (Model)
 import Account.Model as Account exposing (Hash)
 import Accounts.Model exposing (findAccount)
-import Timeline.View.Feed as Feed
+import Timeline.View.Profile as Profile
 import Download.Model as Download exposing (isLoading, hasError, getError)
 import Json.Decode as Json
 
@@ -20,7 +20,7 @@ view address model account =
     []
     [ searchBar address model account
     , findAccount model.accounts (Just model.search.query)
-        |> Maybe.map (Feed.view address model)
+        |> Maybe.map (Profile.view address model)
         |> Maybe.withDefault (text <| searchStatus model.download model.search.query)
     ]
 

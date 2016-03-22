@@ -53,3 +53,30 @@ textarea.materialize-textarea.new-tweet {
 .secondary-content {
   top: 10px;
 }
+
+.follow-button {
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 12px;
+  line-height: 28px;
+  height: 28px;
+}
+
+.avatar {
+  height: 42px;
+  width: 42px;
+  vertical-align: top;
+  text-align: center;
+  line-height: 42px;
+}
+
+.tweet {
+  display: flex;
+
+  .avatar {
+    margin-right: 15px;
+  }
+  .tweet-info {
+    flex-grow: 1;
+  }
+}

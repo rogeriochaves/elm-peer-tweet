@@ -27,8 +27,8 @@ followingItem address model userAccount followingHash =
     case foundAccount of
       Just account ->
         li
-          [ class "collection-item avatar" ]
-          [ i [ class "material-icons circle red" ] [ text "play_arrow" ]
+          [ class "collection-item" ]
+          [ i [ class "avatar material-icons circle red" ] [ text "play_arrow" ]
           , span [ class "title" ] [ text account.head.n ]
           , p [] [ text <| "@" ++ account.head.hash ]
           ]

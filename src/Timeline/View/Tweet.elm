@@ -10,15 +10,18 @@ import DateTime.View.TimeDifference exposing (formatTimeDifference)
 view : Time -> Tweet -> Html
 view timestamp tweet =
   li
-    [ class "collection-item avatar" ]
-    [ i [ class "material-icons circle red" ] [ text "play_arrow" ]
-    , span [ class "title" ] [ text "Fulano" ]
-    , span
-        [ class "secondary-content" ]
-        [ text <| formatTimeDifference timestamp <| toFloat tweet.d
-        ]
-    , p
-        []
-        [ text tweet.t
+    [ class "collection-item tweet" ]
+    [ i [ class "material-icons circle red avatar" ] [ text "play_arrow" ]
+    , div
+        [ class "tweet-info" ]
+        [ span [ class "title" ] [ text "Fulano" ]
+        , span
+            [ class "secondary-content" ]
+            [ text <| formatTimeDifference timestamp <| toFloat tweet.d
+            ]
+        , p
+            []
+            [ text tweet.t
+            ]
         ]
     ]

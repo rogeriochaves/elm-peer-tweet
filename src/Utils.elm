@@ -16,6 +16,11 @@ isJust a =
       False
 
 
+filterEmpty : Signal (Maybe a) -> Signal (Maybe a)
+filterEmpty =
+  Signal.filter isJust Nothing
+
+
 onEnter : Signal.Address a -> a -> Attribute
 onEnter address value =
   on

@@ -14,9 +14,9 @@ import Router.Action exposing (Action(UpdatePath))
 view : Signal.Address RootAction.Action -> Model -> Html
 view address model =
   div
-    [ class "blue darken-4 sidebar" ]
+    [ class "sidebar" ]
     [ div
-      [ class "sidebar-items" ]
+      [ class "sidebar-items blue darken-4" ]
       [ button [ class "sidebar-button material-icons", onClick address (ActionForRouter <| UpdatePath <| TimelineRoute ()) ] [ text "home" ]
       , button [ class "sidebar-button material-icons", onClick address (ActionForRouter <| UpdatePath <| SearchRoute ()) ] [ text "search" ]
       , button [ class "sidebar-button material-icons", onClick address (ActionForRouter <| UpdatePath <| FollowingListRoute ()) ] [ text "group" ]

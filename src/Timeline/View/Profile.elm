@@ -35,7 +35,7 @@ followButton address model account =
     button [ class "btn blue disabled secondary-content follow-button" ] [ text "Following" ]
   else
     button
-      [ class "btn blue secondary-content follow-button"
+      [ class "btn small blue secondary-content"
       , onClick address (ActionForAccounts <| AddFollowerRequest { account = account, hash = account.head.hash })
       ]
       [ text "Follow" ]

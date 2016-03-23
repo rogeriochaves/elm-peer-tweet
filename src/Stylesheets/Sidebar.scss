@@ -6,6 +6,8 @@
     display: flex;
     flex-flow: column;
     height: 100%;
+    position: fixed;
+    min-width: 80px;
   }
 
   .material-icons {

@@ -1,0 +1,23 @@
+textarea.materialize-textarea.new-tweet {
+  width: 100%;
+  min-height: 0;
+  height: 22px;
+  border: none;
+  box-shadow: none;
+
+  &:focus {
+    border: none;
+    box-shadow: none;
+  }
+}
+
+.new-tweet-actions {
+  float: right;
+  margin-top: -35px;
+  position: relative;
+
+  .characters-left {
+    display: inline-block;
+    margin-right: 10px;
+  }
+}

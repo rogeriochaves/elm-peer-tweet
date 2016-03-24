@@ -8,10 +8,16 @@ update : Action -> Model -> Model
 update action model =
   case action of
     Update account ->
-      account
+      if account.head.d > model.head.d then
+        account
+      else
+        model
 
     UpdateHead head ->
-      { model | head = head }
+      if head.d > model.head.d then
+        { model | head = head }
+      else
+        model
 
     AddTweet tweet ->
       addTweet model tweet

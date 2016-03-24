@@ -6,8 +6,8 @@ import { getLocalStorage } from './Utils';
 const hexBuffer = (value) =>
   Buffer(value, 'hex');
 
-const optionsFor = (item) =>
-  item === head() ? { k: hexBuffer(getLocalStorage().publicKey), sign, seq: 1 } : {};
+const optionsFor = (hash, item) =>
+  hash === head() ? { k: hexBuffer(getLocalStorage().publicKey), sign, seq: item.d } : {};
 
 const sign = (buf) =>
   ed.sign(buf, hexBuffer(getLocalStorage().publicKey), hexBuffer(getLocalStorage().secretKey));
@@ -43,7 +43,7 @@ const encodeKeys = (item) =>
     ), {});
 
 export const encodeItem = (hash, item) =>
-  ({ v: encodeKeys(item), ...optionsFor(hash) });
+  ({ v: encodeKeys(item), ...optionsFor(hash, item) });
 
 export const publish = (item, callback) => {
   console.warn('Publishing', item);

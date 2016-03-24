@@ -6,12 +6,15 @@ import './Stylesheets/Main.scss';
 import Elm from './Main';
 import { hash } from './Api/Account';
 import { setup } from './Ports';
+import { getLocalStorage } from './Api/Utils';
 
 const path = window.location.hash || "#/";
+const accounts = getLocalStorage().accounts;
 
 const initialPorts =
   { path: path
   , userHash: hash()
+  , getStorage: accounts ? JSON.parse(accounts) : null
   , accountStream: null
   , publishHeadStream: null
   , publishTweetStream: null

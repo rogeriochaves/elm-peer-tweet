@@ -26,7 +26,7 @@ describe('Ports', () => {
       ports[name] = {send: (data) => { responses[name] = data }};
 
     [ 'requestAddTweet', 'requestAddFollower', 'requestPublishHead', 'requestPublishTweet', 'requestPublishFollowBlock'
-    , 'requestDownloadHead', 'requestDownloadTweet', 'requestDownloadFollowBlock', 'requestCreateKeys', 'requestLogin' ].
+    , 'requestDownloadHead', 'requestDownloadTweet', 'requestDownloadFollowBlock', 'requestCreateKeys', 'requestLogin', 'setStorage' ].
       forEach(addInboundPort);
 
     [ 'accountStream', 'publishHeadStream', 'publishTweetStream', 'publishFollowBlockStream', 'downloadErrorStream'
@@ -137,5 +137,13 @@ describe('Ports', () => {
     requests['requestLogin']({publicKey: '4ab783316d341ebcfc4476fafb5d6b330faf61ece2932f77f82b08d9768da81a', secretKey: '08a3287eebbe8dada17052020d409e4e9c3974ba3722f913744a9b819650e0688d65631fdc1042bd22127dcd9ea69bd990af8d1eda378bb083d5fb76b60304cd'});
 
     expect(responses['doneLoginStream']).to.deep.equal('61d323b6e262992538cc514c2d209deec0c519fe');
+  });
+
+  it('updates the localStorage accounts as JSON', () => {
+    Ports.setup(ports);
+
+    requests['setStorage'](['abc', 'def']);
+
+    expect(global.localStorage.accounts).to.equal('["abc","def"]');
   });
 });

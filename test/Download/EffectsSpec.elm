@@ -45,7 +45,7 @@ model : RootModel.Model
 model =
   let
     initialModel =
-      fst <| RootModel.initialModel "/" (Just "user")
+      fst <| RootModel.initialModel "/" (Just "user") Nothing
   in
     { initialModel | accounts = [ userAccount ] }
 

@@ -15,6 +15,7 @@ import Publish.Ports exposing (requestPublish, publishHeadInput, publishTweetInp
 import Download.Ports exposing (requestDownload, downloadErrorInput, downloadHeadInput, downloadTweetInput, downloadFollowBlockInput)
 import DateTime.Signals exposing (updateDateTime)
 import Authentication.Ports exposing (createdKeysInput, doneLoginInput)
+import Accounts.Model as Accounts
 
 
 -- App starting
@@ -42,7 +43,7 @@ inputs =
 app : StartApp.App Model
 app =
   StartApp.start
-    { init = initialModel path userHash
+    { init = initialModel path userHash getStorage
     , update = update jsMailbox.address
     , view = view
     , inputs = inputs
@@ -61,3 +62,10 @@ port tasks =
 
 port path : String
 port userHash : Maybe String
+
+
+port getStorage : Maybe Accounts.Model
+
+port setStorage : Signal Accounts.Model
+port setStorage =
+  Signal.map .accounts app.model

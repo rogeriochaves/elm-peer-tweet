@@ -3,6 +3,7 @@ import Tweets from './Api/Tweets';
 import FollowBlocks from './Api/FollowBlocks';
 import { publish } from './Api/Publish';
 import { download } from './Api/Download';
+import { getLocalStorage } from './Api/Utils';
 
 const pipePort = (ports) => (input, transform, output, errorOutput = null) =>
   ports[input].subscribe((data) => {
@@ -49,6 +50,10 @@ export const setup = (ports) => {
 
   pipe('requestCreateKeys', createKeys, 'createdKeysStream');
   pipe('requestLogin', login, 'doneLoginStream');
+
+  ports.setStorage.subscribe((accounts) => {
+    getLocalStorage().accounts = JSON.stringify(accounts);
+  });
 };
 
 export default { setup };

@@ -25,12 +25,12 @@ type alias Model =
   }
 
 
-initialModel : String -> Maybe String -> ( Model, Effects Action )
-initialModel path userHash =
+initialModel : String -> Maybe String -> Maybe Accounts.Model -> ( Model, Effects Action )
+initialModel path userHash accounts =
   let
     model =
       { router = Router.initialModel path
-      , accounts = Accounts.initialModel
+      , accounts = Maybe.withDefault Accounts.initialModel accounts
       , newTweet = NewTweet.initialModel
       , publish = Publish.initialModel
       , download = Download.initialModel

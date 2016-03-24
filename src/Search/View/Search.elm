@@ -15,12 +15,12 @@ import Utils exposing (onEnter)
 
 
 view : Signal.Address RootAction.Action -> Model -> Account.Model -> Html
-view address model account =
+view address model userAccount =
   div
     []
-    [ searchBar address model account
+    [ searchBar address model
     , findAccount model.accounts (Just model.search.query)
-        |> Maybe.map (Profile.view address model)
+        |> Maybe.map (Profile.view address model userAccount)
         |> Maybe.withDefault (text <| searchStatus model.download model.search.query)
     ]
 
@@ -35,8 +35,8 @@ searchStatus model hash =
     ""
 
 
-searchBar : Signal.Address RootAction.Action -> Model -> Account.Model -> Html
-searchBar address model account =
+searchBar : Signal.Address RootAction.Action -> Model -> Html
+searchBar address model =
   nav
     []
     [ div

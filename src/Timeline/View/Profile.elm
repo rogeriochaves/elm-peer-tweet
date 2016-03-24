@@ -11,8 +11,8 @@ import Accounts.Model exposing (isFollowing)
 import Timeline.View.Feed as Feed
 
 
-view : Signal.Address RootAction.Action -> Model -> Account.Model -> Html
-view address model account =
+view : Signal.Address RootAction.Action -> Model -> Account.Model -> Account.Model -> Html
+view address model userAccount account =
   div
     []
     [ div
@@ -21,7 +21,7 @@ view address model account =
           [ class "card-content"]
           [ i [ class "avatar material-icons circle red" ] [ text "play_arrow" ]
           , span [ class "card-title" ] [ text account.head.n ]
-          , followButton address model account
+          , followButton address model userAccount account
           , p [] [ text <| "@" ++ account.head.hash ]
           ]
         ]
@@ -29,13 +29,13 @@ view address model account =
     ]
 
 
-followButton : Signal.Address RootAction.Action -> Model -> Account.Model -> Html
-followButton address model account =
+followButton : Signal.Address RootAction.Action -> Model -> Account.Model -> Account.Model -> Html
+followButton address model userAccount account =
   if isFollowing model account.head.hash then
-    button [ class "btn blue disabled secondary-content follow-button" ] [ text "Following" ]
+    button [ class "btn small blue disabled secondary-content" ] [ text "Following" ]
   else
     button
       [ class "btn small blue secondary-content"
-      , onClick address (ActionForAccounts <| AddFollowerRequest { account = account, hash = account.head.hash })
+      , onClick address (ActionForAccounts <| AddFollowerRequest { account = userAccount, hash = account.head.hash })
       ]
       [ text "Follow" ]

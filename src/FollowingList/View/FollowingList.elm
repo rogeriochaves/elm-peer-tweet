@@ -10,11 +10,11 @@ import Topbar.View.Topbar as Topbar
 
 
 view : Signal.Address RootAction.Action -> Model -> Account.Model -> Html
-view address model account =
+view address model userAccount =
   div
     []
     [ Topbar.view address model "Following"
-    , ul [ class "collection" ] (List.map (followingItem address model account) (followList account))
+    , ul [ class "collection" ] (List.map (followingItem address model userAccount) (followList userAccount))
     ]
 
 

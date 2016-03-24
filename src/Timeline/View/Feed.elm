@@ -17,4 +17,6 @@ view address model account =
     tweets =
       account.tweets
   in
-    ul [ class "collection" ] (List.map (Tweet.view timestamp) tweets)
+    ul
+      [ class "collection" ]
+      (List.map (\tweet -> Tweet.view timestamp { head = account.head, tweet = tweet}) tweets)

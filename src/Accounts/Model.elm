@@ -1,6 +1,6 @@
 module Accounts.Model (..) where
 
-import Account.Model as Account exposing (HeadHash)
+import Account.Model as Account exposing (HeadHash, Head, Tweet, followList)
 import Maybe exposing (andThen)
 import Authentication.Model as AuthenticationModel
 
@@ -14,7 +14,7 @@ initialModel =
   []
 
 
-findAccount : Model -> Maybe Account.HeadHash -> Maybe Account.Model
+findAccount : Model -> Maybe HeadHash -> Maybe Account.Model
 findAccount model hash =
   let
     find hash =
@@ -34,3 +34,18 @@ isFollowing data hash =
   getUserAccount data
     |> Maybe.map (Account.isFollowing hash)
     |> Maybe.withDefault False
+
+
+timeline : Model -> Account.Model -> List { head : Head, tweet : Tweet }
+timeline accounts userAccount =
+  let
+    accountTweets { head, tweets } =
+      List.map (\tweet -> { head = head, tweet = tweet }) tweets
+
+    allItems =
+      followList userAccount
+        |> List.filterMap (findAccount accounts << Just)
+        |> List.concatMap accountTweets
+        |> List.append (accountTweets userAccount)
+  in
+    List.sortBy (.tweet >> .d >> (*) -1) allItems

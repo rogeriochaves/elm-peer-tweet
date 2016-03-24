@@ -13,6 +13,7 @@ import Account.ModelSpec
 import DateTime.View.TimeDifferenceSpec
 import Download.EffectsSpec
 import Publish.EffectsSpec
+import Accounts.ModelSpec
 
 
 simpleTests : List Test
@@ -20,6 +21,7 @@ simpleTests =
   [ Account.UpdateSpec.tests
   , Account.ModelSpec.tests
   , DateTime.View.TimeDifferenceSpec.tests
+  , Accounts.ModelSpec.tests
   ]
 
 

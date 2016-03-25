@@ -1,6 +1,7 @@
 module Router.Model (..) where
 
 import Router.Routes exposing (Sitemap(..), match, route)
+import Account.Model exposing (HeadHash)
 
 
 type Page
@@ -9,6 +10,7 @@ type Page
   | NotFound
   | CreateAccount
   | FollowingList
+  | Profile HeadHash
 
 
 type alias Model =
@@ -30,6 +32,9 @@ routeToPage route =
 
     FollowingListRoute () ->
       FollowingList
+
+    ProfileRoute hash ->
+      Profile hash
 
 
 pathToPage : String -> Page

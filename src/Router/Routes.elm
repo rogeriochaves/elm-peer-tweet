@@ -1,6 +1,7 @@
 module Router.Routes (Sitemap(..), match, route) where
 
 import Route exposing (..)
+import Account.Model exposing (HeadHash)
 import String
 
 
@@ -9,36 +10,22 @@ type Sitemap
   | SearchRoute ()
   | CreateAccountRoute ()
   | FollowingListRoute ()
+  | ProfileRoute HeadHash
 
 
-timelineRoute : Route Sitemap
-timelineRoute =
-  TimelineRoute := static ""
-
-
-searchRoute : Route Sitemap
-searchRoute =
-  SearchRoute := static "search"
-
-
-createAccountRoute : Route Sitemap
-createAccountRoute =
-  CreateAccountRoute := static "account" <> "create"
-
-
-followingListRoute : Route Sitemap
-followingListRoute =
-  FollowingListRoute := static "following"
+routes : { a : Route Sitemap, b : Route Sitemap, c : Route Sitemap, d : Route Sitemap, e : Route Sitemap }
+routes =
+  { a = TimelineRoute := static ""
+  , b = SearchRoute := static "search"
+  , c = CreateAccountRoute := static "account" <> "create"
+  , d = FollowingListRoute := static "following"
+  , e = ProfileRoute := "profile" <//> string
+  }
 
 
 sitemap : Router Sitemap
 sitemap =
-  router [ timelineRoute, searchRoute, createAccountRoute, followingListRoute ]
-
-
-match : String -> Maybe Sitemap
-match =
-  String.dropLeft 1 >> Route.match sitemap
+  router [ routes.a, routes.b, routes.c, routes.d, routes.e ]
 
 
 route : Sitemap -> String
@@ -47,15 +34,23 @@ route r =
     route =
       case r of
         TimelineRoute () ->
-          reverse timelineRoute []
+          reverse routes.a []
 
         SearchRoute () ->
-          reverse searchRoute []
+          reverse routes.b []
 
         CreateAccountRoute () ->
-          reverse createAccountRoute []
+          reverse routes.c []
 
         FollowingListRoute () ->
-          reverse followingListRoute []
+          reverse routes.d []
+
+        ProfileRoute hash ->
+          reverse routes.e [ hash ]
   in
     "#" ++ route
+
+
+match : String -> Maybe Sitemap
+match =
+  String.dropLeft 1 >> Route.match sitemap

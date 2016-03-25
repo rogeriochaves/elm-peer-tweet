@@ -26,6 +26,10 @@
     align-self: flex-start;
 
     &:hover {
+      color: #64b5f6;
+    }
+
+    &.active {
       color: #2196f3;
     }
   }

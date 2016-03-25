@@ -7,6 +7,7 @@ import Model exposing (Model)
 import Account.Model as Account exposing (HeadHash, followList)
 import Accounts.Model exposing (findAccount)
 import Topbar.View.Topbar as Topbar
+import Timeline.View.Avatar as Avatar
 
 
 view : Signal.Address RootAction.Action -> Model -> Account.Model -> Html
@@ -28,7 +29,7 @@ followingItem address model userAccount followingHash =
       Just account ->
         li
           [ class "collection-item" ]
-          [ i [ class "avatar material-icons circle red" ] [ text "play_arrow" ]
+          [ Avatar.view account.head
           , span [ class "title" ] [ text account.head.n ]
           , p [] [ text <| "@" ++ account.head.hash ]
           ]

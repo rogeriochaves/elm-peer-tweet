@@ -9,6 +9,7 @@ import Timeline.View.Profile as Profile
 import FollowingList.View.FollowingList as FollowingListView
 import Authentication.View.Login as Login
 import Authentication.View.SignUp as SignUp
+import Settings.View.Settings as SettingsView
 import Action exposing (Action)
 import Model exposing (Model)
 import Accounts.Model exposing (getUserAccount, findAccount)
@@ -58,6 +59,9 @@ contentView address model userAccount =
       findAccount model.accounts (Just hash)
         |> Maybe.map (Profile.view address model userAccount)
         |> Maybe.withDefault notFound
+
+    Settings ->
+      SettingsView.view address model userAccount
 
     _ ->
       notFound

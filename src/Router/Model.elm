@@ -11,6 +11,7 @@ type Page
   | CreateAccount
   | FollowingList
   | Profile HeadHash
+  | Settings
 
 
 type alias Model =
@@ -35,6 +36,9 @@ routeToPage route =
 
     ProfileRoute hash ->
       Profile hash
+
+    SettingsRoute () ->
+      Settings
 
 
 pathToPage : String -> Page

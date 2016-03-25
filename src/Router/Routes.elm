@@ -11,21 +11,23 @@ type Sitemap
   | CreateAccountRoute ()
   | FollowingListRoute ()
   | ProfileRoute HeadHash
+  | SettingsRoute ()
 
 
-routes : { a : Route Sitemap, b : Route Sitemap, c : Route Sitemap, d : Route Sitemap, e : Route Sitemap }
+routes : { a : Route Sitemap, b : Route Sitemap, c : Route Sitemap, d : Route Sitemap, e : Route Sitemap, f : Route Sitemap }
 routes =
   { a = TimelineRoute := static ""
   , b = SearchRoute := static "search"
   , c = CreateAccountRoute := static "account" <> "create"
   , d = FollowingListRoute := static "following"
   , e = ProfileRoute := "profile" <//> string
+  , f = SettingsRoute := static "settings"
   }
 
 
 sitemap : Router Sitemap
 sitemap =
-  router [ routes.a, routes.b, routes.c, routes.d, routes.e ]
+  router [ routes.a, routes.b, routes.c, routes.d, routes.e, routes.f ]
 
 
 route : Sitemap -> String
@@ -47,6 +49,9 @@ route r =
 
         ProfileRoute hash ->
           reverse routes.e [ hash ]
+
+        SettingsRoute () ->
+          reverse routes.f []
   in
     "#" ++ route
 

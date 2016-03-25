@@ -18,7 +18,7 @@ view : Signal.Address RootAction.Action -> Model -> Account.Model -> Html
 view address model userAccount =
   let
     classes =
-      { home = "", followList = "", search = "" }
+      { home = "", followList = "", search = "", settings = "" }
 
     activeClass =
       case model.router.page of
@@ -30,6 +30,9 @@ view address model userAccount =
 
         Search ->
           { classes | search = "active" }
+
+        Settings ->
+          { classes | settings = "active" }
 
         _ ->
           classes
@@ -58,6 +61,11 @@ view address model userAccount =
               , onClick address (ActionForRouter <| UpdatePath <| SearchRoute ())
               ]
               [ text "search" ]
+          , button
+              [ class <| "sidebar-button material-icons " ++ activeClass.settings
+              , onClick address (ActionForRouter <| UpdatePath <| SettingsRoute ())
+              ]
+              [ text "settings" ]
           , div [ class "sidebar-space" ] []
           , PublishProgress.view address model.publish
           , DownloadProgress.view address model.download

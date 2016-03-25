@@ -19,4 +19,4 @@ view address model account =
   in
     ul
       [ class "collection" ]
-      (List.map (\tweet -> Tweet.view timestamp { head = account.head, tweet = tweet}) tweets)
+      (List.map (\tweet -> Tweet.view address timestamp { head = account.head, tweet = tweet}) tweets)

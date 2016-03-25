@@ -17,7 +17,7 @@ view address model userAccount account =
   div
     []
     [ div
-        [ class "card white" ]
+        [ class "card white profile" ]
         [ div
           [ class "card-content"]
           [ Avatar.view account.head
@@ -32,7 +32,9 @@ view address model userAccount account =
 
 followButton : Signal.Address RootAction.Action -> Model -> Account.Model -> Account.Model -> Html
 followButton address model userAccount account =
-  if isFollowing model account.head.hash then
+  if userAccount.head.hash == account.head.hash then
+    div [] []
+  else if isFollowing model account.head.hash then
     button [ class "btn small blue disabled secondary-content" ] [ text "Following" ]
   else
     button

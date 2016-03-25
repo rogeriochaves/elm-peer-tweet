@@ -1,6 +1,8 @@
 @import 'Authentication';
 @import 'Sidebar';
 @import 'NewTweet';
+@import 'Tweet';
+@import 'Profile';
 
 html, body, #main {
   height: 100%;
@@ -48,25 +50,4 @@ html, body, #main {
   font-size: 12px;
   line-height: 28px;
   height: 28px;
-}
-
-.avatar {
-  height: 42px;
-  min-width: 42px;
-  vertical-align: top;
-  text-align: center;
-  line-height: 42px;
-  background-color: #eeeeee;
-  border-radius: 10px;
-}
-
-.tweet {
-  display: flex;
-
-  .avatar {
-    margin-right: 15px;
-  }
-  .tweet-info {
-    flex-grow: 1;
-  }
 }

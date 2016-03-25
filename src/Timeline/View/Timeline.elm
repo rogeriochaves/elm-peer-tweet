@@ -24,5 +24,5 @@ view address model userAccount =
       []
       [ Topbar.view address model "Timeline"
       , NewTweet.view address model userAccount
-      , ul [ class "collection" ] (List.map (Tweet.view timestamp) items)
+      , ul [ class "collection" ] (List.map (Tweet.view address timestamp) items)
       ]

@@ -1,0 +1,20 @@
+.avatar {
+  height: 42px;
+  min-width: 42px;
+  vertical-align: top;
+  text-align: center;
+  line-height: 42px;
+  background-color: #eeeeee;
+  border-radius: 10px;
+}
+
+.profile {
+  .card-title {
+    padding-left: 10px;
+    line-height: 40px;
+  }
+
+  .avatar {
+    margin-bottom: 10px;
+  }
+}

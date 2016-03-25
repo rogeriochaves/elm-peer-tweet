@@ -5,12 +5,13 @@ import Html.Attributes exposing (class)
 import Sidebar.View.Sidebar as Sidebar
 import Timeline.View.Timeline as Timeline
 import Search.View.Search as SearchView
+import Timeline.View.Profile as Profile
 import FollowingList.View.FollowingList as FollowingListView
 import Authentication.View.Login as Login
 import Authentication.View.SignUp as SignUp
 import Action exposing (Action)
 import Model exposing (Model)
-import Accounts.Model exposing (getUserAccount)
+import Accounts.Model exposing (getUserAccount, findAccount)
 import Account.Model as Account
 import Router.Model exposing (Page(..))
 
@@ -42,21 +43,31 @@ loggedInView address model account =
 
 
 contentView : Signal.Address Action -> Model -> Account.Model -> Html
-contentView address model account =
+contentView address model userAccount =
   case model.router.page of
     Timeline ->
-      Timeline.view address model account
+      Timeline.view address model userAccount
 
     Search ->
-      SearchView.view address model account
+      SearchView.view address model userAccount
 
     FollowingList ->
-      FollowingListView.view address model account
+      FollowingListView.view address model userAccount
+
+    Profile hash ->
+      findAccount model.accounts (Just hash)
+        |> Maybe.map (Profile.view address model userAccount)
+        |> Maybe.withDefault notFound
 
     _ ->
-      div
-        []
-        [ text "NotFound" ]
+      notFound
+
+
+notFound : Html
+notFound =
+  div
+    []
+    [ text "NotFound" ]
 
 
 loggedOutView : Signal.Address Action -> Model -> Html

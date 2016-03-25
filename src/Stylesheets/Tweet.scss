@@ -1,0 +1,14 @@
+.tweet {
+  display: flex;
+
+  .avatar {
+    margin-right: 15px;
+  }
+  .tweet-info {
+    flex-grow: 1;
+  }
+  .title {
+    font-weight: bold;
+    color: #333;
+  }
+}

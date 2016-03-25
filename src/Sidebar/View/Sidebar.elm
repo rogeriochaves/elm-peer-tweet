@@ -3,7 +3,7 @@ module Sidebar.View.Sidebar (..) where
 import Html exposing (..)
 import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
-import Action as RootAction exposing (..)
+import Action as RootAction exposing (Action(ActionForRouter))
 import Model exposing (Model)
 import Publish.View.PublishProgress as PublishProgress
 import Download.View.DownloadProgress as DownloadProgress
@@ -18,13 +18,21 @@ view address model userAccount =
   div
     [ class "sidebar" ]
     [ div
-      [ class "sidebar-items blue darken-4" ]
-      [ button [ class "sidebar-button sidebar-avatar" ] [ Avatar.view userAccount.head ]
-      , button [ class "sidebar-button material-icons", onClick address (ActionForRouter <| UpdatePath <| TimelineRoute ()) ] [ text "home" ]
-      , button [ class "sidebar-button material-icons", onClick address (ActionForRouter <| UpdatePath <| FollowingListRoute ()) ] [ text "group" ]
-      , button [ class "sidebar-button material-icons", onClick address (ActionForRouter <| UpdatePath <| SearchRoute ()) ] [ text "search" ]
-      , div [ class "sidebar-space" ] []
-      , PublishProgress.view address model.publish
-      , DownloadProgress.view address model.download
-      ]
+        [ class "sidebar-items blue darken-4" ]
+        [ button
+            [ class "sidebar-button sidebar-avatar", onClick address (ActionForRouter <| UpdatePath <| ProfileRoute userAccount.head.hash) ]
+            [ Avatar.view userAccount.head ]
+        , button
+            [ class "sidebar-button material-icons", onClick address (ActionForRouter <| UpdatePath <| TimelineRoute ()) ]
+            [ text "home" ]
+        , button
+            [ class "sidebar-button material-icons", onClick address (ActionForRouter <| UpdatePath <| FollowingListRoute ()) ]
+            [ text "group" ]
+        , button
+            [ class "sidebar-button material-icons", onClick address (ActionForRouter <| UpdatePath <| SearchRoute ()) ]
+            [ text "search" ]
+        , div [ class "sidebar-space" ] []
+        , PublishProgress.view address model.publish
+        , DownloadProgress.view address model.download
+        ]
     ]

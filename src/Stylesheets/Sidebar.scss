@@ -8,6 +8,7 @@
     height: 100%;
     position: fixed;
     min-width: 80px;
+    padding-top: 15px;
   }
 
   .material-icons {
@@ -39,5 +40,17 @@
     width: 100%;
     text-align: center;
     color: #bbdefb;
+  }
+
+  .sidebar-avatar {
+    margin-bottom: 10px;
+  }
+
+  .avatar {
+    width: 56px;
+    height: 56px;
+    line-height: 56px;
+    font-size: 32px;
+    color: #333;
   }
 }

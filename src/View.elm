@@ -36,7 +36,7 @@ loggedInView : Signal.Address Action -> Model -> Account.Model -> Html
 loggedInView address model account =
   div
     [ class "flexbox-container" ]
-    [ Sidebar.view address model
+    [ Sidebar.view address model account
     , div [ class "flexbox-contents" ] [ contentView address model account ]
     ]
 

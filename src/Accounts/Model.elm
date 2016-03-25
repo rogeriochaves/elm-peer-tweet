@@ -36,6 +36,12 @@ isFollowing data hash =
     |> Maybe.withDefault False
 
 
+followingAccounts : Model -> Account.Model -> List Account.Model
+followingAccounts accounts userAccount =
+  followList userAccount
+    |> List.filterMap (findAccount accounts << Just)
+
+
 timeline : Model -> Account.Model -> List { head : Head, tweet : Tweet }
 timeline accounts userAccount =
   let
@@ -43,8 +49,7 @@ timeline accounts userAccount =
       List.map (\tweet -> { head = head, tweet = tweet }) tweets
 
     allItems =
-      followList userAccount
-        |> List.filterMap (findAccount accounts << Just)
+      followingAccounts accounts userAccount
         |> List.concatMap accountTweets
         |> List.append (accountTweets userAccount)
   in

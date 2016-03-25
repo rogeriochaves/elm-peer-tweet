@@ -7,7 +7,7 @@ import Effects exposing (Effects)
 import Task exposing (Task)
 import Account.Model exposing (Hash, HeadHash, nextHash, nextHashToDownload)
 import Maybe exposing (andThen)
-import Accounts.Model as Accounts exposing (findAccount, getUserAccount)
+import Accounts.Model as Accounts exposing (findAccount, getUserAccount, followingAccounts)
 import Authentication.Model as Authentication
 
 
@@ -27,13 +27,16 @@ effectsDownload jsAddress action model =
     BeginDownload ->
       let
         action =
-          model.authentication.hash
-            |> Maybe.map (\hash -> Effects.task <| Task.succeed (ActionForDownload <| DownloadHead hash))
-            |> Maybe.withDefault Effects.none
+          Effects.task << Task.succeed << ActionForDownload << DownloadHead << .hash << .head
       in
-        getUserAccount model
-          |> Maybe.map (always action)
-          |> Maybe.withDefault Effects.none
+        case getUserAccount model of
+          Just userAccount ->
+            userAccount :: (followingAccounts model.accounts userAccount)
+              |> List.map action
+              |> Effects.batch
+
+          Nothing ->
+            Effects.none
 
     DownloadHead hash ->
       Signal.send jsAddress (ActionForDownload <| DownloadHead hash)

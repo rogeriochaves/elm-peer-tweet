@@ -38,7 +38,22 @@ userAccount =
     head =
       initialModel.head
   in
-    { initialModel | head = { head | hash = "user" } }
+    { initialModel
+      | head = { head | hash = "user", f = ["followBlock1"] }
+      , followBlocks = [{ hash = "followBlock1", l = ["someUser"], next = [] }]
+    }
+
+
+someUserAccount : Account.Model
+someUserAccount =
+  let
+    initialModel =
+      Account.initialModel
+
+    head =
+      initialModel.head
+  in
+    { initialModel | head = { head | hash = "someUser" } }
 
 
 model : RootModel.Model
@@ -55,6 +70,30 @@ tests =
   signalDescribe
     "Download.Effects"
     [ signalDescribe
+        "Begin Download"
+        [ signalIt "downloads user hash"
+            <| let
+                action =
+                  (ActionForDownload BeginDownload)
+
+                account =
+                  setup model action
+               in
+                expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForDownload <| DownloadHead "user") ]
+        , signalIt "downloads followers head hash"
+            <| let
+                setupModel =
+                  { model | accounts = [ userAccount, someUserAccount ] }
+
+                action =
+                  (ActionForDownload BeginDownload)
+
+                account =
+                  setup setupModel action
+               in
+                expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForDownload <| DownloadHead "someUser") ]
+        ]
+    , signalDescribe
         "Head Download"
         [ signalIt "forwards download head actions to javascript mailbox"
             <| let

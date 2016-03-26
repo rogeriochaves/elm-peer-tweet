@@ -49,7 +49,8 @@ export const initialAccount = () => ({
     d: Date.now(),
     next: [],
     f: [],
-    n: ""
+    n: "",
+    a: ""
   },
   tweets: [],
   followBlocks: []

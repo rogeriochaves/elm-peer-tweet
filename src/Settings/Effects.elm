@@ -8,7 +8,6 @@ import Effects exposing (Effects)
 import Accounts.Action exposing (Action(UpdateUserAccount))
 import Accounts.Model exposing (getUserAccount)
 import Task exposing (andThen)
-import Publish.Action exposing (Action(PublishHead))
 
 
 effects : RootAction.Action -> Model -> Effects RootAction.Action
@@ -21,10 +20,8 @@ effects action model =
       ActionForSettings SaveSettings ->
         case getUserAccount model of
           Just userAccount ->
-            Effects.batch
-              [ Effects.task <| Task.succeed (ActionForAccounts <| UpdateUserAccount <| updatedUser userAccount userAccount.head)
-              , Effects.task <| Task.succeed (ActionForPublish <| PublishHead <| .head <| updatedUser userAccount userAccount.head)
-              ]
+            Task.succeed (ActionForAccounts <| UpdateUserAccount <| updatedUser userAccount userAccount.head)
+              |> Effects.task
 
           Nothing ->
             Effects.none

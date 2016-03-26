@@ -6,13 +6,13 @@ import Publish.Action exposing (..)
 import Ports exposing (jsMailbox)
 import Utils.Utils exposing (isJust, filterEmpty)
 import Publish.Action exposing (..)
-import Time exposing (every, second)
+import Time exposing (every, minute)
 import Account.Action exposing (TweetIdentifier, TweetData, FollowBlockIdentifier, FollowBlockData)
 
 
 requestPublish : Signal RootAction.Action
 requestPublish =
-  (every <| 30 * second)
+  (every <| 5 * minute)
     |> Signal.map (always <| ActionForPublish BeginPublish)
 
 

@@ -8,6 +8,7 @@ import Download.Action as Download
 import DateTime.Action as DateTime
 import Search.Action as Search
 import Authentication.Action as Authentication
+import Settings.Action as Settings
 
 
 type Action
@@ -20,3 +21,4 @@ type Action
   | ActionForDateTime DateTime.Action
   | ActionForSearch Search.Action
   | ActionForAuthentication Authentication.Action
+  | ActionForSettings Settings.Action

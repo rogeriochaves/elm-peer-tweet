@@ -28,12 +28,17 @@ type alias Name =
   String
 
 
+type alias AvatarUrl =
+  String
+
+
 type alias Head =
   { hash : HeadHash
   , d : Timestamp
   , next : List TweetHash
   , f : List FollowBlockHash
   , n : Name
+  , a : AvatarUrl
   }
 
 
@@ -61,7 +66,7 @@ type alias Model =
 
 initialModel : Model
 initialModel =
-  { head = { hash = "", d = 0, next = [], f = [], n = "" }
+  { head = { hash = "", d = 0, next = [], f = [], n = "", a = "" }
   , tweets = []
   , followBlocks = []
   }

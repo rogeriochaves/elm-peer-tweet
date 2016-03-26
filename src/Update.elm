@@ -16,6 +16,8 @@ import DateTime.Update as DateTime
 import Search.Update as Search
 import Authentication.Update as Authentication
 import Authentication.Effects as AuthenticationEffects
+import Settings.Update as Settings
+import Settings.Effects as SettingsEffects
 
 
 update : Signal.Address Action -> Action -> Model -> ( Model, Effects Action )
@@ -34,6 +36,7 @@ modelUpdate action model =
     , dateTime = DateTime.update action model.dateTime
     , search = Search.update action model.search
     , authentication = Authentication.update action model.authentication
+    , settings = Settings.update action model.settings
   }
 
 
@@ -45,4 +48,5 @@ effectsUpdate jsAddress action model =
     , PublishEffects.effects jsAddress action model
     , DownloadEffects.effects jsAddress action model
     , AuthenticationEffects.effects jsAddress action
+    , SettingsEffects.effects action model
     ]

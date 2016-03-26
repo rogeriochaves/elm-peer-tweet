@@ -4,7 +4,7 @@ import Account.Model as Account
 import Action exposing (..)
 import Accounts.Action exposing (..)
 import Ports exposing (jsMailbox)
-import Utils exposing (isJust, filterEmpty)
+import Utils.Utils exposing (isJust, filterEmpty)
 
 
 port accountStream : Signal (Maybe Account.Model)

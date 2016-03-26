@@ -1,7 +1,7 @@
-import { dht } from './Utils';
+import { dht } from './Common';
 import { hash as head } from './Account';
 import ed from 'ed25519-supercop';
-import { getLocalStorage } from './Utils';
+import { getLocalStorage } from '../Utils/Utils.js';
 
 const hexBuffer = (value) =>
   Buffer(value, 'hex');

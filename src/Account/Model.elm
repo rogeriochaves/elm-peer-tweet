@@ -1,7 +1,7 @@
 module Account.Model (..) where
 
 import Maybe exposing (andThen, map, withDefault)
-import Utils exposing (isJust)
+import Utils.Utils exposing (isJust)
 
 
 type alias Hash =

@@ -4,7 +4,7 @@ import Account.Model as Account exposing (Hash, Head, Tweet, HeadHash, TweetHash
 import Action as RootAction exposing (..)
 import Download.Action exposing (..)
 import Ports exposing (jsMailbox)
-import Utils exposing (isJust, filterEmpty)
+import Utils.Utils exposing (isJust, filterEmpty)
 import Download.Action exposing (..)
 import Time exposing (every, second)
 import Account.Action exposing (TweetIdentifier, TweetData, FollowBlockIdentifier, FollowBlockData)

@@ -1,4 +1,4 @@
-import { dht } from './Utils';
+import { dht } from './Common';
 
 const decodeHashesArray = (value) =>
   value.toString() ? value.toString().match(/.{1,40}/g) : [];

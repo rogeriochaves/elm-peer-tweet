@@ -9,7 +9,7 @@ import NewTweet.Action exposing (..)
 import Model exposing (Model)
 import Account.Model as Account
 import String exposing (length)
-import Utils exposing (onEnter)
+import Utils.Utils exposing (onEnter)
 
 
 view : Signal.Address RootAction.Action -> Model -> Account.Model -> Html

@@ -5,7 +5,7 @@ import Action exposing (Action(ActionForAuthentication, NoOp))
 import Authentication.Action exposing (Action(CreateKeys, DoneCreateKeys, Login, DoneLogin))
 import Authentication.Model exposing (Keys)
 import Ports exposing (jsMailbox)
-import Utils exposing (isJust, filterEmpty)
+import Utils.Utils exposing (isJust, filterEmpty)
 
 
 port createdKeysStream : Signal (Maybe { hash : HeadHash, keys : Keys })

@@ -1,4 +1,4 @@
-import { findNext, selectHops, hashItem, bencodeItem, sha1 } from './Utils';
+import { findNext, selectHops, hashItem, bencodeItem, sha1 } from './Common';
 
 export const add = (account) => (text) =>
   updateAccount(account)(hashItem(buildTweet(account)(text)));

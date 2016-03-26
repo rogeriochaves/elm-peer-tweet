@@ -1,7 +1,7 @@
 import bencode from 'bencode';
 import crypto from 'crypto';
 import { encodeItem } from './Publish';
-import { findNext, selectHops, hashItem, bencodeItem, sha1 } from './Utils';
+import { findNext, selectHops, hashItem, bencodeItem, sha1 } from './Common';
 
 export const add = (account) => (hash) =>
   updateAccount(account)(hash);

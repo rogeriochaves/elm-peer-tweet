@@ -2,7 +2,7 @@ module Settings.View.Settings (..) where
 
 import Html exposing (..)
 import Model exposing (Model)
-import Html.Attributes exposing (class, type', value)
+import Html.Attributes exposing (class, type', value, href, target)
 import Html.Events exposing (on, targetValue, onClick)
 import Account.Model as Account
 import Topbar.View.Topbar as Topbar
@@ -34,6 +34,12 @@ avatarField address model userAccount =
         , label
             [ class "active" ]
             [ text "Avatar Image URL" ]
+        ]
+    , p
+        [ class "hint" ]
+        [ span [] [ text "Hint: you can use " ]
+        , a [ href "http://imgur.com/", target "_blank", class "link" ] [ text "imgur.com" ]
+        , span [] [ text " to upload your image and paste the direct link here" ]
         ]
     , saveButton address model userAccount
     ]

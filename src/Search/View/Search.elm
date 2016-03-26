@@ -11,7 +11,7 @@ import Account.Model as Account exposing (Hash)
 import Accounts.Model exposing (findAccount)
 import Timeline.View.Profile as Profile
 import Download.Model as Download exposing (isLoading, hasError, getError)
-import Utils exposing (onEnter)
+import Utils.Utils exposing (onEnter)
 
 
 view : Signal.Address RootAction.Action -> Model -> Account.Model -> Html

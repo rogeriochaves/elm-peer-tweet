@@ -6,7 +6,7 @@ import './Stylesheets/Main.scss';
 import Elm from './Main';
 import { hash } from './Api/Account';
 import { setup } from './Ports';
-import { getLocalStorage } from './Api/Utils';
+import { getLocalStorage, openLinksInBrowser } from './Utils/Utils.js';
 
 const path = window.location.hash || "#/";
 const accounts = getLocalStorage().accounts;
@@ -30,3 +30,5 @@ const initialPorts =
 const App = Elm.embed(Elm.Main, document.getElementById('main'), initialPorts);
 
 setup(App.ports);
+
+openLinksInBrowser();

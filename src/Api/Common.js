@@ -4,9 +4,6 @@ import bencode from 'bencode';
 import crypto from 'crypto';
 import { encodeItem } from './Publish';
 
-export const getLocalStorage = () =>
-  (typeof window !== 'undefined' && window.localStorage) || global.localStorage;
-
 export const dht = new DHT({ verify: ed.verify });
 
 export const findNext = (accumulated, current, list) => {

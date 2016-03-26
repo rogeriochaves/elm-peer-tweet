@@ -33,6 +33,8 @@ The downside is that data only lasts about 30 minutes in the DHT network, which 
 
 In order to keep the network working, ElmPeerTweet republishes both your data and data from who you follow, so trending tweets and popular accounts are more likely to live up in the network. All downloaded data is also saved on the localStorage so it can get republished even if it is not on the DHT network anymore.
 
+Since you cannot contact the DHT network from the browser, ElmPeerTweet has to be a native app, it uses [Electron](http://electron.atom.io/) for that.
+
 The data structure is composed by 3 main items:
 
 1. **Your feed head**. Which is the only mutable item of the three, it points to the last tweets and followBlocks you published. The hash for this item is what you share so other people can follow you. The public and secret keys are needed to update it.

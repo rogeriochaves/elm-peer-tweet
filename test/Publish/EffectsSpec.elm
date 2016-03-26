@@ -68,7 +68,7 @@ tests =
         , signalIt "forwards publish head actions to javascript mailbox"
             <| let
                 head =
-                  { hash = "uno", d = 1, next = [ "duo" ], f = [], n = "Mr Foo" }
+                  { hash = "uno", d = 1, next = [ "duo" ], f = [], n = "Mr Foo", a = "" }
 
                 action =
                   (ActionForPublish <| PublishHead head)
@@ -80,7 +80,7 @@ tests =
         , signalIt "dispatches publish action for the next tweets"
             <| let
                 head =
-                  { hash = "uno", d = 1, next = [ "foo" ], f = [], n = "Mr Foo" }
+                  { hash = "uno", d = 1, next = [ "foo" ], f = [], n = "Mr Foo", a = "" }
 
                 nextTweet =
                   { hash = "foo", d = 2, t = "something", next = [] }
@@ -98,7 +98,7 @@ tests =
         , signalIt "dispatches publish action for the next followBlocks"
             <| let
                 head =
-                  { hash = "uno", d = 1, next = [], f = [ "foo" ], n = "Mr Foo" }
+                  { hash = "uno", d = 1, next = [], f = [ "foo" ], n = "Mr Foo", a = "" }
 
                 nextFollowBlock =
                   { hash = "foo", l = [ "somebody" ], next = [] }
@@ -185,7 +185,7 @@ tests =
                   { hash = "foo", l = [ "batman" ], next = [] }
 
                 batman =
-                  { hash = "batman", d = 1, next = [], f = [], n = "Batman" }
+                  { hash = "batman", d = 1, next = [], f = [], n = "Batman", a = "" }
 
                 initialAccount =
                   Account.initialModel
@@ -206,7 +206,7 @@ tests =
                   { hash = "foo", l = [ "batman" ], next = [] }
 
                 batman =
-                  { hash = "batman", d = 1, next = [], f = [], n = "Batman" }
+                  { hash = "batman", d = 1, next = [], f = [], n = "Batman", a = "" }
 
                 initialAccount =
                   Account.initialModel

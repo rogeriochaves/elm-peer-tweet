@@ -1,7 +1,7 @@
 module Search.View.Search (..) where
 
 import Html exposing (..)
-import Html.Attributes exposing (class, type', id, value, for)
+import Html.Attributes exposing (class, type', id, value, for, placeholder)
 import Html.Events exposing (onClick, on, targetValue, keyCode)
 import Action as RootAction exposing (Action(ActionForSearch, ActionForDownload))
 import Download.Action exposing (Action(DownloadHead))
@@ -49,6 +49,7 @@ searchBar address model =
             , id "search"
             , value model.search.query
             , onEnter address (ActionForDownload <| DownloadHead model.search.query)
+            , placeholder "Search by hash..."
             ]
             []
         , label

@@ -12,11 +12,20 @@ import Timeline.View.Avatar as Avatar
 
 view : Signal.Address RootAction.Action -> Model -> Account.Model -> Html
 view address model userAccount =
-  div
-    []
-    [ Topbar.view address model "Following"
-    , ul [ class "collection" ] (List.map (followingItem address model userAccount) (followList userAccount))
-    ]
+  let
+    following =
+      followList userAccount
+  in
+    div
+      []
+      [ Topbar.view address model "Following"
+      , if List.length following == 0 then
+          div
+            [ class "container" ]
+            [ p [] [ text "You are not following anybody, use the search to find more people" ] ]
+        else
+          ul [ class "collection" ] (List.map (followingItem address model userAccount) following)
+      ]
 
 
 followingItem : Signal.Address RootAction.Action -> Model -> Account.Model -> HeadHash -> Html

@@ -1,4 +1,4 @@
-module Authentication.View.Login (view) where
+module Authentication.View.Login where
 
 import Html exposing (..)
 import Html.Attributes exposing (value, class, type', href)
@@ -21,7 +21,7 @@ view address model =
       case model.authentication.hash of
         Just userHash ->
           if isLoading model.download userHash then
-            signingIn
+            loading
           else if hasError model.download userHash then
             signInError address model userHash
           else
@@ -35,8 +35,8 @@ view address model =
       [ content ]
 
 
-signingIn : Html
-signingIn =
+loading : Html
+loading =
   div
     [ class "login" ]
     [ div

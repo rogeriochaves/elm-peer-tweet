@@ -12,6 +12,7 @@ import Accounts.Model exposing (findAccount)
 import Timeline.View.Profile as Profile
 import Download.Model as Download exposing (isLoading, hasError, getError)
 import Utils.Utils exposing (onEnter)
+import Authentication.View.Login exposing (loading)
 
 
 view : Signal.Address RootAction.Action -> Model -> Account.Model -> Html
@@ -21,18 +22,20 @@ view address model userAccount =
     [ searchBar address model
     , findAccount model.accounts (Just model.search.query)
         |> Maybe.map (Profile.view address model userAccount)
-        |> Maybe.withDefault (text <| searchStatus model.download model.search.query)
+        |> Maybe.withDefault (searchStatus model.download model.search.query)
     ]
 
 
-searchStatus : Download.Model -> Hash -> String
+searchStatus : Download.Model -> Hash -> Html
 searchStatus model hash =
   if isLoading model hash then
-    "Searching..."
+    div [ class "search-loading" ] [ loading ]
   else if hasError model hash then
-    Maybe.withDefault "Error" (getError model hash)
+    div
+      [ class "container"]
+      [ p [] [ text <| Maybe.withDefault "Error" (getError model hash) ] ]
   else
-    ""
+    text ""
 
 
 searchBar : Signal.Address RootAction.Action -> Model -> Html

@@ -2,6 +2,8 @@
 
 > Decentralized feeds using BitTorrent's DHT. Reimplemented in Elm the ideas from [peer-tweet](https://github.com/lmatteis/peer-tweet) and [DHT RSS feeds](http://libtorrent.org/dht_rss.html).
 
+![elm-peer-tweet](https://cloud.githubusercontent.com/assets/792201/14061240/09da8412-f35a-11e5-850a-15623db5b9ff.gif)
+
 
 ## What is ElmPeerTweet?
 

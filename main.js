@@ -12,13 +12,17 @@ let mainWindow;
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 850, height: 600});
+  if (process.env.NODE_ENV === 'development') {
+    mainWindow = new BrowserWindow({width: 950, height: 700});
+
+    // Open the DevTools.
+    mainWindow.webContents.openDevTools();
+  } else {
+    mainWindow = new BrowserWindow({width: 500, height: 700});
+  }
 
   // and load the index.html of the app.
   mainWindow.loadURL('file://' + __dirname + '/index.html');
-
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {

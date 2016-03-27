@@ -4,9 +4,10 @@
   "description": "",
   "main": "elm.js",
   "scripts": {
-    "start": "electron main.js",
-    "build": "npm run build-ports && webpack",
-    "watch": "npm run build-ports && webpack --watch",
+    "start": "NODE_ENV=development electron dist/main.js",
+    "copy-static": "cp index.html dist/index.html && cp main.js dist/main.js",
+    "build": "npm run build-ports && npm run copy-static && webpack",
+    "watch": "npm run build-ports && npm run copy-static && webpack --watch",
     "dev": "npm run build-ports && webpack-dev-server --port 3000",
     "test": "npm run test-elm && npm run test-js",
     "test-js": "./node_modules/mocha/bin/mocha --compilers js:babel-core/register test/*.js test/**/*.js",

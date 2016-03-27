@@ -1,9 +1,5 @@
 bundle.js
 node_modules
 elm-stuff
-/*.woff
-/*.woff2
-/*.eot
-/*.ttf
-/*.svg
+dist
 npm-debug.log

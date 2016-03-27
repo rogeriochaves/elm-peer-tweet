@@ -4,7 +4,7 @@ var options = {
   entry: './src/index.js',
 
   output: {
-    path: './',
+    path: './dist',
     filename: 'bundle.js',
     libraryTarget: 'commonjs2'
   },

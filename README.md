@@ -4,6 +4,9 @@
 
 ![elm-peer-tweet](https://cloud.githubusercontent.com/assets/792201/14061240/09da8412-f35a-11e5-850a-15623db5b9ff.gif)
 
+### [Download Here](https://github.com/rogeriochaves/elm-peer-tweet/releases)
+for Windows, Mac and Linux
+
 
 ## What is ElmPeerTweet?
 

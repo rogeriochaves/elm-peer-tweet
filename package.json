@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "NODE_ENV=development electron dist/main.js",
-    "copy-static": "cp index.html dist/index.html && cp main.js dist/main.js && cp package.json dist/package.json && mkdir -p dist/node_modules && cp -r node_modules/ed25519-supercop dist/node_modules",
+    "copy-static": "mkdir -p dist && cp index.html dist/index.html && cp main.js dist/main.js && cp package.json dist/package.json && mkdir -p dist/node_modules && cp -r node_modules/ed25519-supercop dist/node_modules",
     "build": "npm run build-ports && npm run copy-static && webpack",
     "watch": "npm run build-ports && npm run copy-static && webpack --watch",
     "dev": "npm run build-ports && webpack-dev-server --port 3000",
@@ -13,7 +13,8 @@
     "test-js": "mocha --compilers js:babel-core/register test/*.js test/**/*.js",
     "test-elm": "elm-test test/TestRunner.elm",
     "build-ports": "rm -r elm-stuff/build-artifacts; elm-make src/**/Ports.elm --output /dev/null",
-    "package": "electron-packager dist --platform=all --arch=x64 --out out/ --version 0.36.0 --overwrite"
+    "package": "electron-packager dist --platform=all --arch=x64 --out out/ --version 0.36.0 --overwrite",
+    "install": "elm package install -y"
   },
   "author": "",
   "license": "ISC",
@@ -27,6 +28,7 @@
     "css-loader": "^0.23.1",
     "electron-packager": "^5.2.1",
     "electron-prebuilt": "^0.36.0",
+    "elm": "^0.16.0",
     "elm-test": "^0.16.0",
     "elm-webpack-loader": "^2.0.0",
     "file-loader": "^0.8.5",

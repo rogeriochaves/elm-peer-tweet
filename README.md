@@ -81,3 +81,18 @@ https://github.com/rogeriochaves/elm-peer-tweet/wiki/Differences-from-peer-tweet
 ## Naming
 
 I'm looking for a better naming to the project, please suggest any ideas :)
+
+
+## Building elm-peer-tweet
+
+If you want to build elm-peer-tweet for development, first you'll need `node 5.8.x` with `npm 3.x.x`. That's because electron have problems when node version varies, you may get an error message like `Module version mismatch. Expected 47, got 46`.
+
+Then, run:
+
+```
+npm install
+npm run build
+npm start
+```
+
+You should find other npm commands for testing, watching and packaging on the `package.json` file.

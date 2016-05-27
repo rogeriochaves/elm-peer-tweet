@@ -1,7 +1,7 @@
-module Accounts.Action (..) where
+module Accounts.Msg (..) where
 
 import Account.Model as Account exposing (HeadHash, Name)
-import Account.Action as AccountAction
+import Account.Msg as AccountMsg
 import Time exposing (Time)
 
 
@@ -13,9 +13,9 @@ type alias AddFollowerRequestPayload =
   { account : Account.Model, hash : HeadHash }
 
 
-type Action
+type Msg
   = AddTweetRequest AddTweetRequestPayload
   | AddFollowerRequest AddFollowerRequestPayload
   | UpdateUserAccount Account.Model
-  | ActionForAccount HeadHash AccountAction.Action
+  | MsgForAccount HeadHash AccountMsg.Msg
   | CreateAccount HeadHash Name Time

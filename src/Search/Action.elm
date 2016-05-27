@@ -1,5 +1,5 @@
-module Search.Action (..) where
+module Search.Msg (..) where
 
 
-type Action
+type Msg
   = Update String

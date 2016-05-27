@@ -3,18 +3,18 @@ module Authentication.View.Login where
 import Html exposing (..)
 import Html.Attributes exposing (value, class, type', href)
 import Html.Events exposing (onClick, on, targetValue)
-import Action as RootAction exposing (Action(ActionForSearch, ActionForDownload))
+import Msg as RootMsg exposing (Msg(MsgForSearch, MsgForDownload))
 import Model exposing (Model)
 import Download.Model exposing (isLoading, hasError)
-import Action as RootAction exposing (..)
-import Accounts.Action exposing (..)
+import Msg as RootMsg exposing (..)
+import Accounts.Msg exposing (..)
 import Router.Routes exposing (Sitemap(..))
-import Router.Action exposing (Action(UpdatePath))
-import Authentication.Action exposing (Action(UpdatePublicKey, UpdateSecretKey, Login))
+import Router.Msg exposing (Msg(UpdatePath))
+import Authentication.Msg exposing (Msg(UpdatePublicKey, UpdateSecretKey, Login))
 import Account.Model exposing (HeadHash)
 
 
-view : Signal.Address RootAction.Action -> Model -> Html
+view : Signal.Address RootMsg.Msg -> Model -> Html
 view address model =
   let
     content =
@@ -60,7 +60,7 @@ loading =
     ]
 
 
-signIn : Signal.Address RootAction.Action -> Model -> Html
+signIn : Signal.Address RootMsg.Msg -> Model -> Html
 signIn address model =
   div
     [ class "login" ]
@@ -69,7 +69,7 @@ signIn address model =
     ]
 
 
-signInError : Signal.Address RootAction.Action -> Model -> HeadHash -> Html
+signInError : Signal.Address RootMsg.Msg -> Model -> HeadHash -> Html
 signInError address model userHash =
   div
     [ class "login" ]
@@ -83,7 +83,7 @@ signInError address model userHash =
             [ text "Do you want to start a new account using those keys? "
             , span [ class "red-text" ] [ text "This means you will lose your old tweets if there were any" ]
             ]
-        , button [ class "btn green", onClick address <| ActionForAccounts <| CreateAccount userHash "Unknown" model.dateTime.timestamp ] [ text "Ok" ]
+        , button [ class "btn green", onClick address <| MsgForAccounts <| CreateAccount userHash "Unknown" model.dateTime.timestamp ] [ text "Ok" ]
         ]
     , loginContainer address model
     ]
@@ -96,7 +96,7 @@ loginLogo =
     [ b [] [ text "Peer Tweet" ] ]
 
 
-loginContainer : Signal.Address RootAction.Action -> Model -> Html
+loginContainer : Signal.Address RootMsg.Msg -> Model -> Html
 loginContainer address { authentication } =
   div
     [ class "login-container" ]
@@ -105,7 +105,7 @@ loginContainer address { authentication } =
         [ input
             [ type' "text"
             , value authentication.keys.publicKey
-            , on "input" targetValue (Signal.message address << ActionForAuthentication << UpdatePublicKey)
+            , on "input" targetValue (Signal.message address << MsgForAuthentication << UpdatePublicKey)
             ]
             []
         , label
@@ -117,7 +117,7 @@ loginContainer address { authentication } =
         [ input
             [ type' "text"
             , value authentication.keys.secretKey
-            , on "input" targetValue (Signal.message address << ActionForAuthentication << UpdateSecretKey)
+            , on "input" targetValue (Signal.message address << MsgForAuthentication << UpdateSecretKey)
             ]
             []
         , label
@@ -126,7 +126,7 @@ loginContainer address { authentication } =
         ]
     , button
         [ class "waves-effect waves-light btn btn-full blue lighten-1"
-        , onClick address <| ActionForAuthentication <| Login authentication.keys
+        , onClick address <| MsgForAuthentication <| Login authentication.keys
         ]
         [ text "Login" ]
     , div
@@ -134,7 +134,7 @@ loginContainer address { authentication } =
         [ text "Don't have an account yet? "
         , a
             [ class "link"
-            , onClick address <| ActionForRouter <| UpdatePath <| CreateAccountRoute ()
+            , onClick address <| MsgForRouter <| UpdatePath <| CreateAccountRoute ()
             ]
             [ text "Create Account" ]
         ]

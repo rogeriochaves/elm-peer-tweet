@@ -1,7 +1,7 @@
-module DateTime.Action (..) where
+module DateTime.Msg (..) where
 
 import Time exposing (Time)
 
 
-type Action
+type Msg
   = Update Time

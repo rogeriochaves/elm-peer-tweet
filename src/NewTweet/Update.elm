@@ -1,17 +1,17 @@
 module NewTweet.Update (update) where
 
-import Action as RootAction exposing (..)
-import NewTweet.Action exposing (..)
+import Msg as RootMsg exposing (..)
+import NewTweet.Msg exposing (..)
 import NewTweet.Model exposing (Model)
-import Accounts.Action exposing (Action(UpdateUserAccount))
+import Accounts.Msg exposing (Msg(UpdateUserAccount))
 
-update : RootAction.Action -> Model -> Model
-update action model =
-  case action of
-    ActionForNewTweet (Update text) ->
+update : RootMsg.Msg -> Model -> Model
+update msg model =
+  case msg of
+    MsgForNewTweet (Update text) ->
       { model | text = text }
 
-    ActionForAccounts (UpdateUserAccount _) ->
+    MsgForAccounts (UpdateUserAccount _) ->
       { model | text = "" }
 
     _ ->

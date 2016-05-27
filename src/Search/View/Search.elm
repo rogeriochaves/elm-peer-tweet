@@ -3,9 +3,9 @@ module Search.View.Search (..) where
 import Html exposing (..)
 import Html.Attributes exposing (class, type', id, value, for, placeholder)
 import Html.Events exposing (onClick, on, targetValue, keyCode)
-import Action as RootAction exposing (Action(ActionForSearch, ActionForDownload))
-import Download.Action exposing (Action(DownloadHead))
-import Search.Action exposing (Action(Update))
+import Msg as RootMsg exposing (Msg(MsgForSearch, MsgForDownload))
+import Download.Msg exposing (Msg(DownloadHead))
+import Search.Msg exposing (Msg(Update))
 import Model exposing (Model)
 import Account.Model as Account exposing (Hash)
 import Accounts.Model exposing (findAccount)
@@ -15,7 +15,7 @@ import Utils.Utils exposing (onEnter)
 import Authentication.View.Login exposing (loading)
 
 
-view : Signal.Address RootAction.Action -> Model -> Account.Model -> Html
+view : Signal.Address RootMsg.Msg -> Model -> Account.Model -> Html
 view address model userAccount =
   div
     []
@@ -38,7 +38,7 @@ searchStatus model hash =
     text ""
 
 
-searchBar : Signal.Address RootAction.Action -> Model -> Html
+searchBar : Signal.Address RootMsg.Msg -> Model -> Html
 searchBar address model =
   nav
     []
@@ -47,11 +47,11 @@ searchBar address model =
       [ div
         [ class "input-field" ]
         [ input
-            [ on "input" targetValue (Signal.message address << ActionForSearch << Update)
+            [ on "input" targetValue (Signal.message address << MsgForSearch << Update)
             , type' "search"
             , id "search"
             , value model.search.query
-            , onEnter address (ActionForDownload <| DownloadHead model.search.query)
+            , onEnter address (MsgForDownload <| DownloadHead model.search.query)
             , placeholder "Search by hash..."
             ]
             []

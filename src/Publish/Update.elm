@@ -1,23 +1,23 @@
 module Publish.Update (update) where
 
-import Action as RootAction exposing (..)
-import Publish.Action as Publish exposing (..)
+import Msg as RootMsg exposing (..)
+import Publish.Msg as Publish exposing (..)
 import Publish.Model exposing (Model)
 
 
-update : RootAction.Action -> Model -> Model
-update action model =
-  case action of
-    ActionForPublish syncAction ->
-      updatePublish syncAction model
+update : RootMsg.Msg -> Model -> Model
+update msg model =
+  case msg of
+    MsgForPublish syncMsg ->
+      updatePublish syncMsg model
 
     _ ->
       model
 
 
-updatePublish : Publish.Action -> Model -> Model
-updatePublish action model =
-  case action of
+updatePublish : Publish.Msg -> Model -> Model
+updatePublish msg model =
+  case msg of
     BeginPublish ->
       model
 

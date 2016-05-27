@@ -2,7 +2,7 @@ module FollowingList.View.FollowingList (..) where
 
 import Html exposing (..)
 import Html.Attributes exposing (class, type', id, value, for)
-import Action as RootAction
+import Msg as RootMsg
 import Model exposing (Model)
 import Account.Model as Account exposing (HeadHash, followList)
 import Accounts.Model exposing (findAccount)
@@ -10,7 +10,7 @@ import Topbar.View.Topbar as Topbar
 import Timeline.View.Avatar as Avatar
 
 
-view : Signal.Address RootAction.Action -> Model -> Account.Model -> Html
+view : Signal.Address RootMsg.Msg -> Model -> Account.Model -> Html
 view address model userAccount =
   let
     following =
@@ -28,7 +28,7 @@ view address model userAccount =
       ]
 
 
-followingItem : Signal.Address RootAction.Action -> Model -> Account.Model -> HeadHash -> Html
+followingItem : Signal.Address RootMsg.Msg -> Model -> Account.Model -> HeadHash -> Html
 followingItem address model userAccount followingHash =
   let
     foundAccount =

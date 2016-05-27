@@ -1,5 +1,5 @@
-module Settings.Action where
+module Settings.Msg where
 
-type Action
+type Msg
     = UpdateAvatar String
     | SaveSettings

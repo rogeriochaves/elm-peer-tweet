@@ -1,6 +1,6 @@
 module Update (update) where
 
-import Action exposing (Action)
+import Msg exposing (Msg)
 import Model exposing (Model)
 import Effects exposing (Effects)
 import Router.Update as Router
@@ -20,33 +20,33 @@ import Settings.Update as Settings
 import Settings.Effects as SettingsEffects
 
 
-update : Signal.Address Action -> Action -> Model -> ( Model, Effects Action )
-update jsAddress action model =
-  ( modelUpdate action model, effectsUpdate jsAddress action model )
+update : Signal.Address Msg -> Msg -> Model -> ( Model, Effects Msg )
+update jsAddress msg model =
+  ( modelUpdate msg model, effectsUpdate jsAddress msg model )
 
 
-modelUpdate : Action -> Model -> Model
-modelUpdate action model =
+modelUpdate : Msg -> Model -> Model
+modelUpdate msg model =
   { model
-    | router = Router.update action model.router
-    , accounts = Accounts.update action model.accounts
-    , newTweet = NewTweet.update action model.newTweet
-    , publish = Publish.update action model.publish
-    , download = Download.update action model.download
-    , dateTime = DateTime.update action model.dateTime
-    , search = Search.update action model.search
-    , authentication = Authentication.update action model.authentication
-    , settings = Settings.update action model.settings
+    | router = Router.update msg model.router
+    , accounts = Accounts.update msg model.accounts
+    , newTweet = NewTweet.update msg model.newTweet
+    , publish = Publish.update msg model.publish
+    , download = Download.update msg model.download
+    , dateTime = DateTime.update msg model.dateTime
+    , search = Search.update msg model.search
+    , authentication = Authentication.update msg model.authentication
+    , settings = Settings.update msg model.settings
   }
 
 
-effectsUpdate : Signal.Address Action -> Action -> Model -> Effects Action
-effectsUpdate jsAddress action model =
+effectsUpdate : Signal.Address Msg -> Msg -> Model -> Effects Msg
+effectsUpdate jsAddress msg model =
   Effects.batch
-    [ RouterEffects.effects action model.router
-    , AccountsEffects.effects jsAddress action model.accounts
-    , PublishEffects.effects jsAddress action model
-    , DownloadEffects.effects jsAddress action model
-    , AuthenticationEffects.effects jsAddress action
-    , SettingsEffects.effects action model
+    [ RouterEffects.effects msg model.router
+    , AccountsEffects.effects jsAddress msg model.accounts
+    , PublishEffects.effects jsAddress msg model
+    , DownloadEffects.effects jsAddress msg model
+    , AuthenticationEffects.effects jsAddress msg
+    , SettingsEffects.effects msg model
     ]

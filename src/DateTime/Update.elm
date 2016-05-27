@@ -1,14 +1,14 @@
 module DateTime.Update (update) where
 
-import Action as RootAction exposing (..)
-import DateTime.Action exposing (..)
+import Msg as RootMsg exposing (..)
+import DateTime.Msg exposing (..)
 import DateTime.Model exposing (Model)
 
 
-update : RootAction.Action -> Model -> Model
-update action model =
-  case action of
-    ActionForDateTime (Update time) ->
+update : RootMsg.Msg -> Model -> Model
+update msg model =
+  case msg of
+    MsgForDateTime (Update time) ->
       { model | timestamp = time }
 
     _ ->

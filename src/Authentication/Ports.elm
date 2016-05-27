@@ -1,8 +1,8 @@
 module Authentication.Ports (..) where
 
 import Account.Model as Account exposing (HeadHash)
-import Action exposing (Action(ActionForAuthentication, NoOp))
-import Authentication.Action exposing (Action(CreateKeys, DoneCreateKeys, Login, DoneLogin))
+import Msg exposing (Msg(MsgForAuthentication, NoOp))
+import Authentication.Msg exposing (Msg(CreateKeys, DoneCreateKeys, Login, DoneLogin))
 import Authentication.Model exposing (Keys)
 import Ports exposing (jsMailbox)
 import Utils.Utils exposing (isJust, filterEmpty)
@@ -12,9 +12,9 @@ port createdKeysStream : Signal (Maybe { hash : HeadHash, keys : Keys })
 port requestCreateKeys : Signal (Maybe ())
 port requestCreateKeys =
   let
-    getRequest action =
-      case action of
-        ActionForAuthentication CreateKeys ->
+    getRequest msg =
+      case msg of
+        MsgForAuthentication CreateKeys ->
           Just ()
 
         _ ->
@@ -24,10 +24,10 @@ port requestCreateKeys =
       |> filterEmpty
 
 
-createdKeysInput : Signal Action.Action
+createdKeysInput : Signal Msg.Msg
 createdKeysInput =
   Signal.map
-    (Maybe.map (ActionForAuthentication << DoneCreateKeys) >> Maybe.withDefault NoOp)
+    (Maybe.map (MsgForAuthentication << DoneCreateKeys) >> Maybe.withDefault NoOp)
     createdKeysStream
 
 
@@ -35,9 +35,9 @@ port doneLoginStream : Signal (Maybe HeadHash)
 port requestLogin : Signal (Maybe Keys)
 port requestLogin =
   let
-    getRequest action =
-      case action of
-        ActionForAuthentication (Login keys) ->
+    getRequest msg =
+      case msg of
+        MsgForAuthentication (Login keys) ->
           Just keys
 
         _ ->
@@ -47,8 +47,8 @@ port requestLogin =
       |> filterEmpty
 
 
-doneLoginInput : Signal Action.Action
+doneLoginInput : Signal Msg.Msg
 doneLoginInput =
   Signal.map
-    (Maybe.map (ActionForAuthentication << DoneLogin) >> Maybe.withDefault NoOp)
+    (Maybe.map (MsgForAuthentication << DoneLogin) >> Maybe.withDefault NoOp)
     doneLoginStream

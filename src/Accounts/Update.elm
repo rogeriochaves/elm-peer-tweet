@@ -1,30 +1,30 @@
 module Accounts.Update (update) where
 
-import Action as RootAction exposing (..)
-import Accounts.Action as AccountsAction exposing (..)
+import Msg as RootMsg exposing (..)
+import Accounts.Msg as AccountsMsg exposing (..)
 import Accounts.Model exposing (Model, findAccount)
 import Account.Update as AccountUpdate
 import Account.Model as AccountModel exposing (HeadHash, initialModel)
-import Account.Action as AccountAction exposing (..)
-import Download.Action as DownloadAction exposing (..)
+import Account.Msg as AccountMsg exposing (..)
+import Download.Msg as DownloadMsg exposing (..)
 import List.Extra exposing (replaceIf)
 import Time exposing (inMilliseconds)
 
 
-update : RootAction.Action -> Model -> Model
-update action model =
+update : RootMsg.Msg -> Model -> Model
+update msg model =
   let
     updateIn =
       updateAccount model
   in
-    case action of
-      ActionForAccounts (ActionForAccount hash accountAction) ->
-        updateIn hash accountAction
+    case msg of
+      MsgForAccounts (MsgForAccount hash accountMsg) ->
+        updateIn hash accountMsg
 
-      ActionForAccounts (UpdateUserAccount account) ->
+      MsgForAccounts (UpdateUserAccount account) ->
         updateAccount model account.head.hash (Update account)
 
-      ActionForAccounts (CreateAccount hash name timestamp) ->
+      MsgForAccounts (CreateAccount hash name timestamp) ->
         let
           initialModel =
             AccountModel.initialModel
@@ -41,28 +41,28 @@ update action model =
         in
           updateIn hash <| Update { initialModel | head = newHead }
 
-      ActionForDownload (DoneDownloadHead head) ->
+      MsgForDownload (DoneDownloadHead head) ->
         updateIn head.hash (UpdateHead head)
 
-      ActionForDownload (DoneDownloadTweet { headHash, tweet }) ->
+      MsgForDownload (DoneDownloadTweet { headHash, tweet }) ->
         updateIn headHash (AddTweet tweet)
 
-      ActionForDownload (DoneDownloadFollowBlock { headHash, followBlock }) ->
+      MsgForDownload (DoneDownloadFollowBlock { headHash, followBlock }) ->
         updateIn headHash (AddFollowBlock followBlock)
 
       _ ->
         model
 
 
-updateAccount : Model -> HeadHash -> AccountAction.Action -> List AccountModel.Model
-updateAccount accounts hash action =
+updateAccount : Model -> HeadHash -> AccountMsg.Msg -> List AccountModel.Model
+updateAccount accounts hash msg =
   let
     foundAccount =
       findAccount accounts (Just hash)
   in
     case foundAccount of
       Just account ->
-        replaceIf (\x -> (Just x.head.hash) == (Just hash)) (AccountUpdate.update action account) accounts
+        replaceIf (\x -> (Just x.head.hash) == (Just hash)) (AccountUpdate.update msg account) accounts
 
       Nothing ->
-        AccountUpdate.update action AccountModel.initialModel :: accounts
+        AccountUpdate.update msg AccountModel.initialModel :: accounts

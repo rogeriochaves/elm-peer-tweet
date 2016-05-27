@@ -10,14 +10,14 @@ import FollowingList.View.FollowingList as FollowingListView
 import Authentication.View.Login as Login
 import Authentication.View.SignUp as SignUp
 import Settings.View.Settings as SettingsView
-import Action exposing (Action)
+import Msg exposing (Msg)
 import Model exposing (Model)
 import Accounts.Model exposing (getUserAccount, findAccount)
 import Account.Model as Account
 import Router.Model exposing (Page(..))
 
 
-view : Signal.Address Action -> Model -> Html
+view : Signal.Address Msg -> Model -> Html
 view address model =
   let
     userHash =
@@ -34,7 +34,7 @@ view address model =
         loggedOutView address model
 
 
-loggedInView : Signal.Address Action -> Model -> Account.Model -> Html
+loggedInView : Signal.Address Msg -> Model -> Account.Model -> Html
 loggedInView address model account =
   div
     [ class "flexbox-container" ]
@@ -43,7 +43,7 @@ loggedInView address model account =
     ]
 
 
-contentView : Signal.Address Action -> Model -> Account.Model -> Html
+contentView : Signal.Address Msg -> Model -> Account.Model -> Html
 contentView address model userAccount =
   case model.router.page of
     Timeline ->
@@ -74,12 +74,12 @@ notFound =
     [ text "NotFound" ]
 
 
-loggedOutView : Signal.Address Action -> Model -> Html
+loggedOutView : Signal.Address Msg -> Model -> Html
 loggedOutView address model =
   loggedOutContentView address model
 
 
-loggedOutContentView : Signal.Address Action -> Model -> Html
+loggedOutContentView : Signal.Address Msg -> Model -> Html
 loggedOutContentView address model =
   case model.router.page of
     CreateAccount ->

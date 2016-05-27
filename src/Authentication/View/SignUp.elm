@@ -3,14 +3,14 @@ module Authentication.View.SignUp (view) where
 import Html exposing (..)
 import Html.Attributes exposing (class, type', value)
 import Html.Events exposing (onClick, on, targetValue)
-import Action as RootAction exposing (Action(ActionForAuthentication, ActionForRouter, ActionForAccounts))
+import Msg as RootMsg exposing (Msg(MsgForAuthentication, MsgForRouter, MsgForAccounts))
 import Model exposing (Model)
-import Action as RootAction exposing (..)
+import Msg as RootMsg exposing (..)
 import Router.Routes exposing (Sitemap(..))
-import Router.Action exposing (Action(UpdatePath))
-import Authentication.Action exposing (Action(CreateKeys, UpdateName))
+import Router.Msg exposing (Msg(UpdatePath))
+import Authentication.Msg exposing (Msg(CreateKeys, UpdateName))
 import Account.Model exposing (HeadHash)
-import Accounts.Action exposing (Action(CreateAccount))
+import Accounts.Msg exposing (Msg(CreateAccount))
 import String
 
 
@@ -24,7 +24,7 @@ bold x =
   b [] [ text x ]
 
 
-view : Signal.Address RootAction.Action -> Model -> Html
+view : Signal.Address RootMsg.Msg -> Model -> Html
 view address model =
   if String.isEmpty model.authentication.keys.publicKey then
     newAccount address model
@@ -46,7 +46,7 @@ card title content =
     ]
 
 
-createdKeys : Signal.Address RootAction.Action -> Model -> HeadHash -> Html
+createdKeys : Signal.Address RootMsg.Msg -> Model -> HeadHash -> Html
 createdKeys address { dateTime, authentication } userHash =
   navbarContainer Nothing
     <| div
@@ -69,24 +69,24 @@ createdKeys address { dateTime, authentication } userHash =
         , p [] [ text "This will only be shown once, so save it somewhere safe, specially the secret key." ]
         , button
             [ class "waves-effect waves-light btn btn-full blue lighten-1"
-            , onClick address <| ActionForAccounts <| CreateAccount userHash authentication.name dateTime.timestamp
+            , onClick address <| MsgForAccounts <| CreateAccount userHash authentication.name dateTime.timestamp
             ]
             [ text "Continue" ]
         ]
 
 
 navbarContainer : Maybe Attribute -> Html -> Html
-navbarContainer backAction content =
+navbarContainer backMsg content =
   let
     menuItems =
-      case backAction of
-        Just action ->
+      case backMsg of
+        Just msg ->
           ul
             [ class "left" ]
             [ li
                 []
                 [ a
-                    [ action ]
+                    [ msg ]
                     [ i [ class "material-icons" ] [ text "keyboard_arrow_left" ] ]
                 ]
             ]
@@ -113,9 +113,9 @@ navbarContainer backAction content =
       ]
 
 
-newAccount : Signal.Address RootAction.Action -> Model -> Html
+newAccount : Signal.Address RootMsg.Msg -> Model -> Html
 newAccount address model =
-  navbarContainer (Just <| onClick address <| ActionForRouter <| UpdatePath <| TimelineRoute ())
+  navbarContainer (Just <| onClick address <| MsgForRouter <| UpdatePath <| TimelineRoute ())
     <| div
         []
         [ p [ class "info-credentials" ] [ text "Your credentials will be generated automatically, just pick a name" ]
@@ -124,12 +124,12 @@ newAccount address model =
             [ input
                 [ type' "text"
                 , value model.authentication.name
-                , on "input" targetValue (Signal.message address << ActionForAuthentication << UpdateName)
+                , on "input" targetValue (Signal.message address << MsgForAuthentication << UpdateName)
                 ]
                 []
             , label
                 []
                 [ text "Name" ]
             ]
-        , button [ class "btn btn-full blue lighten-1", onClick address <| ActionForAuthentication <| CreateKeys ] [ text "Sign Up" ]
+        , button [ class "btn btn-full blue lighten-1", onClick address <| MsgForAuthentication <| CreateKeys ] [ text "Sign Up" ]
         ]

@@ -1,4 +1,4 @@
-module NewTweet.Action where
+module NewTweet.Msg where
 
-type Action
+type Msg
     = Update String

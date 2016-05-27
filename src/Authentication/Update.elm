@@ -1,34 +1,34 @@
 module Authentication.Update (update) where
 
-import Action as RootAction exposing (..)
-import Authentication.Action as Authentication exposing (Action(..))
+import Msg as RootMsg exposing (..)
+import Authentication.Msg as Authentication exposing (Msg(..))
 import Authentication.Model exposing (Model)
-import Accounts.Action exposing (Action(CreateAccount, UpdateUserAccount))
+import Accounts.Msg exposing (Msg(CreateAccount, UpdateUserAccount))
 
 
-update : RootAction.Action -> Model -> Model
-update action model =
-  case action of
-    ActionForAuthentication authenticationAction ->
-      updateAuthentication authenticationAction model
+update : RootMsg.Msg -> Model -> Model
+update msg model =
+  case msg of
+    MsgForAuthentication authenticationMsg ->
+      updateAuthentication authenticationMsg model
 
-    ActionForAccounts (UpdateUserAccount account) ->
+    MsgForAccounts (UpdateUserAccount account) ->
       { model | hash = (Just account.head.hash) }
 
-    ActionForAccounts (CreateAccount hash _ _) ->
+    MsgForAccounts (CreateAccount hash _ _) ->
       { model | hash = (Just hash) }
 
     _ ->
       model
 
 
-updateAuthentication : Authentication.Action -> Model -> Model
-updateAuthentication action model =
+updateAuthentication : Authentication.Msg -> Model -> Model
+updateAuthentication msg model =
   let
     keys =
       model.keys
   in
-    case action of
+    case msg of
       CreateKeys ->
         model
 

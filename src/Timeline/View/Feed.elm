@@ -5,10 +5,10 @@ import Html.Attributes exposing (class)
 import Model exposing (Model)
 import Account.Model as Account
 import Timeline.View.Tweet as Tweet
-import Action exposing (Action)
+import Msg exposing (Msg)
 
 
-view : Signal.Address Action -> Model -> Account.Model -> Html
+view : Signal.Address Msg -> Model -> Account.Model -> Html
 view address model account =
   let
     timestamp =

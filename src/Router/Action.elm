@@ -1,8 +1,8 @@
-module Router.Action (Action(..)) where
+module Router.Msg (Msg(..)) where
 
 import Router.Routes exposing (Sitemap)
 
 
-type Action
+type Msg
   = PathChange String
   | UpdatePath Sitemap

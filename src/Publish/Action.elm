@@ -1,10 +1,10 @@
-module Publish.Action (..) where
+module Publish.Msg (..) where
 
 import Account.Model exposing (HeadHash, TweetHash, FollowBlockHash, Head, Tweet, FollowBlock)
-import Account.Action exposing (TweetIdentifier, TweetData, FollowBlockIdentifier, FollowBlockData)
+import Account.Msg exposing (TweetIdentifier, TweetData, FollowBlockIdentifier, FollowBlockData)
 
 
-type Action
+type Msg
   = BeginPublish
   | PublishHead Head
   | DonePublishHead HeadHash

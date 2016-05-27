@@ -2,11 +2,11 @@ module Topbar.View.Topbar (..) where
 
 import Html exposing (Html, div, text, nav)
 import Html.Attributes exposing (class)
-import Action exposing (Action)
+import Msg exposing (Msg)
 import Model exposing (Model)
 
 
-view : Signal.Address Action -> Model -> String -> Html
+view : Signal.Address Msg -> Model -> String -> Html
 view address model title =
   nav
     []

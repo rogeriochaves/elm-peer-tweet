@@ -1,27 +1,27 @@
 module Router.Effects (..) where
 
-import Router.Action as Router exposing (Action(..))
+import Router.Msg as Router exposing (Msg(..))
 import Router.Model exposing (Model, Page(..), routeToPage, pathToPage)
 import Router.Routes exposing (Sitemap(..), match, route)
 import Effects exposing (Effects)
 import Task
 import History
-import Action as RootAction exposing (Action(..))
+import Msg as RootMsg exposing (Msg(..))
 
 
-effects : RootAction.Action -> Model -> Effects RootAction.Action
-effects action router =
-  case action of
-    ActionForRouter routerAction ->
-      effectsRouter routerAction router
+effects : RootMsg.Msg -> Model -> Effects RootMsg.Msg
+effects msg router =
+  case msg of
+    MsgForRouter routerMsg ->
+      effectsRouter routerMsg router
 
     _ ->
       Effects.none
 
 
-effectsRouter : Router.Action -> Model -> Effects RootAction.Action
-effectsRouter action model =
-  case action of
+effectsRouter : Router.Msg -> Model -> Effects RootMsg.Msg
+effectsRouter msg model =
+  case msg of
     PathChange path ->
       Effects.none
 

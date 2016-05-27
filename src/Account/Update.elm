@@ -1,12 +1,12 @@
 module Account.Update (update) where
 
-import Account.Action exposing (..)
+import Account.Msg exposing (..)
 import Account.Model exposing (Model, addTweet, addFollowBlock)
 
 
-update : Action -> Model -> Model
-update action model =
-  case action of
+update : Msg -> Model -> Model
+update msg model =
+  case msg of
     Update account ->
       if account.head.d > model.head.d then
         account

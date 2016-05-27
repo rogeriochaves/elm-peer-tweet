@@ -3,18 +3,18 @@ module Sidebar.View.Sidebar (..) where
 import Html exposing (..)
 import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
-import Action as RootAction exposing (Action(ActionForRouter))
+import Msg as RootMsg exposing (Msg(MsgForRouter))
 import Model exposing (Model)
 import Publish.View.PublishProgress as PublishProgress
 import Download.View.DownloadProgress as DownloadProgress
 import Router.Routes exposing (Sitemap(..))
-import Router.Action exposing (Action(UpdatePath))
+import Router.Msg exposing (Msg(UpdatePath))
 import Router.Model exposing (Page(..))
 import Timeline.View.Avatar as Avatar
 import Account.Model as Account
 
 
-view : Signal.Address RootAction.Action -> Model -> Account.Model -> Html
+view : Signal.Address RootMsg.Msg -> Model -> Account.Model -> Html
 view address model userAccount =
   let
     classes =
@@ -43,27 +43,27 @@ view address model userAccount =
           [ class "sidebar-items blue darken-4" ]
           [ button
               [ class "sidebar-button sidebar-avatar"
-              , onClick address (ActionForRouter <| UpdatePath <| ProfileRoute userAccount.head.hash)
+              , onClick address (MsgForRouter <| UpdatePath <| ProfileRoute userAccount.head.hash)
               ]
               [ Avatar.view userAccount.head ]
           , button
               [ class <| "sidebar-button material-icons " ++ activeClass.home
-              , onClick address (ActionForRouter <| UpdatePath <| TimelineRoute ())
+              , onClick address (MsgForRouter <| UpdatePath <| TimelineRoute ())
               ]
               [ text "home" ]
           , button
               [ class <| "sidebar-button material-icons " ++ activeClass.followList
-              , onClick address (ActionForRouter <| UpdatePath <| FollowingListRoute ())
+              , onClick address (MsgForRouter <| UpdatePath <| FollowingListRoute ())
               ]
               [ text "group" ]
           , button
               [ class <| "sidebar-button material-icons " ++ activeClass.search
-              , onClick address (ActionForRouter <| UpdatePath <| SearchRoute ())
+              , onClick address (MsgForRouter <| UpdatePath <| SearchRoute ())
               ]
               [ text "search" ]
           , button
               [ class <| "sidebar-button material-icons " ++ activeClass.settings
-              , onClick address (ActionForRouter <| UpdatePath <| SettingsRoute ())
+              , onClick address (MsgForRouter <| UpdatePath <| SettingsRoute ())
               ]
               [ text "settings" ]
           , div [ class "sidebar-space" ] []

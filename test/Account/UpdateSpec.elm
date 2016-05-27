@@ -2,7 +2,7 @@ module Account.UpdateSpec (..) where
 
 import Account.Update exposing (update)
 import Account.Model exposing (initialModel)
-import Account.Action exposing (..)
+import Account.Msg exposing (..)
 import ElmTestBDDStyle exposing (..)
 
 
@@ -20,10 +20,10 @@ tests =
                 model =
                   initialModel
 
-                action =
+                msg =
                   AddTweet tweet
                in
-                expect (update action model) toBe { initialModel | tweets = tweet :: initialModel.tweets }
+                expect (update msg model) toBe { initialModel | tweets = tweet :: initialModel.tweets }
         ]
     , describe
         "account update"
@@ -38,9 +38,9 @@ tests =
               nextModel =
                 { initialModel | head = { initialHead | d = 20 } }
 
-              action = Update nextModel
+              msg = Update nextModel
             in
-              expect (update action model) toBe nextModel
+              expect (update msg model) toBe nextModel
         , it "does not update the account if the head timestamp is smaller than current account" <|
             let
               initialHead =
@@ -52,9 +52,9 @@ tests =
               nextModel =
                 { initialModel | head = { initialHead | d = 5 } }
 
-              action = Update nextModel
+              msg = Update nextModel
             in
-              expect (update action model) toBe model
+              expect (update msg model) toBe model
         ]
     , describe
         "head update"
@@ -69,9 +69,9 @@ tests =
               nextModel =
                 { initialModel | head = { initialHead | d = 20 } }
 
-              action = UpdateHead nextModel.head
+              msg = UpdateHead nextModel.head
             in
-              expect (update action model) toBe nextModel
+              expect (update msg model) toBe nextModel
         , it "does not update the head if the head timestamp is smaller than current account" <|
             let
               initialHead =
@@ -83,8 +83,8 @@ tests =
               nextModel =
                 { initialModel | head = { initialHead | d = 5 } }
 
-              action = UpdateHead nextModel.head
+              msg = UpdateHead nextModel.head
             in
-              expect (update action model) toBe model
+              expect (update msg model) toBe model
         ]
     ]

@@ -1,10 +1,10 @@
-module Download.Action (..) where
+module Download.Msg (..) where
 
 import Account.Model exposing (Hash, HeadHash, TweetHash, FollowBlockHash, Head, Tweet, FollowBlock)
-import Account.Action exposing (TweetIdentifier, TweetData, FollowBlockIdentifier, FollowBlockData)
+import Account.Msg exposing (TweetIdentifier, TweetData, FollowBlockIdentifier, FollowBlockData)
 
 
-type Action
+type Msg
   = BeginDownload
   | DownloadHead HeadHash
   | DoneDownloadHead Head

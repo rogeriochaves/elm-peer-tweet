@@ -1,4 +1,4 @@
-module Account.Action (..) where
+module Account.Msg (..) where
 
 import Account.Model exposing (Model, Head, Tweet, FollowBlock, HeadHash, TweetHash, FollowBlockHash)
 
@@ -19,7 +19,7 @@ type alias FollowBlockData =
   { headHash : HeadHash, followBlock : FollowBlock }
 
 
-type Action
+type Msg
   = Update Model
   | UpdateHead Head
   | AddTweet Tweet

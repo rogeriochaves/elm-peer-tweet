@@ -1,7 +1,7 @@
 module Model (Model, initialModel) where
 
 import Effects exposing (Effects)
-import Action exposing (Action)
+import Msg exposing (Msg)
 import Router.Model as Router
 import Accounts.Model as Accounts exposing (getUserAccount)
 import NewTweet.Model as NewTweet
@@ -27,7 +27,7 @@ type alias Model =
   }
 
 
-initialModel : String -> Maybe String -> Maybe Accounts.Model -> ( Model, Effects Action )
+initialModel : String -> Maybe String -> Maybe Accounts.Model -> ( Model, Effects Msg )
 initialModel path userHash accounts =
   let
     modelAccounts = Maybe.withDefault Accounts.initialModel accounts

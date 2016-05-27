@@ -3,29 +3,29 @@ module Publish.EffectsSpec (..) where
 import Publish.Effects exposing (effects)
 import Model as RootModel
 import Account.Model as Account
-import Action exposing (..)
-import Publish.Action exposing (..)
+import Msg exposing (..)
+import Publish.Msg exposing (..)
 import ElmTestBDDStyle exposing (..)
 import Effects exposing (toTask)
 import Task exposing (Task, andThen, sequence)
 import TestHelpers exposing (expectSignal, signalIt, signalDescribe, expectTask)
 
 
-setup : RootModel.Model -> Action.Action -> { jsSignal : Signal Action.Action, actionsSignal : Signal (List Action.Action), task : Task Effects.Never () }
-setup model action =
+setup : RootModel.Model -> Msg.Msg -> { jsSignal : Signal Msg.Msg, msgsSignal : Signal (List Msg.Msg), task : Task Effects.Never () }
+setup model msg =
   let
     jsMailbox =
       Signal.mailbox NoOp
 
-    actionsMailbox =
+    msgsMailbox =
       Signal.mailbox [ NoOp ]
 
     effect =
-      effects jsMailbox.address action model
+      effects jsMailbox.address msg model
   in
     { jsSignal = jsMailbox.signal
-    , actionsSignal = actionsMailbox.signal
-    , task = toTask actionsMailbox.address (effect)
+    , msgsSignal = msgsMailbox.signal
+    , task = toTask msgsMailbox.address (effect)
     }
 
 
@@ -58,26 +58,26 @@ tests =
         "Head Publish"
         [ signalIt "starts publishing from account head"
             <| let
-                action =
-                  ActionForPublish BeginPublish
+                msg =
+                  MsgForPublish BeginPublish
 
                 account =
-                  setup model action
+                  setup model msg
                in
-                expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForPublish <| PublishHead userAccount.head) ]
-        , signalIt "forwards publish head actions to javascript mailbox"
+                expectSignal ( account.msgsSignal, account.task ) toBe [ (MsgForPublish <| PublishHead userAccount.head) ]
+        , signalIt "forwards publish head msgs to javascript mailbox"
             <| let
                 head =
                   { hash = "uno", d = 1, next = [ "duo" ], f = [], n = "Mr Foo", a = "" }
 
-                action =
-                  (ActionForPublish <| PublishHead head)
+                msg =
+                  (MsgForPublish <| PublishHead head)
 
                 account =
-                  setup model action
+                  setup model msg
                in
-                expectSignal ( account.jsSignal, account.task ) toBe (ActionForPublish <| PublishHead head)
-        , signalIt "dispatches publish action for the next tweets"
+                expectSignal ( account.jsSignal, account.task ) toBe (MsgForPublish <| PublishHead head)
+        , signalIt "dispatches publish msg for the next tweets"
             <| let
                 head =
                   { hash = "uno", d = 1, next = [ "foo" ], f = [], n = "Mr Foo", a = "" }
@@ -88,14 +88,14 @@ tests =
                 setupModel =
                   { model | accounts = [ { userAccount | head = head, tweets = [ nextTweet ] } ] }
 
-                action =
-                  (ActionForPublish <| PublishHead head)
+                msg =
+                  (MsgForPublish <| PublishHead head)
 
                 account =
-                  setup setupModel action
+                  setup setupModel msg
                in
-                expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForPublish <| PublishTweet { headHash = "uno", tweet = nextTweet }) ]
-        , signalIt "dispatches publish action for the next followBlocks"
+                expectSignal ( account.msgsSignal, account.task ) toBe [ (MsgForPublish <| PublishTweet { headHash = "uno", tweet = nextTweet }) ]
+        , signalIt "dispatches publish msg for the next followBlocks"
             <| let
                 head =
                   { hash = "uno", d = 1, next = [], f = [ "foo" ], n = "Mr Foo", a = "" }
@@ -106,29 +106,29 @@ tests =
                 setupModel =
                   { model | accounts = [ { userAccount | head = head, followBlocks = [ nextFollowBlock ] } ] }
 
-                action =
-                  (ActionForPublish <| PublishHead head)
+                msg =
+                  (MsgForPublish <| PublishHead head)
 
                 account =
-                  setup setupModel action
+                  setup setupModel msg
                in
-                expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForPublish <| PublishFollowBlock { headHash = "uno", followBlock = nextFollowBlock }) ]
+                expectSignal ( account.msgsSignal, account.task ) toBe [ (MsgForPublish <| PublishFollowBlock { headHash = "uno", followBlock = nextFollowBlock }) ]
         ]
     , signalDescribe
         "Tweet Publish"
-        [ signalIt "forwards publish tweets actions to javascript mailbox"
+        [ signalIt "forwards publish tweets msgs to javascript mailbox"
             <| let
                 tweet =
                   { hash = "foo", d = 1, t = "something", next = [] }
 
-                action =
-                  (ActionForPublish <| PublishTweet { headHash = "user", tweet = tweet })
+                msg =
+                  (MsgForPublish <| PublishTweet { headHash = "user", tweet = tweet })
 
                 account =
-                  setup model action
+                  setup model msg
                in
-                expectSignal ( account.jsSignal, account.task ) toBe action
-        , signalIt "dispatches publish action for the next item"
+                expectSignal ( account.jsSignal, account.task ) toBe msg
+        , signalIt "dispatches publish msg for the next item"
             <| let
                 tweet =
                   { hash = "foo", d = 1, t = "something", next = [ "bar" ] }
@@ -139,29 +139,29 @@ tests =
                 setupModel =
                   { model | accounts = [ { userAccount | tweets = [ tweet, nextTweet ] } ] }
 
-                action =
-                  (ActionForPublish <| PublishTweet { headHash = "user", tweet = tweet })
+                msg =
+                  (MsgForPublish <| PublishTweet { headHash = "user", tweet = tweet })
 
                 account =
-                  setup setupModel action
+                  setup setupModel msg
                in
-                expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForPublish <| PublishTweet { headHash = "user", tweet = nextTweet }) ]
+                expectSignal ( account.msgsSignal, account.task ) toBe [ (MsgForPublish <| PublishTweet { headHash = "user", tweet = nextTweet }) ]
         ]
     , signalDescribe
         "FollowBlock Publish"
-        [ signalIt "forwards publish followBlocks actions to javascript mailbox"
+        [ signalIt "forwards publish followBlocks msgs to javascript mailbox"
             <| let
                 followBlock =
                   { hash = "foo", l = [ "bar" ], next = [] }
 
-                action =
-                  (ActionForPublish <| PublishFollowBlock { headHash = "user", followBlock = followBlock })
+                msg =
+                  (MsgForPublish <| PublishFollowBlock { headHash = "user", followBlock = followBlock })
 
                 account =
-                  setup model action
+                  setup model msg
                in
-                expectSignal ( account.jsSignal, account.task ) toBe action
-        , signalIt "dispatches publish action for the next item"
+                expectSignal ( account.jsSignal, account.task ) toBe msg
+        , signalIt "dispatches publish msg for the next item"
             <| let
                 followBlock =
                   { hash = "foo", l = [ "uno" ], next = [ "bar" ] }
@@ -172,13 +172,13 @@ tests =
                 setupModel =
                   { model | accounts = [ { userAccount | followBlocks = [ followBlock, nextFollowBlock ] } ] }
 
-                action =
-                  (ActionForPublish <| PublishFollowBlock { headHash = "user", followBlock = followBlock })
+                msg =
+                  (MsgForPublish <| PublishFollowBlock { headHash = "user", followBlock = followBlock })
 
                 account =
-                  setup setupModel action
+                  setup setupModel msg
                in
-                expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForPublish <| PublishFollowBlock { headHash = "user", followBlock = nextFollowBlock }) ]
+                expectSignal ( account.msgsSignal, account.task ) toBe [ (MsgForPublish <| PublishFollowBlock { headHash = "user", followBlock = nextFollowBlock }) ]
         , signalIt "publishes the user followers"
             <| let
                 followBlock =
@@ -193,13 +193,13 @@ tests =
                 setupModel =
                   { model | accounts = [ { initialAccount | head = batman } ] }
 
-                action =
-                  (ActionForPublish <| PublishFollowBlock { headHash = "user", followBlock = followBlock })
+                msg =
+                  (MsgForPublish <| PublishFollowBlock { headHash = "user", followBlock = followBlock })
 
                 account =
-                  setup setupModel action
+                  setup setupModel msg
                in
-                expectSignal ( account.actionsSignal, account.task ) toBe [ (ActionForPublish <| PublishHead batman) ]
+                expectSignal ( account.msgsSignal, account.task ) toBe [ (MsgForPublish <| PublishHead batman) ]
         , signalIt "does not publish follower if it is not being followed by the user"
             <| let
                 followBlock =
@@ -214,12 +214,12 @@ tests =
                 setupModel =
                   { model | accounts = [ { initialAccount | head = batman } ] }
 
-                action =
-                  (ActionForPublish <| PublishFollowBlock { headHash = "somebody else", followBlock = followBlock })
+                msg =
+                  (MsgForPublish <| PublishFollowBlock { headHash = "somebody else", followBlock = followBlock })
 
                 account =
-                  setup setupModel action
+                  setup setupModel msg
                in
-                expectSignal ( account.actionsSignal, account.task ) toBe [ NoOp ]
+                expectSignal ( account.msgsSignal, account.task ) toBe [ NoOp ]
         ]
     ]

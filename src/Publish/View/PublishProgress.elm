@@ -2,10 +2,10 @@ module Publish.View.PublishProgress where
 
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (class)
-import Action as RootAction exposing (..)
+import Msg as RootMsg exposing (..)
 import Publish.Model exposing (Model)
 
-view : Signal.Address RootAction.Action -> Model -> Html
+view : Signal.Address RootMsg.Msg -> Model -> Html
 view address model =
   div [class "sidebar-status ion-upload down"] [
     model.publishingCount

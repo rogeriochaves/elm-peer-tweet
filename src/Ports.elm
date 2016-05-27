@@ -1,8 +1,8 @@
 module Ports (..) where
 
-import Action exposing (..)
+import Msg exposing (..)
 
 
-jsMailbox : Signal.Mailbox Action.Action
+jsMailbox : Signal.Mailbox Msg.Msg
 jsMailbox =
   Signal.mailbox NoOp

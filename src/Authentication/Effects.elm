@@ -1,22 +1,22 @@
 module Authentication.Effects (effects) where
 
-import Action as RootAction exposing (..)
-import Authentication.Action exposing (Action(CreateKeys, DoneLogin))
+import Msg as RootMsg exposing (..)
+import Authentication.Msg exposing (Msg(CreateKeys, DoneLogin))
 import Task
 import Effects exposing (Effects)
-import Download.Action exposing (Action(DownloadHead))
+import Download.Msg exposing (Msg(DownloadHead))
 
 
-effects : Signal.Address RootAction.Action -> RootAction.Action -> Effects RootAction.Action
-effects jsAddress action =
-  case action of
-    ActionForAuthentication (DoneLogin hash) ->
-      Task.succeed (ActionForDownload <| DownloadHead hash)
+effects : Signal.Address RootMsg.Msg -> RootMsg.Msg -> Effects RootMsg.Msg
+effects jsAddress msg =
+  case msg of
+    MsgForAuthentication (DoneLogin hash) ->
+      Task.succeed (MsgForDownload <| DownloadHead hash)
         |> Effects.task
 
-    ActionForAuthentication authenticationAction ->
-      Signal.send jsAddress (ActionForAuthentication authenticationAction)
-        |> Task.map (always RootAction.NoOp)
+    MsgForAuthentication authenticationMsg ->
+      Signal.send jsAddress (MsgForAuthentication authenticationMsg)
+        |> Task.map (always RootMsg.NoOp)
         |> Effects.task
 
     _ ->

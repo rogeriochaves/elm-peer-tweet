@@ -1,23 +1,23 @@
 module Download.Update (update) where
 
-import Action as RootAction exposing (..)
-import Download.Action as Download exposing (..)
+import Msg as RootMsg exposing (..)
+import Download.Msg as Download exposing (..)
 import Download.Model exposing (Model, Status(..), updateDownloadingItem)
 import Account.Model exposing (Hash)
 
 
-update : RootAction.Action -> Model -> Model
-update action model =
-  case action of
-    ActionForDownload syncAction ->
-      updateDownload syncAction model
+update : RootMsg.Msg -> Model -> Model
+update msg model =
+  case msg of
+    MsgForDownload syncMsg ->
+      updateDownload syncMsg model
 
     _ ->
       model
 
 
-updateDownload : Download.Action -> Model -> Model
-updateDownload action model =
+updateDownload : Download.Msg -> Model -> Model
+updateDownload msg model =
   let
     setLoading =
       setDownloadLoading model
@@ -28,7 +28,7 @@ updateDownload action model =
     setError =
       setDownloadError model
   in
-    case action of
+    case msg of
       BeginDownload ->
         model
 

@@ -1,17 +1,17 @@
 module Settings.Update (update) where
 
-import Action as RootAction exposing (..)
-import Settings.Action exposing (..)
+import Msg as RootMsg exposing (..)
+import Settings.Msg exposing (..)
 import Settings.Model exposing (Model)
-import Accounts.Action exposing (Action(UpdateUserAccount))
+import Accounts.Msg exposing (Msg(UpdateUserAccount))
 
-update : RootAction.Action -> Model -> Model
-update action model =
-  case action of
-    ActionForSettings (UpdateAvatar avatar) ->
+update : RootMsg.Msg -> Model -> Model
+update msg model =
+  case msg of
+    MsgForSettings (UpdateAvatar avatar) ->
       { model | avatar = avatar }
 
-    ActionForAccounts (UpdateUserAccount account) ->
+    MsgForAccounts (UpdateUserAccount account) ->
       { model | avatar = account.head.a }
 
     _ ->

@@ -1,26 +1,26 @@
 module Settings.Effects (effects) where
 
-import Action as RootAction exposing (Action(ActionForSettings, ActionForAccounts, ActionForPublish))
+import Msg as RootMsg exposing (Msg(MsgForSettings, MsgForAccounts, MsgForPublish))
 import Model exposing (Model)
-import Settings.Action exposing (Action(SaveSettings))
+import Settings.Msg exposing (Msg(SaveSettings))
 import Task
 import Effects exposing (Effects)
-import Accounts.Action exposing (Action(UpdateUserAccount))
+import Accounts.Msg exposing (Msg(UpdateUserAccount))
 import Accounts.Model exposing (getUserAccount)
 import Task exposing (andThen)
 
 
-effects : RootAction.Action -> Model -> Effects RootAction.Action
-effects action model =
+effects : RootMsg.Msg -> Model -> Effects RootMsg.Msg
+effects msg model =
   let
     updatedUser userAccount head =
       { userAccount | head = { head | a = model.settings.avatar, d = round model.dateTime.timestamp } }
   in
-    case action of
-      ActionForSettings SaveSettings ->
+    case msg of
+      MsgForSettings SaveSettings ->
         case getUserAccount model of
           Just userAccount ->
-            Task.succeed (ActionForAccounts <| UpdateUserAccount <| updatedUser userAccount userAccount.head)
+            Task.succeed (MsgForAccounts <| UpdateUserAccount <| updatedUser userAccount userAccount.head)
               |> Effects.task
 
           Nothing ->

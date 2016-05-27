@@ -6,11 +6,11 @@ import Html.Attributes exposing (class, type', value, href, target)
 import Html.Events exposing (on, targetValue, onClick)
 import Account.Model as Account
 import Topbar.View.Topbar as Topbar
-import Action as RootAction exposing (Action(ActionForSettings))
-import Settings.Action exposing (Action(UpdateAvatar, SaveSettings))
+import Msg as RootMsg exposing (Msg(MsgForSettings))
+import Settings.Msg exposing (Msg(UpdateAvatar, SaveSettings))
 
 
-view : Signal.Address RootAction.Action -> Model -> Account.Model -> Html
+view : Signal.Address RootMsg.Msg -> Model -> Account.Model -> Html
 view address model userAccount =
   div
     []
@@ -19,7 +19,7 @@ view address model userAccount =
     ]
 
 
-avatarField : Signal.Address RootAction.Action -> Model -> Account.Model -> Html
+avatarField : Signal.Address RootMsg.Msg -> Model -> Account.Model -> Html
 avatarField address model userAccount =
   div
     [ class "container settings" ]
@@ -28,7 +28,7 @@ avatarField address model userAccount =
         [ input
             [ type' "text"
             , value model.settings.avatar
-            , on "input" targetValue (Signal.message address << ActionForSettings << UpdateAvatar)
+            , on "input" targetValue (Signal.message address << MsgForSettings << UpdateAvatar)
             ]
             []
         , label
@@ -45,7 +45,7 @@ avatarField address model userAccount =
     ]
 
 
-saveButton : Signal.Address RootAction.Action -> Model -> Account.Model -> Html
+saveButton : Signal.Address RootMsg.Msg -> Model -> Account.Model -> Html
 saveButton address model userAccount =
   let
     buttonClass =
@@ -57,5 +57,5 @@ saveButton address model userAccount =
         [ text "Settings Saved" ]
     else
       button
-        [ class buttonClass, onClick address <| ActionForSettings SaveSettings ]
+        [ class buttonClass, onClick address <| MsgForSettings SaveSettings ]
         [ text "Save" ]

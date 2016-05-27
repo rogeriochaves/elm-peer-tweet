@@ -7,11 +7,11 @@ import Account.Model as Account
 import Accounts.Model exposing (timeline)
 import Timeline.View.Tweet as Tweet
 import Topbar.View.Topbar as Topbar
-import Action exposing (Action)
+import Msg exposing (Msg)
 import NewTweet.View.NewTweet as NewTweet
 
 
-view : Signal.Address Action -> Model -> Account.Model -> Html
+view : Signal.Address Msg -> Model -> Account.Model -> Html
 view address model userAccount =
   let
     timestamp =

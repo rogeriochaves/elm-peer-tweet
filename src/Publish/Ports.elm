@@ -1,19 +1,19 @@
 module Publish.Ports (..) where
 
 import Account.Model as Account exposing (Head, Tweet, Hash)
-import Action as RootAction exposing (..)
-import Publish.Action exposing (..)
+import Msg as RootMsg exposing (..)
+import Publish.Msg exposing (..)
 import Ports exposing (jsMailbox)
 import Utils.Utils exposing (isJust, filterEmpty)
-import Publish.Action exposing (..)
+import Publish.Msg exposing (..)
 import Time exposing (every, minute)
-import Account.Action exposing (TweetIdentifier, TweetData, FollowBlockIdentifier, FollowBlockData)
+import Account.Msg exposing (TweetIdentifier, TweetData, FollowBlockIdentifier, FollowBlockData)
 
 
-requestPublish : Signal RootAction.Action
+requestPublish : Signal RootMsg.Msg
 requestPublish =
   (every <| 5 * minute)
-    |> Signal.map (always <| ActionForPublish BeginPublish)
+    |> Signal.map (always <| MsgForPublish BeginPublish)
 
 
 port publishHeadStream : Signal (Maybe Hash)
@@ -22,9 +22,9 @@ port publishHeadStream : Signal (Maybe Hash)
 port requestPublishHead : Signal (Maybe Head)
 port requestPublishHead =
   let
-    getRequest action =
-      case action of
-        ActionForPublish (PublishHead head) ->
+    getRequest msg =
+      case msg of
+        MsgForPublish (PublishHead head) ->
           Just head
 
         _ ->
@@ -34,9 +34,9 @@ port requestPublishHead =
       |> filterEmpty
 
 
-publishHeadInput : Signal RootAction.Action
+publishHeadInput : Signal RootMsg.Msg
 publishHeadInput =
-  Signal.map (Maybe.map (ActionForPublish << DonePublishHead) >> Maybe.withDefault NoOp) publishHeadStream
+  Signal.map (Maybe.map (MsgForPublish << DonePublishHead) >> Maybe.withDefault NoOp) publishHeadStream
 
 
 port publishTweetStream : Signal (Maybe TweetIdentifier)
@@ -45,9 +45,9 @@ port publishTweetStream : Signal (Maybe TweetIdentifier)
 port requestPublishTweet : Signal (Maybe TweetData)
 port requestPublishTweet =
   let
-    getRequest action =
-      case action of
-        ActionForPublish (PublishTweet tweet) ->
+    getRequest msg =
+      case msg of
+        MsgForPublish (PublishTweet tweet) ->
           Just tweet
 
         _ ->
@@ -57,9 +57,9 @@ port requestPublishTweet =
       |> filterEmpty
 
 
-publishTweetInput : Signal RootAction.Action
+publishTweetInput : Signal RootMsg.Msg
 publishTweetInput =
-  Signal.map (Maybe.map (ActionForPublish << DonePublishTweet) >> Maybe.withDefault NoOp) publishTweetStream
+  Signal.map (Maybe.map (MsgForPublish << DonePublishTweet) >> Maybe.withDefault NoOp) publishTweetStream
 
 
 
@@ -69,9 +69,9 @@ port publishFollowBlockStream : Signal (Maybe FollowBlockIdentifier)
 port requestPublishFollowBlock : Signal (Maybe FollowBlockData)
 port requestPublishFollowBlock =
   let
-    getRequest action =
-      case action of
-        ActionForPublish (PublishFollowBlock tweet) ->
+    getRequest msg =
+      case msg of
+        MsgForPublish (PublishFollowBlock tweet) ->
           Just tweet
 
         _ ->
@@ -81,6 +81,6 @@ port requestPublishFollowBlock =
       |> filterEmpty
 
 
-publishFollowBlockInput : Signal RootAction.Action
+publishFollowBlockInput : Signal RootMsg.Msg
 publishFollowBlockInput =
-  Signal.map (Maybe.map (ActionForPublish << DonePublishFollowBlock) >> Maybe.withDefault NoOp) publishFollowBlockStream
+  Signal.map (Maybe.map (MsgForPublish << DonePublishFollowBlock) >> Maybe.withDefault NoOp) publishFollowBlockStream

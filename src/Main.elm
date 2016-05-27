@@ -2,7 +2,7 @@ module Main (main) where
 
 import View exposing (view)
 import Model exposing (Model, initialModel)
-import Action exposing (Action)
+import Msg exposing (Msg)
 import StartApp
 import Html exposing (Html)
 import Update exposing (update)
@@ -21,7 +21,7 @@ import Accounts.Model as Accounts
 -- App starting
 
 
-inputs : List (Signal Action)
+inputs : List (Signal Msg)
 inputs =
   [ routeInput
   , requestPublish

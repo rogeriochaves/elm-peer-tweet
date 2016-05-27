@@ -1,10 +1,10 @@
-module Authentication.Action (..) where
+module Authentication.Msg (..) where
 
 import Authentication.Model exposing (Model, Keys)
 import Account.Model exposing (HeadHash)
 
 
-type Action
+type Msg
   = CreateKeys
   | DoneCreateKeys { hash : HeadHash, keys : Keys }
   | UpdatePublicKey String

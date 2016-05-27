@@ -1,14 +1,14 @@
 module Search.Update (update) where
 
-import Action as RootAction exposing (..)
-import Search.Action exposing (..)
+import Msg as RootMsg exposing (..)
+import Search.Msg exposing (..)
 import Search.Model exposing (Model)
 
 
-update : RootAction.Action -> Model -> Model
-update action model =
-  case action of
-    ActionForSearch (Update query) ->
+update : RootMsg.Msg -> Model -> Model
+update msg model =
+  case msg of
+    MsgForSearch (Update query) ->
       { model | query = query }
 
     _ ->

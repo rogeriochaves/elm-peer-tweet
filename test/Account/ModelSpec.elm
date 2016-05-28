@@ -1,4 +1,4 @@
-module Account.ModelSpec (..) where
+module Account.ModelSpec exposing (..)
 
 import Account.Model exposing (Model, initialModel, nextHash, nextHashToDownload, findItem, addTweet)
 import ElmTestBDDStyle exposing (..)

@@ -1,4 +1,4 @@
-module Download.Model (Model, initialModel, Status(..), updateDownloadingItem, downloadingItemsCount, isLoading, hasError, getError) where
+module Download.Model exposing (Model, initialModel, Status(..), updateDownloadingItem, downloadingItemsCount, isLoading, hasError, getError)
 
 import Account.Model exposing (Hash)
 import Maybe exposing (andThen)

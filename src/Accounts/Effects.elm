@@ -1,4 +1,4 @@
-module Accounts.Effects (effects) where
+module Accounts.Effects exposing (effects)
 
 import Msg as RootMsg exposing (..)
 import Accounts.Model exposing (Model, findAccount)

@@ -1,4 +1,4 @@
-module Accounts.Msg (..) where
+module Accounts.Msg exposing (..)
 
 import Account.Model as Account exposing (HeadHash, Name)
 import Account.Msg as AccountMsg

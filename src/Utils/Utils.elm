@@ -1,4 +1,4 @@
-module Utils.Utils (..) where
+module Utils.Utils exposing (..)
 
 import Json.Decode as Json
 import Signal

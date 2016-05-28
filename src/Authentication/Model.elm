@@ -1,4 +1,4 @@
-module Authentication.Model (..) where
+module Authentication.Model exposing (..)
 
 import Account.Model exposing (HeadHash, Name)
 

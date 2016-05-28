@@ -1,4 +1,4 @@
-module Router.Update (..) where
+module Router.Update exposing (..)
 
 import Router.Msg as Router exposing (Msg(..))
 import Router.Model exposing (Model, Page(..), routeToPage, pathToPage)

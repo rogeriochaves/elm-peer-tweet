@@ -1,4 +1,4 @@
-module Router.Msg (Msg(..)) where
+module Router.Msg exposing (Msg(..))
 
 import Router.Routes exposing (Sitemap)
 

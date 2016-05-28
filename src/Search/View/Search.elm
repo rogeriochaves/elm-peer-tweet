@@ -1,4 +1,4 @@
-module Search.View.Search (..) where
+module Search.View.Search exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (class, type', id, value, for, placeholder)

@@ -1,4 +1,4 @@
-module Search.Model (Model, initialModel) where
+module Search.Model exposing (Model, initialModel)
 
 
 type alias Model =

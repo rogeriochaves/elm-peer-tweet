@@ -1,4 +1,4 @@
-module Settings.View.Settings (..) where
+module Settings.View.Settings exposing (..)
 
 import Html exposing (..)
 import Model exposing (Model)

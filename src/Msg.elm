@@ -1,4 +1,4 @@
-module Msg (..) where
+module Msg exposing (..)
 
 import Router.Msg as Router
 import NewTweet.Msg as NewTweet

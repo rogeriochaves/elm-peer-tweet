@@ -1,4 +1,4 @@
-module DateTime.View.TimeDifferenceSpec (..) where
+module DateTime.View.TimeDifferenceSpec exposing (..)
 
 import ElmTestBDDStyle exposing (..)
 import DateTime.View.TimeDifference exposing (formatTimeDifference, day, month, year)

@@ -1,4 +1,4 @@
-module DateTime.Update (update) where
+module DateTime.Update exposing (update)
 
 import Msg as RootMsg exposing (..)
 import DateTime.Msg exposing (..)

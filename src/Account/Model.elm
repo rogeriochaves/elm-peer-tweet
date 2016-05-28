@@ -1,4 +1,4 @@
-module Account.Model (..) where
+module Account.Model exposing (..)
 
 import Maybe exposing (andThen, map, withDefault)
 import Utils.Utils exposing (isJust)

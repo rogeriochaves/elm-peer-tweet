@@ -1,4 +1,4 @@
-module Publish.EffectsSpec (..) where
+module Publish.EffectsSpec exposing (..)
 
 import Publish.Effects exposing (effects)
 import Model as RootModel

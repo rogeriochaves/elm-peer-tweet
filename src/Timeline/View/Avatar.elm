@@ -1,4 +1,4 @@
-module Timeline.View.Avatar (..) where
+module Timeline.View.Avatar exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (class, src)

@@ -1,4 +1,4 @@
-module Update (update) where
+module Update exposing (update)
 
 import Msg exposing (Msg)
 import Model exposing (Model)

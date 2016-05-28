@@ -1,4 +1,4 @@
-module Settings.Effects (effects) where
+module Settings.Effects exposing (effects)
 
 import Msg as RootMsg exposing (Msg(MsgForSettings, MsgForAccounts, MsgForPublish))
 import Model exposing (Model)

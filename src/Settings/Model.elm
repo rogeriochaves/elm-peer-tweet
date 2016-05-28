@@ -1,4 +1,4 @@
-module Settings.Model (Model, initialModel) where
+module Settings.Model exposing (Model, initialModel)
 
 import Account.Model as Account
 

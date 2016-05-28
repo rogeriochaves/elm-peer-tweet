@@ -1,4 +1,4 @@
-module NewTweet.Update (update) where
+module NewTweet.Update exposing (update)
 
 import Msg as RootMsg exposing (..)
 import NewTweet.Msg exposing (..)

@@ -1,4 +1,4 @@
-module Main (main) where
+module Main exposing (main)
 
 import View exposing (view)
 import Model exposing (Model, initialModel)

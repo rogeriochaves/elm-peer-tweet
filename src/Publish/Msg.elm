@@ -1,4 +1,4 @@
-module Publish.Msg (..) where
+module Publish.Msg exposing (..)
 
 import Account.Model exposing (HeadHash, TweetHash, FollowBlockHash, Head, Tweet, FollowBlock)
 import Account.Msg exposing (TweetIdentifier, TweetData, FollowBlockIdentifier, FollowBlockData)

@@ -1,4 +1,4 @@
-module Download.Effects (effects, initialEffects) where
+module Download.Effects exposing (effects, initialEffects)
 
 import Msg as RootMsg exposing (..)
 import Download.Msg as Download exposing (..)

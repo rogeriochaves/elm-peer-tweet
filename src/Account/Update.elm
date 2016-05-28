@@ -1,4 +1,4 @@
-module Account.Update (update) where
+module Account.Update exposing (update)
 
 import Account.Msg exposing (..)
 import Account.Model exposing (Model, addTweet, addFollowBlock)

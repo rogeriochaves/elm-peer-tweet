@@ -1,4 +1,4 @@
-module NewTweet.Model (Model, initialModel) where
+module NewTweet.Model exposing (Model, initialModel)
 
 type alias Model =
   { text: String

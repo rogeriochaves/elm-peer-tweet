@@ -1,4 +1,4 @@
-module Accounts.Model (..) where
+module Accounts.Model exposing (..)
 
 import Account.Model as Account exposing (HeadHash, Head, Tweet, followList)
 import Maybe exposing (andThen)

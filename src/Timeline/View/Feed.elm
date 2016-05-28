@@ -1,4 +1,4 @@
-module Timeline.View.Feed (..) where
+module Timeline.View.Feed exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (class)

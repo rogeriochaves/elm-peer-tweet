@@ -1,4 +1,4 @@
-module Accounts.Update (update) where
+module Accounts.Update exposing (update)
 
 import Msg as RootMsg exposing (..)
 import Accounts.Msg as AccountsMsg exposing (..)

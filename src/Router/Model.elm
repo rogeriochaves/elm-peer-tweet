@@ -1,4 +1,4 @@
-module Router.Model (..) where
+module Router.Model exposing (..)
 
 import Router.Routes exposing (Sitemap(..), match, route)
 import Account.Model exposing (HeadHash)

@@ -1,4 +1,4 @@
-module Authentication.Ports (..) where
+module Authentication.Ports exposing (..)
 
 import Account.Model as Account exposing (HeadHash)
 import Msg exposing (Msg(MsgForAuthentication, NoOp))

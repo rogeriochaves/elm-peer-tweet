@@ -1,4 +1,4 @@
-module Download.EffectsSpec (..) where
+module Download.EffectsSpec exposing (..)
 
 import Download.Effects exposing (effects)
 import Model as RootModel

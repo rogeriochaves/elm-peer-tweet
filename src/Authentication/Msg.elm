@@ -1,4 +1,4 @@
-module Authentication.Msg (..) where
+module Authentication.Msg exposing (..)
 
 import Authentication.Model exposing (Model, Keys)
 import Account.Model exposing (HeadHash)

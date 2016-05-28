@@ -1,4 +1,4 @@
-module TestHelpers (..) where
+module TestHelpers exposing (..)
 
 import ElmTestBDDStyle exposing (..)
 import Task exposing (Task, andThen, sequence)

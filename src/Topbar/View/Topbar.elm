@@ -1,4 +1,4 @@
-module Topbar.View.Topbar (..) where
+module Topbar.View.Topbar exposing (..)
 
 import Html exposing (Html, div, text, nav)
 import Html.Attributes exposing (class)

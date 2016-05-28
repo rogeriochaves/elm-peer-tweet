@@ -1,4 +1,4 @@
-module Timeline.View.Timeline (..) where
+module Timeline.View.Timeline exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (class)

@@ -1,4 +1,4 @@
-module Authentication.Update (update) where
+module Authentication.Update exposing (update)
 
 import Msg as RootMsg exposing (..)
 import Authentication.Msg as Authentication exposing (Msg(..))

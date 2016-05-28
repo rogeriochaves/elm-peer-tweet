@@ -1,4 +1,4 @@
-module Publish.Ports (..) where
+module Publish.Ports exposing (..)
 
 import Account.Model as Account exposing (Head, Tweet, Hash)
 import Msg as RootMsg exposing (..)

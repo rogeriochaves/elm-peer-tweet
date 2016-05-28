@@ -1,4 +1,4 @@
-module View (..) where
+module View exposing (..)
 
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (class)

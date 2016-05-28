@@ -1,4 +1,4 @@
-module Search.Update (update) where
+module Search.Update exposing (update)
 
 import Msg as RootMsg exposing (..)
 import Search.Msg exposing (..)

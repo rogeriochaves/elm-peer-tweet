@@ -1,4 +1,4 @@
-module Main (..) where
+module Main exposing (..)
 
 import Task exposing (Task, andThen, sequence)
 import Console exposing (run, putStrLn, (>>>))

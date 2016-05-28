@@ -1,4 +1,4 @@
-module DateTime.View.TimeDifference (..) where
+module DateTime.View.TimeDifference exposing (..)
 
 import Time exposing (Time, second, minute, hour)
 

@@ -1,4 +1,4 @@
-module Settings.Update (update) where
+module Settings.Update exposing (update)
 
 import Msg as RootMsg exposing (..)
 import Settings.Msg exposing (..)

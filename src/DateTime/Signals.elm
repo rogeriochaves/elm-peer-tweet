@@ -1,4 +1,4 @@
-module DateTime.Signals (..) where
+module DateTime.Signals exposing (..)
 
 import Time exposing (every, second)
 import Msg as RootMsg exposing (..)

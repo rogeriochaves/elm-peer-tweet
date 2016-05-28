@@ -1,4 +1,4 @@
-module Publish.Update (update) where
+module Publish.Update exposing (update)
 
 import Msg as RootMsg exposing (..)
 import Publish.Msg as Publish exposing (..)

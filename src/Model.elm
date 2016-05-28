@@ -1,4 +1,4 @@
-module Model (Model, initialModel) where
+module Model exposing (Model, initialModel)
 
 import Effects exposing (Effects)
 import Msg exposing (Msg)

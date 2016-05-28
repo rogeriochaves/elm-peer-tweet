@@ -1,4 +1,4 @@
-module FollowingList.View.FollowingList (..) where
+module FollowingList.View.FollowingList exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (class, type', id, value, for)

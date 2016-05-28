@@ -1,4 +1,4 @@
-module Router.Effects (..) where
+module Router.Effects exposing (..)
 
 import Router.Msg as Router exposing (Msg(..))
 import Router.Model exposing (Model, Page(..), routeToPage, pathToPage)

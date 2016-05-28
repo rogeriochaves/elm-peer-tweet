@@ -1,4 +1,4 @@
-module Accounts.ModelSpec (..) where
+module Accounts.ModelSpec exposing (..)
 
 import Accounts.Model exposing (Model, timeline)
 import Account.Model as Account exposing (initialModel, Tweet, FollowBlock)

@@ -1,4 +1,4 @@
-module Account.UpdateSpec (..) where
+module Account.UpdateSpec exposing (..)
 
 import Account.Update exposing (update)
 import Account.Model exposing (initialModel)

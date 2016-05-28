@@ -1,4 +1,4 @@
-module NewTweet.View.NewTweet (..) where
+module NewTweet.View.NewTweet exposing (..)
 
 import Html exposing (Html, div, textarea, text, button)
 import Html.Attributes exposing (class, value)

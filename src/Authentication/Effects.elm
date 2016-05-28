@@ -1,4 +1,4 @@
-module Authentication.Effects (effects) where
+module Authentication.Effects exposing (effects)
 
 import Msg as RootMsg exposing (..)
 import Authentication.Msg exposing (Msg(CreateKeys, DoneLogin))

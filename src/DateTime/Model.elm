@@ -1,4 +1,4 @@
-module DateTime.Model (Model, initialModel) where
+module DateTime.Model exposing (Model, initialModel)
 
 import Time exposing (Time)
 

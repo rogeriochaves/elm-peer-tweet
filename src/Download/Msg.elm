@@ -1,4 +1,4 @@
-module Download.Msg (..) where
+module Download.Msg exposing (..)
 
 import Account.Model exposing (Hash, HeadHash, TweetHash, FollowBlockHash, Head, Tweet, FollowBlock)
 import Account.Msg exposing (TweetIdentifier, TweetData, FollowBlockIdentifier, FollowBlockData)

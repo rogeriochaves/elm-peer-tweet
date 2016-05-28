@@ -1,4 +1,4 @@
-module Publish.Effects (effects) where
+module Publish.Effects exposing (effects)
 
 import Msg as RootMsg exposing (..)
 import Publish.Msg as Publish exposing (..)

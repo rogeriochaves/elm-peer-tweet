@@ -1,4 +1,4 @@
-module Timeline.View.Tweet (..) where
+module Timeline.View.Tweet exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (class)

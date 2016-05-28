@@ -1,4 +1,4 @@
-module Download.Update (update) where
+module Download.Update exposing (update)
 
 import Msg as RootMsg exposing (..)
 import Download.Msg as Download exposing (..)

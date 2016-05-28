@@ -1,4 +1,4 @@
-module Authentication.View.Login where
+module Authentication.View.Login exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (value, class, type', href)

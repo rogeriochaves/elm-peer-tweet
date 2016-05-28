@@ -1,4 +1,4 @@
-module Settings.Msg where
+module Settings.Msg exposing (..)
 
 type Msg
     = UpdateAvatar String

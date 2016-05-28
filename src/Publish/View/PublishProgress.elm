@@ -1,4 +1,4 @@
-module Publish.View.PublishProgress where
+module Publish.View.PublishProgress exposing (..)
 
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (class)

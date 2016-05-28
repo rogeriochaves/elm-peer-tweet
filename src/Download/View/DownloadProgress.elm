@@ -1,4 +1,4 @@
-module Download.View.DownloadProgress where
+module Download.View.DownloadProgress exposing (..)
 
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (class)

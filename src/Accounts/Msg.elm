@@ -6,16 +6,16 @@ import Time exposing (Time)
 
 
 type alias AddTweetRequestPayload =
-  { account : Account.Model, text : String }
+    { account : Account.Model, text : String }
 
 
 type alias AddFollowerRequestPayload =
-  { account : Account.Model, hash : HeadHash }
+    { account : Account.Model, hash : HeadHash }
 
 
 type Msg
-  = AddTweetRequest AddTweetRequestPayload
-  | AddFollowerRequest AddFollowerRequestPayload
-  | UpdateUserAccount Account.Model
-  | MsgForAccount HeadHash AccountMsg.Msg
-  | CreateAccount HeadHash Name Time
+    = AddTweetRequest AddTweetRequestPayload
+    | AddFollowerRequest AddFollowerRequestPayload
+    | UpdateUserAccount Account.Model
+    | MsgForAccount HeadHash AccountMsg.Msg
+    | CreateAccount HeadHash Name Time

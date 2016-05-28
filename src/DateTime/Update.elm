@@ -7,9 +7,9 @@ import DateTime.Model exposing (Model)
 
 update : RootMsg.Msg -> Model -> Model
 update msg model =
-  case msg of
-    MsgForDateTime (Update time) ->
-      { model | timestamp = time }
+    case msg of
+        MsgForDateTime (Update time) ->
+            { model | timestamp = time }
 
-    _ ->
-      model
+        _ ->
+            model

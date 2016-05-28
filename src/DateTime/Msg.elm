@@ -4,4 +4,4 @@ import Time exposing (Time)
 
 
 type Msg
-  = Update Time
+    = Update Time

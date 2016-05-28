@@ -4,11 +4,11 @@ import Time exposing (Time)
 
 
 type alias Model =
-  { timestamp : Time
-  }
+    { timestamp : Time
+    }
 
 
 initialModel : Model
 initialModel =
-  { timestamp = 0
-  }
+    { timestamp = 0
+    }

@@ -7,44 +7,44 @@ import Publish.Model exposing (Model)
 
 update : RootMsg.Msg -> Model -> Model
 update msg model =
-  case msg of
-    MsgForPublish syncMsg ->
-      updatePublish syncMsg model
+    case msg of
+        MsgForPublish syncMsg ->
+            updatePublish syncMsg model
 
-    _ ->
-      model
+        _ ->
+            model
 
 
 updatePublish : Publish.Msg -> Model -> Model
 updatePublish msg model =
-  case msg of
-    BeginPublish ->
-      model
+    case msg of
+        BeginPublish ->
+            model
 
-    PublishHead _ ->
-      incPublishingCount model
+        PublishHead _ ->
+            incPublishingCount model
 
-    DonePublishHead _ ->
-      decPublishingCount model
+        DonePublishHead _ ->
+            decPublishingCount model
 
-    PublishTweet _ ->
-      incPublishingCount model
+        PublishTweet _ ->
+            incPublishingCount model
 
-    DonePublishTweet _ ->
-      decPublishingCount model
+        DonePublishTweet _ ->
+            decPublishingCount model
 
-    PublishFollowBlock _ ->
-      incPublishingCount model
+        PublishFollowBlock _ ->
+            incPublishingCount model
 
-    DonePublishFollowBlock _ ->
-      decPublishingCount model
+        DonePublishFollowBlock _ ->
+            decPublishingCount model
 
 
 incPublishingCount : Model -> Model
 incPublishingCount model =
-  { model | publishingCount = model.publishingCount + 1 }
+    { model | publishingCount = model.publishingCount + 1 }
 
 
 decPublishingCount : Model -> Model
 decPublishingCount model =
-  { model | publishingCount = model.publishingCount - 1 }
+    { model | publishingCount = model.publishingCount - 1 }

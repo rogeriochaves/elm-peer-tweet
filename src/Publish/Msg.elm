@@ -5,10 +5,10 @@ import Account.Msg exposing (TweetIdentifier, TweetData, FollowBlockIdentifier, 
 
 
 type Msg
-  = BeginPublish
-  | PublishHead Head
-  | DonePublishHead HeadHash
-  | PublishTweet TweetData
-  | DonePublishTweet TweetIdentifier
-  | PublishFollowBlock FollowBlockData
-  | DonePublishFollowBlock FollowBlockIdentifier
+    = BeginPublish
+    | PublishHead Head
+    | DonePublishHead HeadHash
+    | PublishTweet TweetData
+    | DonePublishTweet TweetIdentifier
+    | PublishFollowBlock FollowBlockData
+    | DonePublishFollowBlock FollowBlockIdentifier

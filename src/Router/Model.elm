@@ -5,52 +5,52 @@ import Account.Model exposing (HeadHash)
 
 
 type Page
-  = Timeline
-  | Search
-  | NotFound
-  | CreateAccount
-  | FollowingList
-  | Profile HeadHash
-  | Settings
+    = Timeline
+    | Search
+    | NotFound
+    | CreateAccount
+    | FollowingList
+    | Profile HeadHash
+    | Settings
 
 
 type alias Model =
-  { page : Page
-  }
+    { page : Page
+    }
 
 
 routeToPage : Sitemap -> Page
 routeToPage route =
-  case route of
-    TimelineRoute () ->
-      Timeline
+    case route of
+        TimelineRoute () ->
+            Timeline
 
-    SearchRoute () ->
-      Search
+        SearchRoute () ->
+            Search
 
-    CreateAccountRoute () ->
-      CreateAccount
+        CreateAccountRoute () ->
+            CreateAccount
 
-    FollowingListRoute () ->
-      FollowingList
+        FollowingListRoute () ->
+            FollowingList
 
-    ProfileRoute hash ->
-      Profile hash
+        ProfileRoute hash ->
+            Profile hash
 
-    SettingsRoute () ->
-      Settings
+        SettingsRoute () ->
+            Settings
 
 
 pathToPage : String -> Page
 pathToPage page =
-  case match page of
-    Nothing ->
-      NotFound
+    case match page of
+        Nothing ->
+            NotFound
 
-    Just r ->
-      routeToPage r
+        Just r ->
+            routeToPage r
 
 
 initialModel : String -> Model
 initialModel path =
-  { page = pathToPage path }
+    { page = pathToPage path }

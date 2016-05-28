@@ -5,11 +5,11 @@ import Account.Msg exposing (TweetIdentifier, TweetData, FollowBlockIdentifier, 
 
 
 type Msg
-  = BeginDownload
-  | DownloadHead HeadHash
-  | DoneDownloadHead Head
-  | DownloadTweet TweetIdentifier
-  | DoneDownloadTweet TweetData
-  | DownloadFollowBlock FollowBlockIdentifier
-  | DoneDownloadFollowBlock FollowBlockData
-  | ErrorDownload Hash String
+    = BeginDownload
+    | DownloadHead HeadHash
+    | DoneDownloadHead Head
+    | DownloadTweet TweetIdentifier
+    | DoneDownloadTweet TweetData
+    | DownloadFollowBlock FollowBlockIdentifier
+    | DoneDownloadFollowBlock FollowBlockData
+    | ErrorDownload Hash String

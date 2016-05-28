@@ -8,24 +8,24 @@ import History
 
 update : RootMsg.Msg -> Model -> Model
 update msg model =
-  case msg of
-    MsgForRouter routerMsg ->
-      updateRouter routerMsg model
+    case msg of
+        MsgForRouter routerMsg ->
+            updateRouter routerMsg model
 
-    _ ->
-      model
+        _ ->
+            model
 
 
 updateRouter : Router.Msg -> Model -> Model
 updateRouter msg model =
-  case msg of
-    PathChange path ->
-      { page = pathToPage path }
+    case msg of
+        PathChange path ->
+            { page = pathToPage path }
 
-    UpdatePath route ->
-      model
+        UpdatePath route ->
+            model
 
 
 routeInput : Signal RootMsg.Msg
 routeInput =
-  Signal.map (MsgForRouter << PathChange) History.hash
+    Signal.map (MsgForRouter << PathChange) History.hash

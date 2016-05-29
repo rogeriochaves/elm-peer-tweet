@@ -8,6 +8,7 @@ import Maybe exposing (andThen)
 import Accounts.Model as Accounts exposing (findAccount, getUserAccount, followingAccounts)
 import Authentication.Model as Authentication
 import Download.Ports exposing (..)
+import Authentication.Msg exposing (Msg(DoneLogin))
 
 
 cmds : RootMsg.Msg -> { a | accounts : Accounts.Model, authentication : Authentication.Model } -> Cmd RootMsg.Msg
@@ -15,6 +16,9 @@ cmds msg model =
     case msg of
         MsgForDownload syncMsg ->
             cmdsDownload syncMsg model
+
+        MsgForAuthentication (DoneLogin hash) ->
+            cmdsDownload (DownloadHead hash) model
 
         _ ->
             Cmd.none

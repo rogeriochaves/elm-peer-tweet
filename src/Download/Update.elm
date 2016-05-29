@@ -4,6 +4,7 @@ import Msg as RootMsg exposing (..)
 import Download.Msg as Download exposing (..)
 import Download.Model exposing (Model, Status(..), updateDownloadingItem)
 import Account.Model exposing (Hash)
+import Authentication.Msg exposing (Msg(DoneLogin))
 
 
 update : RootMsg.Msg -> Model -> Model
@@ -11,6 +12,9 @@ update msg model =
     case msg of
         MsgForDownload syncMsg ->
             updateDownload syncMsg model
+
+        MsgForAuthentication (DoneLogin hash) ->
+            updateDownload (DownloadHead hash) model
 
         _ ->
             model

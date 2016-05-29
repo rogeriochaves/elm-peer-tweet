@@ -5,7 +5,7 @@ import Msg as RootMsg exposing (..)
 import DateTime.Msg exposing (..)
 
 
-updateDateTime : Signal RootMsg.Msg
+updateDateTime : Sub RootMsg.Msg
 updateDateTime =
-  (every second)
-    |> Signal.map (MsgForDateTime << Update)
+    (MsgForDateTime << Update)
+        |> every second

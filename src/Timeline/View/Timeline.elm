@@ -13,16 +13,15 @@ import NewTweet.View.NewTweet as NewTweet
 
 view : Model -> Account.Model -> Html Msg
 view model userAccount =
-  let
-    timestamp =
-      model.dateTime.timestamp
+    let
+        timestamp =
+            model.dateTime.timestamp
 
-    items =
-      timeline model.accounts userAccount
-  in
-    div
-      []
-      [ Topbar.view model "Timeline"
-      , NewTweet.view model userAccount
-      , ul [ class "collection" ] (List.map (Tweet.view timestamp) items)
-      ]
+        items =
+            timeline model.accounts userAccount
+    in
+        div []
+            [ Topbar.view model "Timeline"
+            , NewTweet.view model userAccount
+            , ul [ class "collection" ] (List.map (Tweet.view timestamp) items)
+            ]

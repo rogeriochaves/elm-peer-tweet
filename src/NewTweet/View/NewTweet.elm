@@ -10,29 +10,27 @@ import Model exposing (Model)
 import Account.Model as Account
 import String exposing (length)
 import Utils.Utils exposing (onEnter)
+import Json.Decode as Json
 
 
 view : Model -> Account.Model -> Html RootMsg.Msg
 view model account =
-  let
-    tweetMsg =
-      MsgForAccounts <| AddTweetRequest { account = account, text = model.newTweet.text }
-  in
-    div
-      [ class "container" ]
-      [ textarea
-          [ class "materialize-textarea new-tweet"
-          , on "input" (Json.map (MsgForNewTweet << Update) targetValue)
-          , onEnter tweetMsg
-          , value model.newTweet.text
-          ]
-          []
-      , div
-          [ class "new-tweet-actions" ]
-          [ div [ class "characters-left grey-text" ] [ text <| toString <| 140 - (length model.newTweet.text) ]
-          , button
-              [ class "btn small", onClick tweetMsg ]
-              [ text "Tweet"
-              ]
-          ]
-      ]
+    let
+        tweetMsg =
+            MsgForAccounts <| AddTweetRequest { account = account, text = model.newTweet.text }
+    in
+        div [ class "container" ]
+            [ textarea
+                [ class "materialize-textarea new-tweet"
+                , on "input" (Json.map (MsgForNewTweet << Update) targetValue)
+                , onEnter NoOp tweetMsg
+                , value model.newTweet.text
+                ]
+                []
+            , div [ class "new-tweet-actions" ]
+                [ div [ class "characters-left grey-text" ] [ text <| toString <| 140 - (length model.newTweet.text) ]
+                , button [ class "btn small", onClick tweetMsg ]
+                    [ text "Tweet"
+                    ]
+                ]
+            ]

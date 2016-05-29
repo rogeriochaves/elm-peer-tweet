@@ -12,23 +12,18 @@ import Router.Msg exposing (Msg(UpdatePath))
 import Router.Routes exposing (Sitemap(..))
 
 
-view : Time -> { head: Head, tweet: Tweet } -> Html RootMsg.Msg
+view : Time -> { head : Head, tweet : Tweet } -> Html RootMsg.Msg
 view timestamp { head, tweet } =
-  li
-    [ class "collection-item tweet" ]
-    [ Avatar.view head
-    , div
-        [ class "tweet-info" ]
-        [ a
-          [ class "title link", onClick (MsgForRouter <| UpdatePath <| ProfileRoute head.hash) ]
-          [ text head.n ]
-        , span
-            [ class "secondary-content" ]
-            [ text <| formatTimeDifference timestamp <| toFloat tweet.d
-            ]
-        , p
-            []
-            [ text tweet.t
+    li [ class "collection-item tweet" ]
+        [ Avatar.view head
+        , div [ class "tweet-info" ]
+            [ a [ class "title link", onClick (MsgForRouter <| UpdatePath <| ProfileRoute head.hash) ]
+                [ text head.n ]
+            , span [ class "secondary-content" ]
+                [ text <| formatTimeDifference timestamp <| toFloat tweet.d
+                ]
+            , p []
+                [ text tweet.t
+                ]
             ]
         ]
-    ]

@@ -10,13 +10,12 @@ import Msg exposing (Msg)
 
 view : Model -> Account.Model -> Html Msg
 view model account =
-  let
-    timestamp =
-      model.dateTime.timestamp
+    let
+        timestamp =
+            model.dateTime.timestamp
 
-    tweets =
-      account.tweets
-  in
-    ul
-      [ class "collection" ]
-      (List.map (\tweet -> Tweet.view timestamp { head = account.head, tweet = tweet}) tweets)
+        tweets =
+            account.tweets
+    in
+        ul [ class "collection" ]
+            (List.map (\tweet -> Tweet.view timestamp { head = account.head, tweet = tweet }) tweets)

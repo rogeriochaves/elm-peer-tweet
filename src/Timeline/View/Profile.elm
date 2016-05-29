@@ -14,31 +14,28 @@ import Timeline.View.Avatar as Avatar
 
 view : Model -> Account.Model -> Account.Model -> Html RootMsg.Msg
 view model userAccount account =
-  div
-    []
-    [ div
-        [ class "card white profile" ]
-        [ div
-          [ class "card-content"]
-          [ Avatar.view account.head
-          , span [ class "card-title" ] [ text account.head.n ]
-          , followButton model userAccount account
-          , p [] [ text <| "@" ++ account.head.hash ]
-          ]
+    div []
+        [ div [ class "card white profile" ]
+            [ div [ class "card-content" ]
+                [ Avatar.view account.head
+                , span [ class "card-title" ] [ text account.head.n ]
+                , followButton model userAccount account
+                , p [] [ text <| "@" ++ account.head.hash ]
+                ]
+            ]
+        , Feed.view model account
         ]
-    , Feed.view model account
-    ]
 
 
 followButton : Model -> Account.Model -> Account.Model -> Html RootMsg.Msg
 followButton model userAccount account =
-  if userAccount.head.hash == account.head.hash then
-    div [] []
-  else if isFollowing model account.head.hash then
-    button [ class "btn small blue disabled secondary-content" ] [ text "Following" ]
-  else
-    button
-      [ class "btn small blue secondary-content"
-      , onClick (MsgForAccounts <| AddFollowerRequest { account = userAccount, hash = account.head.hash })
-      ]
-      [ text "Follow" ]
+    if userAccount.head.hash == account.head.hash then
+        div [] []
+    else if isFollowing model account.head.hash then
+        button [ class "btn small blue disabled secondary-content" ] [ text "Following" ]
+    else
+        button
+            [ class "btn small blue secondary-content"
+            , onClick (MsgForAccounts <| AddFollowerRequest { account = userAccount, hash = account.head.hash })
+            ]
+            [ text "Follow" ]

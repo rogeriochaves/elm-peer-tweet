@@ -8,10 +8,8 @@ import Model exposing (Model)
 
 view : Model -> String -> Html Msg
 view model title =
-  nav
-    []
-    [ div
-        [ class "nav-wrapper grey lighten-5 black-text" ]
-        [ text title
+    nav []
+        [ div [ class "nav-wrapper grey lighten-5 black-text" ]
+            [ text title
+            ]
         ]
-    ]

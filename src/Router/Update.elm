@@ -12,6 +12,9 @@ update msg model =
         MsgForRouter routerMsg ->
             updateRouter routerMsg model
 
+        MsgForAccounts (CreateAccount _ _ _) ->
+            updateRouter <| UpdatePath <| TimelineRoute ()
+
         _ ->
             model
 

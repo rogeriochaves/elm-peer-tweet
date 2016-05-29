@@ -3,6 +3,7 @@ module Publish.Update exposing (update)
 import Msg as RootMsg exposing (..)
 import Publish.Msg as Publish exposing (..)
 import Publish.Model exposing (Model)
+import Accounts.Msg exposing (Msg(UpdateUserAccount))
 
 
 update : RootMsg.Msg -> Model -> Model
@@ -10,6 +11,9 @@ update msg model =
     case msg of
         MsgForPublish syncMsg ->
             updatePublish syncMsg model
+
+        MsgForAccounts (UpdateUserAccount userAccount) ->
+            updatePublish (PublishHead <| .head <| userAccount) model
 
         _ ->
             model

@@ -14,8 +14,8 @@ import Timeline.View.Avatar as Avatar
 import Account.Model as Account
 
 
-view : Signal.Address RootMsg.Msg -> Model -> Account.Model -> Html
-view address model userAccount =
+view : Model -> Account.Model -> Html RootMsg.Msg
+view model userAccount =
   let
     classes =
       { home = "", followList = "", search = "", settings = "" }
@@ -43,31 +43,31 @@ view address model userAccount =
           [ class "sidebar-items blue darken-4" ]
           [ button
               [ class "sidebar-button sidebar-avatar"
-              , onClick address (MsgForRouter <| UpdatePath <| ProfileRoute userAccount.head.hash)
+              , onClick (MsgForRouter <| UpdatePath <| ProfileRoute userAccount.head.hash)
               ]
               [ Avatar.view userAccount.head ]
           , button
               [ class <| "sidebar-button material-icons " ++ activeClass.home
-              , onClick address (MsgForRouter <| UpdatePath <| TimelineRoute ())
+              , onClick (MsgForRouter <| UpdatePath <| TimelineRoute ())
               ]
               [ text "home" ]
           , button
               [ class <| "sidebar-button material-icons " ++ activeClass.followList
-              , onClick address (MsgForRouter <| UpdatePath <| FollowingListRoute ())
+              , onClick (MsgForRouter <| UpdatePath <| FollowingListRoute ())
               ]
               [ text "group" ]
           , button
               [ class <| "sidebar-button material-icons " ++ activeClass.search
-              , onClick address (MsgForRouter <| UpdatePath <| SearchRoute ())
+              , onClick (MsgForRouter <| UpdatePath <| SearchRoute ())
               ]
               [ text "search" ]
           , button
               [ class <| "sidebar-button material-icons " ++ activeClass.settings
-              , onClick address (MsgForRouter <| UpdatePath <| SettingsRoute ())
+              , onClick (MsgForRouter <| UpdatePath <| SettingsRoute ())
               ]
               [ text "settings" ]
           , div [ class "sidebar-space" ] []
-          , PublishProgress.view address model.publish
-          , DownloadProgress.view address model.download
+          , PublishProgress.view model.publish
+          , DownloadProgress.view model.download
           ]
       ]

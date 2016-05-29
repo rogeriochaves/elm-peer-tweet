@@ -8,8 +8,8 @@ import Timeline.View.Tweet as Tweet
 import Msg exposing (Msg)
 
 
-view : Signal.Address Msg -> Model -> Account.Model -> Html
-view address model account =
+view : Model -> Account.Model -> Html Msg
+view model account =
   let
     timestamp =
       model.dateTime.timestamp
@@ -19,4 +19,4 @@ view address model account =
   in
     ul
       [ class "collection" ]
-      (List.map (\tweet -> Tweet.view address timestamp { head = account.head, tweet = tweet}) tweets)
+      (List.map (\tweet -> Tweet.view timestamp { head = account.head, tweet = tweet}) tweets)

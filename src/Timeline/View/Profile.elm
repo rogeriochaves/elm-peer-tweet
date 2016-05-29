@@ -12,8 +12,8 @@ import Timeline.View.Feed as Feed
 import Timeline.View.Avatar as Avatar
 
 
-view : Signal.Address RootMsg.Msg -> Model -> Account.Model -> Account.Model -> Html
-view address model userAccount account =
+view : Model -> Account.Model -> Account.Model -> Html RootMsg.Msg
+view model userAccount account =
   div
     []
     [ div
@@ -22,16 +22,16 @@ view address model userAccount account =
           [ class "card-content"]
           [ Avatar.view account.head
           , span [ class "card-title" ] [ text account.head.n ]
-          , followButton address model userAccount account
+          , followButton model userAccount account
           , p [] [ text <| "@" ++ account.head.hash ]
           ]
         ]
-    , Feed.view address model account
+    , Feed.view model account
     ]
 
 
-followButton : Signal.Address RootMsg.Msg -> Model -> Account.Model -> Account.Model -> Html
-followButton address model userAccount account =
+followButton : Model -> Account.Model -> Account.Model -> Html RootMsg.Msg
+followButton model userAccount account =
   if userAccount.head.hash == account.head.hash then
     div [] []
   else if isFollowing model account.head.hash then
@@ -39,6 +39,6 @@ followButton address model userAccount account =
   else
     button
       [ class "btn small blue secondary-content"
-      , onClick address (MsgForAccounts <| AddFollowerRequest { account = userAccount, hash = account.head.hash })
+      , onClick (MsgForAccounts <| AddFollowerRequest { account = userAccount, hash = account.head.hash })
       ]
       [ text "Follow" ]

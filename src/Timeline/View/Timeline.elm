@@ -11,8 +11,8 @@ import Msg exposing (Msg)
 import NewTweet.View.NewTweet as NewTweet
 
 
-view : Signal.Address Msg -> Model -> Account.Model -> Html
-view address model userAccount =
+view : Model -> Account.Model -> Html Msg
+view model userAccount =
   let
     timestamp =
       model.dateTime.timestamp
@@ -22,7 +22,7 @@ view address model userAccount =
   in
     div
       []
-      [ Topbar.view address model "Timeline"
-      , NewTweet.view address model userAccount
-      , ul [ class "collection" ] (List.map (Tweet.view address timestamp) items)
+      [ Topbar.view model "Timeline"
+      , NewTweet.view model userAccount
+      , ul [ class "collection" ] (List.map (Tweet.view timestamp) items)
       ]

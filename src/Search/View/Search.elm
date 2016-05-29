@@ -15,13 +15,13 @@ import Utils.Utils exposing (onEnter)
 import Authentication.View.Login exposing (loading)
 
 
-view : Signal.Address RootMsg.Msg -> Model -> Account.Model -> Html
-view address model userAccount =
+view : Model -> Account.Model -> Html RootMsg.Msg
+view model userAccount =
   div
     []
-    [ searchBar address model
+    [ searchBar model
     , findAccount model.accounts (Just model.search.query)
-        |> Maybe.map (Profile.view address model userAccount)
+        |> Maybe.map (Profile.view model userAccount)
         |> Maybe.withDefault (searchStatus model.download model.search.query)
     ]
 
@@ -38,8 +38,8 @@ searchStatus model hash =
     text ""
 
 
-searchBar : Signal.Address RootMsg.Msg -> Model -> Html
-searchBar address model =
+searchBar : Model -> Html RootMsg.Msg
+searchBar model =
   nav
     []
     [ div
@@ -47,11 +47,11 @@ searchBar address model =
       [ div
         [ class "input-field" ]
         [ input
-            [ on "input" targetValue (Signal.message address << MsgForSearch << Update)
+            [ on "input" (Json.map (MsgForSearch << Update) targetValue)
             , type' "search"
             , id "search"
             , value model.search.query
-            , onEnter address (MsgForDownload <| DownloadHead model.search.query)
+            , onEnter (MsgForDownload <| DownloadHead model.search.query)
             , placeholder "Search by hash..."
             ]
             []

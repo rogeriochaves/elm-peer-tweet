@@ -6,8 +6,8 @@ import Msg exposing (Msg)
 import Model exposing (Model)
 
 
-view : Signal.Address Msg -> Model -> String -> Html
-view address model title =
+view : Model -> String -> Html Msg
+view model title =
   nav
     []
     [ div

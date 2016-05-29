@@ -12,15 +12,15 @@ import Router.Msg exposing (Msg(UpdatePath))
 import Router.Routes exposing (Sitemap(..))
 
 
-view : Signal.Address RootMsg.Msg -> Time -> { head: Head, tweet: Tweet } -> Html
-view address timestamp { head, tweet } =
+view : Time -> { head: Head, tweet: Tweet } -> Html RootMsg.Msg
+view timestamp { head, tweet } =
   li
     [ class "collection-item tweet" ]
     [ Avatar.view head
     , div
         [ class "tweet-info" ]
         [ a
-          [ class "title link", onClick address (MsgForRouter <| UpdatePath <| ProfileRoute head.hash) ]
+          [ class "title link", onClick (MsgForRouter <| UpdatePath <| ProfileRoute head.hash) ]
           [ text head.n ]
         , span
             [ class "secondary-content" ]

@@ -10,26 +10,26 @@ import Topbar.View.Topbar as Topbar
 import Timeline.View.Avatar as Avatar
 
 
-view : Signal.Address RootMsg.Msg -> Model -> Account.Model -> Html
-view address model userAccount =
+view : Model -> Account.Model -> Html RootMsg.Msg
+view model userAccount =
   let
     following =
       followList userAccount
   in
     div
       []
-      [ Topbar.view address model "Following"
+      [ Topbar.view model "Following"
       , if List.length following == 0 then
           div
             [ class "container" ]
             [ p [] [ text "You are not following anybody, use the search to find more people" ] ]
         else
-          ul [ class "collection" ] (List.map (followingItem address model userAccount) following)
+          ul [ class "collection" ] (List.map (followingItem model userAccount) following)
       ]
 
 
-followingItem : Signal.Address RootMsg.Msg -> Model -> Account.Model -> HeadHash -> Html
-followingItem address model userAccount followingHash =
+followingItem : Model -> Account.Model -> HeadHash -> Html RootMsg.Msg
+followingItem model userAccount followingHash =
   let
     foundAccount =
       findAccount model.accounts (Just followingHash)

@@ -12,13 +12,13 @@ import Settings.Msg as Settings
 
 
 type Msg
-  = NoOp
-  | MsgForRouter Router.Msg
-  | MsgForNewTweet NewTweet.Msg
-  | MsgForAccounts Accounts.Msg
-  | MsgForPublish Publish.Msg
-  | MsgForDownload Download.Msg
-  | MsgForDateTime DateTime.Msg
-  | MsgForSearch Search.Msg
-  | MsgForAuthentication Authentication.Msg
-  | MsgForSettings Settings.Msg
+    = NoOp
+    | MsgForRouter Router.Msg
+    | MsgForNewTweet NewTweet.Msg
+    | MsgForAccounts Accounts.Msg
+    | MsgForPublish Publish.Msg
+    | MsgForDownload Download.Msg
+    | MsgForDateTime DateTime.Msg
+    | MsgForSearch Search.Msg
+    | MsgForAuthentication Authentication.Msg
+    | MsgForSettings Settings.Msg

@@ -1,86 +1,47 @@
-module Publish.Ports exposing (..)
+port module Publish.Ports exposing (..)
 
 import Account.Model as Account exposing (Head, Tweet, Hash)
 import Msg as RootMsg exposing (..)
-import Publish.Msg exposing (..)
-import Ports exposing (jsMailbox)
-import Utils.Utils exposing (isJust, filterEmpty)
 import Publish.Msg exposing (..)
 import Time exposing (every, minute)
 import Account.Msg exposing (TweetIdentifier, TweetData, FollowBlockIdentifier, FollowBlockData)
 
 
-requestPublish : Signal RootMsg.Msg
+requestPublish : Sub RootMsg.Msg
 requestPublish =
-  (every <| 5 * minute)
-    |> Signal.map (always <| MsgForPublish BeginPublish)
+    MsgForPublish BeginPublish
+        |> always
+        |> every (5 * minute)
 
 
-port publishHeadStream : Signal (Maybe Hash)
+port publishHeadStream : (Maybe Hash -> msg) -> Sub msg
 
 
-port requestPublishHead : Signal (Maybe Head)
-port requestPublishHead =
-  let
-    getRequest msg =
-      case msg of
-        MsgForPublish (PublishHead head) ->
-          Just head
-
-        _ ->
-          Nothing
-  in
-    Signal.map getRequest jsMailbox.signal
-      |> filterEmpty
+port requestPublishHead : Head -> Cmd msg
 
 
-publishHeadInput : Signal RootMsg.Msg
+publishHeadInput : Sub RootMsg.Msg
 publishHeadInput =
-  Signal.map (Maybe.map (MsgForPublish << DonePublishHead) >> Maybe.withDefault NoOp) publishHeadStream
+    publishHeadStream (Maybe.map (MsgForPublish << DonePublishHead) >> Maybe.withDefault NoOp)
 
 
-port publishTweetStream : Signal (Maybe TweetIdentifier)
+port publishTweetStream : (Maybe TweetIdentifier -> msg) -> Sub msg
 
 
-port requestPublishTweet : Signal (Maybe TweetData)
-port requestPublishTweet =
-  let
-    getRequest msg =
-      case msg of
-        MsgForPublish (PublishTweet tweet) ->
-          Just tweet
-
-        _ ->
-          Nothing
-  in
-    Signal.map getRequest jsMailbox.signal
-      |> filterEmpty
+port requestPublishTweet : TweetData -> Cmd msg
 
 
-publishTweetInput : Signal RootMsg.Msg
+publishTweetInput : Sub RootMsg.Msg
 publishTweetInput =
-  Signal.map (Maybe.map (MsgForPublish << DonePublishTweet) >> Maybe.withDefault NoOp) publishTweetStream
+    publishTweetStream (Maybe.map (MsgForPublish << DonePublishTweet) >> Maybe.withDefault NoOp)
 
 
-
-port publishFollowBlockStream : Signal (Maybe FollowBlockIdentifier)
-
-
-port requestPublishFollowBlock : Signal (Maybe FollowBlockData)
-port requestPublishFollowBlock =
-  let
-    getRequest msg =
-      case msg of
-        MsgForPublish (PublishFollowBlock tweet) ->
-          Just tweet
-
-        _ ->
-          Nothing
-  in
-    Signal.map getRequest jsMailbox.signal
-      |> filterEmpty
+port publishFollowBlockStream : (Maybe FollowBlockIdentifier -> msg) -> Sub msg
 
 
-publishFollowBlockInput : Signal RootMsg.Msg
+port requestPublishFollowBlock : FollowBlockData -> Cmd msg
+
+
+publishFollowBlockInput : Sub RootMsg.Msg
 publishFollowBlockInput =
-  Signal.map (Maybe.map (MsgForPublish << DonePublishFollowBlock) >> Maybe.withDefault NoOp) publishFollowBlockStream
+    publishFollowBlockStream (Maybe.map (MsgForPublish << DonePublishFollowBlock) >> Maybe.withDefault NoOp)

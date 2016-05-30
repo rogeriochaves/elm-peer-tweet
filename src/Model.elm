@@ -1,4 +1,4 @@
-module Model exposing (Model, initialModel)
+module Model exposing (Model, Flags, initialModel)
 
 import Msg exposing (Msg)
 import Router.Model as Router
@@ -26,8 +26,12 @@ type alias Model =
     }
 
 
-initialModel : String -> Maybe String -> Maybe Accounts.Model -> ( Model, Cmd Msg )
-initialModel path userHash accounts =
+type alias Flags =
+    { userHash : Maybe String, accounts : Maybe Accounts.Model }
+
+
+initialModel : Flags -> ( Model, Cmd Msg )
+initialModel { userHash, accounts } =
     let
         modelAccounts =
             Maybe.withDefault Accounts.initialModel accounts
@@ -36,7 +40,7 @@ initialModel path userHash accounts =
             Authentication.initialModel userHash
 
         model =
-            { router = Router.initialModel path
+            { router = Router.initialModel "/"
             , accounts = modelAccounts
             , newTweet = NewTweet.initialModel
             , publish = Publish.initialModel

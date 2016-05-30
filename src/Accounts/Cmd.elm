@@ -1,4 +1,4 @@
-module Accounts.Cmd exposing (effects)
+module Accounts.Cmd exposing (cmds)
 
 import Msg as RootMsg exposing (..)
 import Accounts.Model exposing (Model, findAccount)
@@ -6,8 +6,8 @@ import Accounts.Msg exposing (Msg(CreateAccount, UpdateUserAccount, AddTweetRequ
 import Accounts.Ports exposing (requestAddTweet, requestAddFollower)
 
 
-effects : RootMsg.Msg -> Model -> Cmd RootMsg.Msg
-effects msg _ =
+cmds : RootMsg.Msg -> Model -> Cmd RootMsg.Msg
+cmds msg _ =
     case msg of
         MsgForAccounts (AddTweetRequest req) ->
             requestAddTweet req

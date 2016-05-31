@@ -21,7 +21,7 @@ type alias FollowBlockHash =
 
 
 type alias Timestamp =
-    Int
+    Float
 
 
 type alias Name =

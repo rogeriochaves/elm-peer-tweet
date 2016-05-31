@@ -14,9 +14,6 @@ import Router.Update as Router
 import Router.Routes exposing (urlParser)
 
 
--- App starting
-
-
 inputs : Sub Msg
 inputs =
     Sub.batch

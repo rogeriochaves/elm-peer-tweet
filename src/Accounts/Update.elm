@@ -36,7 +36,7 @@ update msg model =
                         { head
                             | hash = hash
                             , n = name
-                            , d = round <| inMilliseconds timestamp
+                            , d = inMilliseconds timestamp
                         }
                 in
                     updateIn hash <| Update { initialModel | head = newHead }

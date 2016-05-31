@@ -12,7 +12,7 @@ cmds : RootMsg.Msg -> Model -> Cmd RootMsg.Msg
 cmds msg model =
     let
         updatedUser userAccount head =
-            { userAccount | head = { head | a = model.settings.avatar, d = round model.dateTime.timestamp } }
+            { userAccount | head = { head | a = model.settings.avatar, d = model.dateTime.timestamp } }
 
         updateAccountCmd userAccount =
             succeed (MsgForAccounts <| UpdateUserAccount <| updatedUser userAccount userAccount.head)

@@ -20,7 +20,7 @@ view timestamp { head, tweet } =
             [ a [ class "title link", onClick (MsgForRouter <| Go <| ProfileRoute head.hash) ]
                 [ text head.n ]
             , span [ class "secondary-content" ]
-                [ text <| formatTimeDifference timestamp <| toFloat tweet.d
+                [ text <| formatTimeDifference timestamp tweet.d
                 ]
             , p []
                 [ text tweet.t

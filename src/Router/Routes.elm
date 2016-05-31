@@ -23,7 +23,7 @@ pageParser =
         , format CreateAccountRoute (static "account" </> static "create")
         , format FollowingListRoute (static "following")
         , format ProfileRoute (static "profile" </> string)
-        , format FollowingListRoute (static "settings")
+        , format SettingsRoute (static "settings")
         ]
 
 
@@ -51,7 +51,7 @@ toPath page =
 
 pathParser : Navigation.Location -> Result String Page
 pathParser location =
-    UrlParser.parse identity pageParser (String.dropLeft 1 location.pathname)
+    UrlParser.parse identity pageParser (String.dropLeft 1 location.hash)
 
 
 urlParser : Navigation.Parser (Result String Page)

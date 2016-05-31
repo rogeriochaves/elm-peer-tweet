@@ -3,6 +3,7 @@ module Utils.Utils exposing (..)
 import Json.Decode as Json
 import Html exposing (Attribute)
 import Html.Events exposing (on, keyCode)
+import Task exposing (perform, succeed)
 
 
 isJust : Maybe a -> Bool
@@ -26,3 +27,8 @@ is13 fail success code =
         success
     else
         fail
+
+
+nextMsg : msg -> Cmd msg
+nextMsg msg =
+    perform identity identity (succeed msg)

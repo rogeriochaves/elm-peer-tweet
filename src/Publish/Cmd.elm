@@ -9,6 +9,7 @@ import Maybe exposing (andThen)
 import Authentication.Model as Authentication
 import Publish.Ports exposing (..)
 import Accounts.Msg exposing (Msg(UpdateUserAccount))
+import Utils.Utils exposing (nextMsg)
 
 
 cmds : RootMsg.Msg -> { a | accounts : Accounts.Model, authentication : Authentication.Model } -> Cmd RootMsg.Msg
@@ -34,12 +35,12 @@ cmdsPublish msg model =
                         |> Maybe.map (MsgForPublish << PublishHead << .head)
                         |> Maybe.withDefault NoOp
             in
-                cmds publishMsg model
+                nextMsg publishMsg
 
         PublishHead head ->
             Cmd.batch
                 [ requestPublishHead head
-                , cmds (nextPublishTweetMsg head.hash model.accounts head) model
+                , nextMsg (nextPublishTweetMsg head.hash model.accounts head)
                 , publishFirstFollowBlockCmd model.accounts head
                 ]
 
@@ -49,7 +50,7 @@ cmdsPublish msg model =
         PublishTweet payload ->
             Cmd.batch
                 [ requestPublishTweet payload
-                , cmds (nextPublishTweetMsg payload.headHash model.accounts payload.tweet) model
+                , nextMsg (nextPublishTweetMsg payload.headHash model.accounts payload.tweet)
                 ]
 
         DonePublishTweet _ ->
@@ -58,7 +59,7 @@ cmdsPublish msg model =
         PublishFollowBlock payload ->
             Cmd.batch
                 [ requestPublishFollowBlock payload
-                , cmds (nextPublishFollowBlockMsg payload.headHash model.accounts payload.followBlock) model
+                , nextMsg (nextPublishFollowBlockMsg payload.headHash model.accounts payload.followBlock)
                 , if (Just payload.headHash) == model.authentication.hash then
                     publishFollowerCmd model.accounts payload.followBlock
                   else

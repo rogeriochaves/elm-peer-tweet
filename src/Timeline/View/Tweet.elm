@@ -8,8 +8,8 @@ import Time exposing (Time)
 import DateTime.View.TimeDifference exposing (formatTimeDifference)
 import Timeline.View.Avatar as Avatar
 import Msg as RootMsg exposing (Msg(MsgForRouter))
-import Router.Msg exposing (Msg(UpdatePath))
-import Router.Routes exposing (Sitemap(..))
+import Router.Msg exposing (Msg(Go))
+import Router.Routes exposing (Page(..))
 
 
 view : Time -> { head : Head, tweet : Tweet } -> Html RootMsg.Msg
@@ -17,7 +17,7 @@ view timestamp { head, tweet } =
     li [ class "collection-item tweet" ]
         [ Avatar.view head
         , div [ class "tweet-info" ]
-            [ a [ class "title link", onClick (MsgForRouter <| UpdatePath <| ProfileRoute head.hash) ]
+            [ a [ class "title link", onClick (MsgForRouter <| Go <| ProfileRoute head.hash) ]
                 [ text head.n ]
             , span [ class "secondary-content" ]
                 [ text <| formatTimeDifference timestamp <| toFloat tweet.d

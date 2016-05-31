@@ -6,8 +6,8 @@ import Html.Events exposing (onClick, on, targetValue)
 import Msg as RootMsg exposing (Msg(MsgForAuthentication, MsgForRouter, MsgForAccounts))
 import Model exposing (Model)
 import Msg as RootMsg exposing (..)
-import Router.Routes exposing (Sitemap(..))
-import Router.Msg exposing (Msg(UpdatePath))
+import Router.Routes exposing (Page(..))
+import Router.Msg exposing (Msg(Go))
 import Authentication.Msg exposing (Msg(CreateKeys, UpdateName))
 import Account.Model exposing (HeadHash)
 import Accounts.Msg exposing (Msg(CreateAccount))
@@ -103,7 +103,7 @@ navbarContainer backMsg content =
 
 newAccount : Model -> Html RootMsg.Msg
 newAccount model =
-    navbarContainer (Just <| onClick <| MsgForRouter <| UpdatePath <| TimelineRoute ())
+    navbarContainer (Just <| onClick <| MsgForRouter <| Go TimelineRoute)
         <| div []
             [ p [ class "info-credentials" ] [ text "Your credentials will be generated automatically, just pick a name" ]
             , div [ class "input-field" ]

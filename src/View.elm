@@ -14,7 +14,7 @@ import Msg exposing (Msg)
 import Model exposing (Model)
 import Accounts.Model exposing (getUserAccount, findAccount)
 import Account.Model as Account
-import Router.Model exposing (Page(..))
+import Router.Routes exposing (Page(..))
 
 
 view : Model -> Html Msg
@@ -45,21 +45,21 @@ loggedInView model account =
 contentView : Model -> Account.Model -> Html Msg
 contentView model userAccount =
     case model.router.page of
-        Timeline ->
+        TimelineRoute ->
             Timeline.view model userAccount
 
-        Search ->
+        SearchRoute ->
             SearchView.view model userAccount
 
-        FollowingList ->
+        FollowingListRoute ->
             FollowingListView.view model userAccount
 
-        Profile hash ->
+        ProfileRoute hash ->
             findAccount model.accounts (Just hash)
                 |> Maybe.map (Profile.view model userAccount)
                 |> Maybe.withDefault notFound
 
-        Settings ->
+        SettingsRoute ->
             SettingsView.view model userAccount
 
         _ ->
@@ -80,7 +80,7 @@ loggedOutView model =
 loggedOutContentView : Model -> Html Msg
 loggedOutContentView model =
     case model.router.page of
-        CreateAccount ->
+        CreateAccountRoute ->
             SignUp.view model
 
         _ ->

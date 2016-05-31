@@ -7,9 +7,8 @@ import Msg as RootMsg exposing (Msg(MsgForRouter))
 import Model exposing (Model)
 import Publish.View.PublishProgress as PublishProgress
 import Download.View.DownloadProgress as DownloadProgress
-import Router.Routes exposing (Sitemap(..))
-import Router.Msg exposing (Msg(UpdatePath))
-import Router.Model exposing (Page(..))
+import Router.Routes exposing (Page(..))
+import Router.Msg exposing (Msg(Go))
 import Timeline.View.Avatar as Avatar
 import Account.Model as Account
 
@@ -22,16 +21,16 @@ view model userAccount =
 
         activeClass =
             case model.router.page of
-                Timeline ->
+                TimelineRoute ->
                     { classes | home = "active" }
 
-                FollowingList ->
+                FollowingListRoute ->
                     { classes | followList = "active" }
 
-                Search ->
+                SearchRoute ->
                     { classes | search = "active" }
 
-                Settings ->
+                SettingsRoute ->
                     { classes | settings = "active" }
 
                 _ ->
@@ -41,27 +40,27 @@ view model userAccount =
             [ div [ class "sidebar-items blue darken-4" ]
                 [ button
                     [ class "sidebar-button sidebar-avatar"
-                    , onClick (MsgForRouter <| UpdatePath <| ProfileRoute userAccount.head.hash)
+                    , onClick (MsgForRouter <| Go <| ProfileRoute userAccount.head.hash)
                     ]
                     [ Avatar.view userAccount.head ]
                 , button
                     [ class <| "sidebar-button material-icons " ++ activeClass.home
-                    , onClick (MsgForRouter <| UpdatePath <| TimelineRoute ())
+                    , onClick (MsgForRouter <| Go TimelineRoute)
                     ]
                     [ text "home" ]
                 , button
                     [ class <| "sidebar-button material-icons " ++ activeClass.followList
-                    , onClick (MsgForRouter <| UpdatePath <| FollowingListRoute ())
+                    , onClick (MsgForRouter <| Go FollowingListRoute)
                     ]
                     [ text "group" ]
                 , button
                     [ class <| "sidebar-button material-icons " ++ activeClass.search
-                    , onClick (MsgForRouter <| UpdatePath <| SearchRoute ())
+                    , onClick (MsgForRouter <| Go SearchRoute)
                     ]
                     [ text "search" ]
                 , button
                     [ class <| "sidebar-button material-icons " ++ activeClass.settings
-                    , onClick (MsgForRouter <| UpdatePath <| SettingsRoute ())
+                    , onClick (MsgForRouter <| Go SettingsRoute)
                     ]
                     [ text "settings" ]
                 , div [ class "sidebar-space" ] []

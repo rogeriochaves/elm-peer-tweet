@@ -2,7 +2,6 @@ module Update exposing (update)
 
 import Msg exposing (Msg)
 import Model exposing (Model)
-import Router.Update as Router
 import Router.Cmd as RouterCmd
 import Accounts.Update as Accounts
 import Accounts.Cmd as AccountsCmd
@@ -27,8 +26,7 @@ update msg model =
 modelUpdate : Msg -> Model -> Model
 modelUpdate msg model =
     { model
-        | router = Router.update msg model.router
-        , accounts = Accounts.update msg model.accounts
+        | accounts = Accounts.update msg model.accounts
         , newTweet = NewTweet.update msg model.newTweet
         , publish = Publish.update msg model.publish
         , download = Download.update msg model.download
@@ -42,7 +40,7 @@ modelUpdate msg model =
 cmdsUpdate : Msg -> Model -> Cmd Msg
 cmdsUpdate msg model =
     Cmd.batch
-        [ RouterCmd.cmds msg model.router
+        [ RouterCmd.cmds msg
         , AccountsCmd.cmds msg model.accounts
         , PublishCmd.cmds msg model
         , DownloadCmd.cmds msg model

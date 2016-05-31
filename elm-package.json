@@ -11,12 +11,12 @@
     "exposed-modules": [],
     "native-modules": true,
     "dependencies": {
-        "Bogdanp/elm-route": "2.0.3 <= v < 3.0.0",
         "elm-community/elm-test": "1.1.0 <= v < 2.0.0",
         "elm-community/list-extra": "2.0.0 <= v < 3.0.0",
         "elm-lang/core": "4.0.1 <= v < 5.0.0",
         "elm-lang/html": "1.0.0 <= v < 2.0.0",
         "elm-lang/navigation": "1.0.0 <= v < 2.0.0",
+        "evancz/url-parser": "1.0.0 <= v < 2.0.0",
         "rogeriochaves/elm-test-bdd-style": "4.0.0 <= v < 5.0.0"
     },
     "elm-version": "0.17.0 <= v < 0.18.0"

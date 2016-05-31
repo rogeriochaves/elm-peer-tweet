@@ -8,8 +8,8 @@ import Model exposing (Model)
 import Download.Model exposing (isLoading, hasError)
 import Msg as RootMsg exposing (..)
 import Accounts.Msg exposing (..)
-import Router.Routes exposing (Sitemap(..))
-import Router.Msg exposing (Msg(UpdatePath))
+import Router.Routes exposing (Page(..))
+import Router.Msg exposing (Msg(Go))
 import Authentication.Msg exposing (Msg(UpdatePublicKey, UpdateSecretKey, Login))
 import Account.Model exposing (HeadHash)
 import Json.Decode as Json
@@ -116,7 +116,7 @@ loginContainer { authentication } =
             [ text "Don't have an account yet? "
             , a
                 [ class "link"
-                , onClick <| MsgForRouter <| UpdatePath <| CreateAccountRoute ()
+                , onClick <| MsgForRouter <| Go CreateAccountRoute
                 ]
                 [ text "Create Account" ]
             ]

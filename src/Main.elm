@@ -9,7 +9,9 @@ import Publish.Ports exposing (requestPublish, publishHeadInput, publishTweetInp
 import Download.Ports exposing (requestDownload, downloadErrorInput, downloadHeadInput, downloadTweetInput, downloadFollowBlockInput)
 import DateTime.Signals exposing (updateDateTime)
 import Authentication.Ports exposing (createdKeysInput, doneLoginInput)
-import Html.App as App
+import Navigation
+import Router.Update as Router
+import Router.Routes exposing (urlParser)
 
 
 -- App starting
@@ -36,9 +38,10 @@ inputs =
 
 main : Program (Flags)
 main =
-    App.programWithFlags
+    Navigation.programWithFlags urlParser
         { init = initialModel
         , view = view
         , update = update
+        , urlUpdate = Router.update
         , subscriptions = always inputs
         }

@@ -1,8 +1,7 @@
 module Router.Msg exposing (Msg(..))
 
-import Router.Routes exposing (Sitemap)
+import Router.Routes exposing (Page)
 
 
 type Msg
-    = PathChange String
-    | UpdatePath Sitemap
+    = Go Page

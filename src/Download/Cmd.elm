@@ -9,6 +9,7 @@ import Accounts.Model as Accounts exposing (findAccount, getUserAccount, followi
 import Authentication.Model as Authentication
 import Download.Ports exposing (..)
 import Authentication.Msg exposing (Msg(DoneLogin))
+import Utils.Utils exposing (nextMsg)
 
 
 cmds : RootMsg.Msg -> { a | accounts : Accounts.Model, authentication : Authentication.Model } -> Cmd RootMsg.Msg
@@ -18,7 +19,7 @@ cmds msg model =
             cmdsDownload syncMsg model
 
         MsgForAuthentication (DoneLogin hash) ->
-            cmdsDownload (DownloadHead hash) model
+            nextMsg (MsgForDownload <| DownloadHead hash)
 
         _ ->
             Cmd.none
@@ -30,7 +31,7 @@ cmdsDownload msg model =
         BeginDownload ->
             let
                 msg =
-                    requestDownloadHead << .hash << .head
+                    nextMsg << MsgForDownload << DownloadHead << .hash << .head
             in
                 case getUserAccount model of
                     Just userAccount ->
@@ -52,13 +53,19 @@ cmdsDownload msg model =
                 ]
 
         DownloadTweet { headHash, tweetHash } ->
-            nextDownloadTweetCmd headHash model.accounts <| Just tweetHash
+            Cmd.batch
+                [ requestDownloadTweet { headHash = headHash, tweetHash = tweetHash }
+                , nextDownloadTweetCmd headHash model.accounts <| Just tweetHash
+                ]
 
         DoneDownloadTweet { headHash, tweet } ->
             nextDownloadTweetCmd headHash model.accounts <| nextHash (Just tweet)
 
         DownloadFollowBlock { headHash, followBlockHash } ->
-            nextDownloadFollowBlockCmd headHash model.accounts <| Just followBlockHash
+            Cmd.batch
+                [ requestDownloadFollowBlock { headHash = headHash, followBlockHash = followBlockHash }
+                , nextDownloadFollowBlockCmd headHash model.accounts <| Just followBlockHash
+                ]
 
         DoneDownloadFollowBlock { headHash, followBlock } ->
             Cmd.batch
@@ -77,7 +84,7 @@ initialCmd : Authentication.Model -> Cmd RootMsg.Msg
 initialCmd accounts =
     case accounts.hash of
         Just hash ->
-            requestDownloadHead hash
+            nextMsg (MsgForDownload <| DownloadHead hash)
 
         Nothing ->
             Cmd.none
@@ -99,14 +106,14 @@ nextDownloadCmd nextListKey cmdFn headHash accounts followBlockHash =
 nextDownloadTweetCmd : HeadHash -> Accounts.Model -> Maybe Hash -> Cmd RootMsg.Msg
 nextDownloadTweetCmd headHash =
     nextDownloadCmd .tweets
-        (\hash -> requestDownloadTweet { headHash = headHash, tweetHash = hash })
+        (\hash -> nextMsg <| MsgForDownload <| DownloadTweet { headHash = headHash, tweetHash = hash })
         headHash
 
 
 nextDownloadFollowBlockCmd : HeadHash -> Accounts.Model -> Maybe Hash -> Cmd RootMsg.Msg
 nextDownloadFollowBlockCmd headHash =
     nextDownloadCmd .followBlocks
-        (\hash -> requestDownloadFollowBlock { headHash = headHash, followBlockHash = hash })
+        (\hash -> nextMsg <| MsgForDownload <| DownloadFollowBlock { headHash = headHash, followBlockHash = hash })
         headHash
 
 
@@ -118,7 +125,7 @@ downloadFirstFollowBlockCmd head =
     in
         case foundFollowBlockHash of
             Just followBlockHash ->
-                requestDownloadFollowBlock { headHash = head.hash, followBlockHash = followBlockHash }
+                nextMsg <| MsgForDownload <| DownloadFollowBlock { headHash = head.hash, followBlockHash = followBlockHash }
 
             Nothing ->
                 Cmd.none
@@ -127,5 +134,5 @@ downloadFirstFollowBlockCmd head =
 downloadFollowerCmd : Account.FollowBlock -> Cmd RootMsg.Msg
 downloadFollowerCmd followBlock =
     followBlock.l
-        |> List.map requestDownloadHead
+        |> List.map (nextMsg << MsgForDownload << DownloadHead)
         |> Cmd.batch

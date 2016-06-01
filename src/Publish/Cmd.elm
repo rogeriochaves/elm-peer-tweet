@@ -19,7 +19,7 @@ cmds msg model =
             cmdsPublish syncMsg model
 
         MsgForAccounts (UpdateUserAccount userAccount) ->
-            cmdsPublish (PublishHead <| .head <| userAccount) model
+            nextMsg (MsgForPublish <| PublishHead userAccount.head)
 
         _ ->
             Cmd.none

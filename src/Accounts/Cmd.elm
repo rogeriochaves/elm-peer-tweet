@@ -4,6 +4,7 @@ import Msg as RootMsg exposing (..)
 import Accounts.Model exposing (Model, findAccount)
 import Accounts.Msg as AccountsMsg exposing (Msg(CreateAccount, UpdateUserAccount, AddTweetRequest, AddFollowerRequest))
 import Accounts.Ports exposing (requestAddTweet, requestAddFollower, setStorage)
+import Accounts.Update exposing (update)
 
 
 cmds : RootMsg.Msg -> Model -> Cmd RootMsg.Msg
@@ -12,7 +13,7 @@ cmds msg model =
         MsgForAccounts accountsMsg ->
             Cmd.batch
                 [ cmdsAccounts accountsMsg
-                , setStorage model
+                , setStorage (update msg model)
                 ]
 
         _ ->

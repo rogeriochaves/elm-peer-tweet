@@ -40,7 +40,7 @@ cmdsPublish msg model =
         PublishHead head ->
             Cmd.batch
                 [ requestPublishHead head
-                , nextMsg (nextPublishTweetMsg head.hash model.accounts head)
+                , nextPublishTweetMsg head.hash model.accounts head
                 , publishFirstFollowBlockCmd model.accounts head
                 ]
 
@@ -50,7 +50,7 @@ cmdsPublish msg model =
         PublishTweet payload ->
             Cmd.batch
                 [ requestPublishTweet payload
-                , nextMsg (nextPublishTweetMsg payload.headHash model.accounts payload.tweet)
+                , nextPublishTweetMsg payload.headHash model.accounts payload.tweet
                 ]
 
         DonePublishTweet _ ->
@@ -59,7 +59,7 @@ cmdsPublish msg model =
         PublishFollowBlock payload ->
             Cmd.batch
                 [ requestPublishFollowBlock payload
-                , nextMsg (nextPublishFollowBlockMsg payload.headHash model.accounts payload.followBlock)
+                , nextPublishFollowBlockMsg payload.headHash model.accounts payload.followBlock
                 , if (Just payload.headHash) == model.authentication.hash then
                     publishFollowerCmd model.accounts payload.followBlock
                   else
@@ -78,13 +78,13 @@ publishFirstFollowBlockCmd accounts head =
     in
         case foundFollowBlock of
             Just followBlock ->
-                requestPublishFollowBlock { headHash = head.hash, followBlock = followBlock }
+                nextMsg (MsgForPublish <| PublishFollowBlock { headHash = head.hash, followBlock = followBlock })
 
             Nothing ->
                 Cmd.none
 
 
-nextItemMsg : (Account.Model -> List { a | hash : Hash, next : List Hash }) -> ({ a | hash : Hash, next : List Hash } -> RootMsg.Msg) -> HeadHash -> Accounts.Model -> { b | next : List Hash } -> RootMsg.Msg
+nextItemMsg : (Account.Model -> List { a | hash : Hash, next : List Hash }) -> ({ a | hash : Hash, next : List Hash } -> RootMsg.Msg) -> HeadHash -> Accounts.Model -> { b | next : List Hash } -> Cmd RootMsg.Msg
 nextItemMsg listKey msgFn headHash accounts item =
     let
         hash =
@@ -94,18 +94,18 @@ nextItemMsg listKey msgFn headHash accounts item =
             findAccount accounts (Just headHash) `andThen` (\account -> findItem (listKey account) hash)
     in
         foundItem
-            |> Maybe.map msgFn
-            |> Maybe.withDefault NoOp
+            |> Maybe.map (nextMsg << msgFn)
+            |> Maybe.withDefault Cmd.none
 
 
-nextPublishTweetMsg : HeadHash -> Accounts.Model -> { a | next : List TweetHash } -> RootMsg.Msg
+nextPublishTweetMsg : HeadHash -> Accounts.Model -> { a | next : List TweetHash } -> Cmd RootMsg.Msg
 nextPublishTweetMsg headHash =
     nextItemMsg .tweets
         (\tweet -> MsgForPublish (PublishTweet { headHash = headHash, tweet = tweet }))
         headHash
 
 
-nextPublishFollowBlockMsg : HeadHash -> Accounts.Model -> { a | next : List FollowBlockHash } -> RootMsg.Msg
+nextPublishFollowBlockMsg : HeadHash -> Accounts.Model -> { a | next : List FollowBlockHash } -> Cmd RootMsg.Msg
 nextPublishFollowBlockMsg headHash =
     nextItemMsg .followBlocks
         (\followBlock -> MsgForPublish (PublishFollowBlock { headHash = headHash, followBlock = followBlock }))

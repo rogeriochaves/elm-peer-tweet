@@ -90,8 +90,8 @@ initialCmd accounts =
             Cmd.none
 
 
-nextDownloadCmd : (Account.Model -> List { a | hash : Hash, next : List Hash }) -> (Hash -> Cmd RootMsg.Msg) -> HeadHash -> Accounts.Model -> Maybe Hash -> Cmd RootMsg.Msg
-nextDownloadCmd nextListKey cmdFn headHash accounts followBlockHash =
+nextDownloadCmd : (Account.Model -> List { a | hash : Hash, next : List Hash }) -> (Hash -> RootMsg.Msg) -> HeadHash -> Accounts.Model -> Maybe Hash -> Cmd RootMsg.Msg
+nextDownloadCmd nextListKey msgFn headHash accounts followBlockHash =
     let
         nextItem =
             findAccount accounts (Just headHash)
@@ -99,21 +99,21 @@ nextDownloadCmd nextListKey cmdFn headHash accounts followBlockHash =
                 |> Maybe.withDefault followBlockHash
     in
         nextItem
-            |> Maybe.map cmdFn
+            |> Maybe.map (nextMsg << msgFn)
             |> Maybe.withDefault Cmd.none
 
 
 nextDownloadTweetCmd : HeadHash -> Accounts.Model -> Maybe Hash -> Cmd RootMsg.Msg
 nextDownloadTweetCmd headHash =
     nextDownloadCmd .tweets
-        (\hash -> nextMsg <| MsgForDownload <| DownloadTweet { headHash = headHash, tweetHash = hash })
+        (\hash -> MsgForDownload <| DownloadTweet { headHash = headHash, tweetHash = hash })
         headHash
 
 
 nextDownloadFollowBlockCmd : HeadHash -> Accounts.Model -> Maybe Hash -> Cmd RootMsg.Msg
 nextDownloadFollowBlockCmd headHash =
     nextDownloadCmd .followBlocks
-        (\hash -> nextMsg <| MsgForDownload <| DownloadFollowBlock { headHash = headHash, followBlockHash = hash })
+        (\hash -> MsgForDownload <| DownloadFollowBlock { headHash = headHash, followBlockHash = hash })
         headHash
 
 

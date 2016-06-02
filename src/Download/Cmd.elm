@@ -53,19 +53,13 @@ cmdsDownload msg model =
                 ]
 
         DownloadTweet { headHash, tweetHash } ->
-            Cmd.batch
-                [ requestDownloadTweet { headHash = headHash, tweetHash = tweetHash }
-                , nextDownloadTweetCmd headHash model.accounts <| Just tweetHash
-                ]
+            requestDownloadTweet { headHash = headHash, tweetHash = tweetHash }
 
         DoneDownloadTweet { headHash, tweet } ->
             nextDownloadTweetCmd headHash model.accounts <| nextHash (Just tweet)
 
         DownloadFollowBlock { headHash, followBlockHash } ->
-            Cmd.batch
-                [ requestDownloadFollowBlock { headHash = headHash, followBlockHash = followBlockHash }
-                , nextDownloadFollowBlockCmd headHash model.accounts <| Just followBlockHash
-                ]
+            requestDownloadFollowBlock { headHash = headHash, followBlockHash = followBlockHash }
 
         DoneDownloadFollowBlock { headHash, followBlock } ->
             Cmd.batch

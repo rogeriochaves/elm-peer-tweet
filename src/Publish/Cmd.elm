@@ -117,7 +117,7 @@ publishFollowerCmd accounts followBlock =
     let
         effectMap hash =
             findAccount accounts (Just hash)
-                |> Maybe.map (requestPublishHead << .head)
+                |> Maybe.map (nextMsg << MsgForPublish << PublishHead << .head)
                 |> Maybe.withDefault Cmd.none
     in
         followBlock.l

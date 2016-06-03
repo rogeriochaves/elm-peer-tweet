@@ -11,6 +11,7 @@
     "exposed-modules": [],
     "native-modules": true,
     "dependencies": {
+        "avh4/elm-testable": "3.0.0 <= v < 4.0.0",
         "elm-community/elm-test": "1.1.0 <= v < 2.0.0",
         "elm-community/list-extra": "2.0.0 <= v < 3.0.0",
         "elm-lang/core": "4.0.1 <= v < 5.0.0",

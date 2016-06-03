@@ -11,7 +11,7 @@
     "dev": "webpack-dev-server --port 3000",
     "test": "npm run test-elm && npm run test-js",
     "test-js": "mocha --compilers js:babel-core/register test/*.js test/**/*.js",
-    "test-elm": "elm-test test/TestRunner.elm",
+    "test-elm": "elm make test/TestRunner.elm --output out/test.js && node out/test.js",
     "package": "electron-packager dist --platform=all --arch=x64 --out out/ --version 0.36.0 --overwrite",
     "install": "elm package install -y"
   },

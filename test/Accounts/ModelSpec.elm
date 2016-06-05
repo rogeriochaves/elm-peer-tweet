@@ -2,9 +2,7 @@ module Accounts.ModelSpec exposing (..)
 
 import Accounts.Model exposing (Model, timeline)
 import Account.Model as Account exposing (initialModel, Tweet, FollowBlock)
-import Model as RootModel
 import ElmTestBDDStyle exposing (..)
-import Router.Routes exposing (Page(TimelineRoute))
 
 
 someUserTweet1 : Tweet
@@ -57,13 +55,9 @@ userAccount =
         }
 
 
-model : RootModel.Model
-model =
-    let
-        initialModel =
-            fst <| RootModel.initialModel { userHash = (Just "user"), accounts = Nothing } (Ok TimelineRoute)
-    in
-        { initialModel | accounts = [ userAccount, someUser ] }
+accounts : List Account.Model
+accounts =
+    [ userAccount, someUser ]
 
 
 tests : Test
@@ -79,6 +73,6 @@ tests =
                         , { head = userAccount.head, tweet = tweet1 }
                         ]
                    in
-                    expect (timeline model.accounts userAccount) toBe expectedTimeline
+                    expect (timeline accounts userAccount) toBe expectedTimeline
             ]
         ]

@@ -6,6 +6,7 @@ import Account.UpdateSpec
 import Account.ModelSpec
 import DateTime.View.TimeDifferenceSpec
 import Accounts.ModelSpec
+import Download.CmdSpec
 
 
 simpleTests : List Test
@@ -14,6 +15,7 @@ simpleTests =
     , Account.ModelSpec.tests
     , DateTime.View.TimeDifferenceSpec.tests
     , Accounts.ModelSpec.tests
+    , Download.CmdSpec.tests
     ]
 
 

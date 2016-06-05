@@ -15,8 +15,8 @@ import Utils.Utils exposing (nextMsg)
 cmds : RootMsg.Msg -> { a | accounts : Accounts.Model, authentication : Authentication.Model } -> Cmd RootMsg.Msg
 cmds msg model =
     case msg of
-        MsgForDownload syncMsg ->
-            cmdsDownload syncMsg model
+        MsgForDownload msg ->
+            cmdsDownload msg model
 
         MsgForAuthentication (DoneLogin hash) ->
             nextMsg (MsgForDownload <| DownloadHead hash)

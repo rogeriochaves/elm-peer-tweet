@@ -29,7 +29,7 @@
     "electron-prebuilt": "0.36.0",
     "electron-packager": "^5.2.1",
     "electron-rebuild": "^1.4.0",
-    "elm": "^0.17.0",
+    "elm": "^0.18.0",
     "elm-webpack-loader": "^3.0.3",
     "file-loader": "^0.8.5",
     "mocha": "^2.4.5",

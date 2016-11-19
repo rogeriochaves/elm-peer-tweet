@@ -64,15 +64,15 @@ tests : Test
 tests =
     describe "Accounts.Model"
         [ describe "timeline"
-            [ it "returns the tweets from the user and who it is following, ordered descending by the timestamp"
-                <| let
+            [ it "returns the tweets from the user and who it is following, ordered descending by the timestamp" <|
+                let
                     expectedTimeline =
                         [ { head = someUser.head, tweet = someUserTweet2 }
                         , { head = userAccount.head, tweet = tweet2 }
                         , { head = someUser.head, tweet = someUserTweet1 }
                         , { head = userAccount.head, tweet = tweet1 }
                         ]
-                   in
+                in
                     expect (timeline accounts userAccount) toBe expectedTimeline
             ]
         ]

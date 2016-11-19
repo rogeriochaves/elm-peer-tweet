@@ -1,5 +1,4 @@
-module SignalConcatMap
-  (concatMap, (>>=), (=<<)) where
+module SignalConcatMap exposing (concatMap, (>>=), (=<<))
 
 {-| ConcatMap for Elm Signals
 
@@ -10,14 +9,23 @@ module SignalConcatMap
 
 import Native.SignalConcatMap
 
-{-| Maps a signal creator function over a signal and concatenates the result -}
+
+{-| Maps a signal creator function over a signal and concatenates the result
+-}
 concatMap : (a -> Signal b) -> Signal a -> Signal b
-concatMap = Native.SignalConcatMap.concatMap
+concatMap =
+    Native.SignalConcatMap.concatMap
 
-{-| Infix notation for concatMap, taking the signal first -}
+
+{-| Infix notation for concatMap, taking the signal first
+-}
 (>>=) : Signal a -> (a -> Signal b) -> Signal b
-(>>=) = flip concatMap
+(>>=) =
+    flip concatMap
 
-{-| Infix notation for concatMap, taking the sinal last -}
+
+{-| Infix notation for concatMap, taking the sinal last
+-}
 (=<<) : (a -> Signal b) -> Signal a -> Signal b
-(=<<) = concatMap
+(=<<) =
+    concatMap

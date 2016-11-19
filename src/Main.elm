@@ -33,7 +33,7 @@ inputs =
         ]
 
 
-main : Program (Flags)
+main : Program Flags
 main =
     Navigation.programWithFlags urlParser
         { init = initialModel

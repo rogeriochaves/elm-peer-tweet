@@ -17,8 +17,9 @@ model =
 tests : Test
 tests =
     describe "Download.Cmd"
-        [ it "starts downloading head using the requestDownloadHead port"
-            <| expect (cmds (MsgForDownload <| DownloadHead "foo") model)
+        [ it "starts downloading head using the requestDownloadHead port" <|
+            expect (cmds (MsgForDownload <| DownloadHead "foo") model)
                 toBe
-            <| requestDownloadHead "foo"
+            <|
+                requestDownloadHead "foo"
         ]

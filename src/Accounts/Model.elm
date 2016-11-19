@@ -21,7 +21,7 @@ findAccount model hash =
             List.filter (\a -> a.head.hash == hash) model
                 |> List.head
     in
-        hash `andThen` find
+        hash |> andThen find
 
 
 getUserAccount : { a | authentication : AuthenticationModel.Model, accounts : Model } -> Maybe Account.Model

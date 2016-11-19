@@ -11,14 +11,14 @@ expectSignal ( signal, task ) toBe expected =
     signal
         |> map
             (\value ->
-                task `andThen` (always <| Task.succeed <| expect value toBe expected)
+                task |> andThen (always <| Task.succeed <| expect value toBe expected)
             )
 
 
 expectTask : Task a b -> (b -> c -> Assertion) -> c -> Signal (Task a Assertion)
 expectTask task toBe expected =
     task
-        `andThen` (\value -> Task.succeed <| expect value toBe expected)
+        |> andThen (\value -> Task.succeed <| expect value toBe expected)
         |> constant
 
 

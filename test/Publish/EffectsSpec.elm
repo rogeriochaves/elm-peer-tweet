@@ -45,7 +45,7 @@ model : RootModel.Model
 model =
     let
         initialModel =
-            fst <| RootModel.initialModel "/" (Just "user") Nothing
+            Tuple.first <| RootModel.initialModel "/" (Just "user") Nothing
     in
         { initialModel | accounts = [ userAccount ] }
 
@@ -54,17 +54,17 @@ tests : Signal (Task Effects.Never Test)
 tests =
     signalDescribe "Publish.Effects"
         [ signalDescribe "Head Publish"
-            [ signalIt "starts publishing from account head"
-                <| let
+            [ signalIt "starts publishing from account head" <|
+                let
                     msg =
                         MsgForPublish BeginPublish
 
                     account =
                         setup model msg
-                   in
+                in
                     expectSignal ( account.msgsSignal, account.task ) toBe [ (MsgForPublish <| PublishHead userAccount.head) ]
-            , signalIt "forwards publish head msgs to javascript mailbox"
-                <| let
+            , signalIt "forwards publish head msgs to javascript mailbox" <|
+                let
                     head =
                         { hash = "uno", d = 1, next = [ "duo" ], f = [], n = "Mr Foo", a = "" }
 
@@ -73,10 +73,10 @@ tests =
 
                     account =
                         setup model msg
-                   in
+                in
                     expectSignal ( account.jsSignal, account.task ) toBe (MsgForPublish <| PublishHead head)
-            , signalIt "dispatches publish msg for the next tweets"
-                <| let
+            , signalIt "dispatches publish msg for the next tweets" <|
+                let
                     head =
                         { hash = "uno", d = 1, next = [ "foo" ], f = [], n = "Mr Foo", a = "" }
 
@@ -91,10 +91,10 @@ tests =
 
                     account =
                         setup setupModel msg
-                   in
+                in
                     expectSignal ( account.msgsSignal, account.task ) toBe [ (MsgForPublish <| PublishTweet { headHash = "uno", tweet = nextTweet }) ]
-            , signalIt "dispatches publish msg for the next followBlocks"
-                <| let
+            , signalIt "dispatches publish msg for the next followBlocks" <|
+                let
                     head =
                         { hash = "uno", d = 1, next = [], f = [ "foo" ], n = "Mr Foo", a = "" }
 
@@ -109,12 +109,12 @@ tests =
 
                     account =
                         setup setupModel msg
-                   in
+                in
                     expectSignal ( account.msgsSignal, account.task ) toBe [ (MsgForPublish <| PublishFollowBlock { headHash = "uno", followBlock = nextFollowBlock }) ]
             ]
         , signalDescribe "Tweet Publish"
-            [ signalIt "forwards publish tweets msgs to javascript mailbox"
-                <| let
+            [ signalIt "forwards publish tweets msgs to javascript mailbox" <|
+                let
                     tweet =
                         { hash = "foo", d = 1, t = "something", next = [] }
 
@@ -123,10 +123,10 @@ tests =
 
                     account =
                         setup model msg
-                   in
+                in
                     expectSignal ( account.jsSignal, account.task ) toBe msg
-            , signalIt "dispatches publish msg for the next item"
-                <| let
+            , signalIt "dispatches publish msg for the next item" <|
+                let
                     tweet =
                         { hash = "foo", d = 1, t = "something", next = [ "bar" ] }
 
@@ -141,12 +141,12 @@ tests =
 
                     account =
                         setup setupModel msg
-                   in
+                in
                     expectSignal ( account.msgsSignal, account.task ) toBe [ (MsgForPublish <| PublishTweet { headHash = "user", tweet = nextTweet }) ]
             ]
         , signalDescribe "FollowBlock Publish"
-            [ signalIt "forwards publish followBlocks msgs to javascript mailbox"
-                <| let
+            [ signalIt "forwards publish followBlocks msgs to javascript mailbox" <|
+                let
                     followBlock =
                         { hash = "foo", l = [ "bar" ], next = [] }
 
@@ -155,10 +155,10 @@ tests =
 
                     account =
                         setup model msg
-                   in
+                in
                     expectSignal ( account.jsSignal, account.task ) toBe msg
-            , signalIt "dispatches publish msg for the next item"
-                <| let
+            , signalIt "dispatches publish msg for the next item" <|
+                let
                     followBlock =
                         { hash = "foo", l = [ "uno" ], next = [ "bar" ] }
 
@@ -173,10 +173,10 @@ tests =
 
                     account =
                         setup setupModel msg
-                   in
+                in
                     expectSignal ( account.msgsSignal, account.task ) toBe [ (MsgForPublish <| PublishFollowBlock { headHash = "user", followBlock = nextFollowBlock }) ]
-            , signalIt "publishes the user followers"
-                <| let
+            , signalIt "publishes the user followers" <|
+                let
                     followBlock =
                         { hash = "foo", l = [ "batman" ], next = [] }
 
@@ -194,10 +194,10 @@ tests =
 
                     account =
                         setup setupModel msg
-                   in
+                in
                     expectSignal ( account.msgsSignal, account.task ) toBe [ (MsgForPublish <| PublishHead batman) ]
-            , signalIt "does not publish follower if it is not being followed by the user"
-                <| let
+            , signalIt "does not publish follower if it is not being followed by the user" <|
+                let
                     followBlock =
                         { hash = "foo", l = [ "batman" ], next = [] }
 
@@ -215,7 +215,7 @@ tests =
 
                     account =
                         setup setupModel msg
-                   in
+                in
                     expectSignal ( account.msgsSignal, account.task ) toBe [ NoOp ]
             ]
         ]

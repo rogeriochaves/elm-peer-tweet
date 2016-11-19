@@ -1,7 +1,7 @@
 module Authentication.View.SignUp exposing (view)
 
 import Html exposing (..)
-import Html.Attributes exposing (class, type', value)
+import Html.Attributes exposing (class, type_, value)
 import Html.Events exposing (onClick, on, targetValue)
 import Msg as RootMsg exposing (Msg(MsgForAuthentication, MsgForRouter, MsgForAccounts))
 import Model exposing (Model)
@@ -47,8 +47,8 @@ card title content =
 
 createdKeys : Model -> HeadHash -> Html RootMsg.Msg
 createdKeys { dateTime, authentication } userHash =
-    navbarContainer Nothing
-        <| div []
+    navbarContainer Nothing <|
+        div []
             [ p [] [ text "Account created successfully!" ]
             , card userHash "This is your hash, share this with friends so they can follow you"
             , p [] [ text "Also, here's your public and secret keys, it is like your login and password." ]
@@ -103,12 +103,12 @@ navbarContainer backMsg content =
 
 newAccount : Model -> Html RootMsg.Msg
 newAccount model =
-    navbarContainer (Just <| onClick <| MsgForRouter <| Go TimelineRoute)
-        <| div []
+    navbarContainer (Just <| onClick <| MsgForRouter <| Go TimelineRoute) <|
+        div []
             [ p [ class "info-credentials" ] [ text "Your credentials will be generated automatically, just pick a name" ]
             , div [ class "input-field" ]
                 [ input
-                    [ type' "text"
+                    [ type_ "text"
                     , value model.authentication.name
                     , on "input" (Json.map (MsgForAuthentication << UpdateName) targetValue)
                     ]

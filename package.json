@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "NODE_ENV=development electron .",
+    "start": "npm run watch & NODE_ENV=development electron .",
     "build": "webpack --progress",
     "watch": "webpack --progress --watch",
     "dev": "webpack-dev-server --port 3000",

@@ -7,13 +7,17 @@ import { getLocalStorage } from './Utils/Utils.js';
 
 const pipePort = (ports) => (input, transform, output, errorOutput = null) =>
   ports[input].subscribe((data) => {
-    transform(data, (err, result) => {
-      if (err && errorOutput)
-        ports[errorOutput].send([data.headHash ? data.headHash : data, err]);
+    try {
+      transform(data, (err, result) => {
+        if (err && errorOutput)
+          ports[errorOutput].send([data.headHash ? data.headHash : data, err]);
 
-      if (!err)
-        ports[output].send(result);
-    });
+        if (!err)
+          ports[output].send(result);
+      });
+    } catch (err) {
+      if (errorOutput) ports[errorOutput].send([data.headHash ? data.headHash : data, err.message]);
+    }
   });
 
 const addTweet = ({account, text}, resolve) =>
@@ -29,10 +33,10 @@ const login = (keys, resolve) =>
   resolve(null, setKeys(keys));
 
 const wireDownload = (hashKey, itemKey) => (data, resolve) =>
-  download(data[hashKey], (err, item) => resolve(err, { headHash: data.headHash, [itemKey]: item }));
+  download(data[hashKey], (err, item) => resolve(err && [data[hashKey], err], { headHash: data.headHash, [itemKey]: item }));
 
 const wirePublish = (hashKey, itemKey) => (data, resolve) =>
-  publish(data[itemKey], (err, hash) => resolve(err, { headHash: data.headHash, [hashKey]: hash }));
+  publish(data[itemKey], (err, hash) => resolve(err && [data[hashKey], err], { headHash: data.headHash, [hashKey]: hash }));
 
 export const setup = (ports) => {
   const pipe = pipePort(ports);

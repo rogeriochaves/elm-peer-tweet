@@ -1,143 +1,143 @@
-module Account.Model (..) where
+module Account.Model exposing (..)
 
 import Maybe exposing (andThen, map, withDefault)
 import Utils.Utils exposing (isJust)
 
 
 type alias Hash =
-  String
+    String
 
 
 type alias HeadHash =
-  Hash
+    Hash
 
 
 type alias TweetHash =
-  Hash
+    Hash
 
 
 type alias FollowBlockHash =
-  Hash
+    Hash
 
 
 type alias Timestamp =
-  Int
+    Float
 
 
 type alias Name =
-  String
+    String
 
 
 type alias AvatarUrl =
-  String
+    String
 
 
 type alias Head =
-  { hash : HeadHash
-  , d : Timestamp
-  , next : List TweetHash
-  , f : List FollowBlockHash
-  , n : Name
-  , a : AvatarUrl
-  }
+    { hash : HeadHash
+    , d : Timestamp
+    , next : List TweetHash
+    , f : List FollowBlockHash
+    , n : Name
+    , a : AvatarUrl
+    }
 
 
 type alias Tweet =
-  { hash : TweetHash
-  , t : String
-  , d : Timestamp
-  , next : List TweetHash
-  }
+    { hash : TweetHash
+    , t : String
+    , d : Timestamp
+    , next : List TweetHash
+    }
 
 
 type alias FollowBlock =
-  { hash : FollowBlockHash
-  , l : List HeadHash
-  , next : List FollowBlockHash
-  }
+    { hash : FollowBlockHash
+    , l : List HeadHash
+    , next : List FollowBlockHash
+    }
 
 
 type alias Model =
-  { head : Head
-  , tweets : List Tweet
-  , followBlocks : List FollowBlock
-  }
+    { head : Head
+    , tweets : List Tweet
+    , followBlocks : List FollowBlock
+    }
 
 
 initialModel : Model
 initialModel =
-  { head = { hash = "", d = 0, next = [], f = [], n = "", a = "" }
-  , tweets = []
-  , followBlocks = []
-  }
+    { head = { hash = "", d = 0, next = [], f = [], n = "", a = "" }
+    , tweets = []
+    , followBlocks = []
+    }
 
 
 nextHash : Maybe { a | next : List Hash } -> Maybe Hash
 nextHash hash =
-  hash `andThen` (List.head << .next)
+    hash `andThen` (List.head << .next)
 
 
 findItem : List { a | hash : Hash } -> Maybe Hash -> Maybe { a | hash : Hash }
 findItem list hash =
-  case hash of
-    Just hash ->
-      List.filter (\t -> t.hash == hash) list
-        |> List.head
+    case hash of
+        Just hash ->
+            List.filter (\t -> t.hash == hash) list
+                |> List.head
 
-    Nothing ->
-      Nothing
+        Nothing ->
+            Nothing
 
 
 nextHashToDownload : List { a | hash : Hash, next : List Hash } -> Hash -> Maybe Hash
 nextHashToDownload list hash =
-  let
-    item =
-      findItem list (Just hash)
+    let
+        item =
+            findItem list (Just hash)
 
-    next =
-      nextHash item
-  in
-    case item of
-      Nothing ->
-        Just hash
+        next =
+            nextHash item
+    in
+        case item of
+            Nothing ->
+                Just hash
 
-      Just item ->
-        next `andThen` (nextHashToDownload list)
+            Just item ->
+                next `andThen` (nextHashToDownload list)
 
 
 addTweet : Model -> Tweet -> Model
 addTweet account tweet =
-  case (findItem account.tweets (Just tweet.hash)) of
-    Just _ ->
-      account
+    case (findItem account.tweets (Just tweet.hash)) of
+        Just _ ->
+            account
 
-    Nothing ->
-      { account | tweets = tweet :: account.tweets }
+        Nothing ->
+            { account | tweets = tweet :: account.tweets }
 
 
 firstFollowBlock : Model -> Maybe FollowBlock
 firstFollowBlock account =
-  List.head account.head.f
-    |> findItem account.followBlocks
+    List.head account.head.f
+        |> findItem account.followBlocks
 
 
 addFollowBlock : Model -> FollowBlock -> Model
 addFollowBlock account followBlock =
-  case (findItem account.followBlocks (Just followBlock.hash)) of
-    Just _ ->
-      account
+    case (findItem account.followBlocks (Just followBlock.hash)) of
+        Just _ ->
+            account
 
-    Nothing ->
-      { account | followBlocks = followBlock :: account.followBlocks }
+        Nothing ->
+            { account | followBlocks = followBlock :: account.followBlocks }
 
 
 followList : Model -> List HeadHash
 followList account =
-  List.concatMap .l account.followBlocks
+    List.concatMap .l account.followBlocks
 
 
 isFollowing : HeadHash -> Model -> Bool
 isFollowing hash account =
-  List.filter ((==) hash) (followList account)
-    |> List.head
-    |> isJust
+    List.filter ((==) hash) (followList account)
+        |> List.head
+        |> isJust

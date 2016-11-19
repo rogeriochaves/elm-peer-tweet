@@ -1,61 +1,64 @@
-module Router.Routes (Sitemap(..), match, route) where
+module Router.Routes exposing (..)
 
-import Route exposing (..)
 import Account.Model exposing (HeadHash)
 import String
+import UrlParser exposing (Parser, (</>), format, oneOf, s, string)
+import Navigation
 
 
-type Sitemap
-  = TimelineRoute ()
-  | SearchRoute ()
-  | CreateAccountRoute ()
-  | FollowingListRoute ()
-  | ProfileRoute HeadHash
-  | SettingsRoute ()
+type Page
+    = TimelineRoute
+    | SearchRoute
+    | CreateAccountRoute
+    | FollowingListRoute
+    | ProfileRoute HeadHash
+    | SettingsRoute
 
 
-routes : { a : Route Sitemap, b : Route Sitemap, c : Route Sitemap, d : Route Sitemap, e : Route Sitemap, f : Route Sitemap }
-routes =
-  { a = TimelineRoute := static ""
-  , b = SearchRoute := static "search"
-  , c = CreateAccountRoute := static "account" <> "create"
-  , d = FollowingListRoute := static "following"
-  , e = ProfileRoute := "profile" <//> string
-  , f = SettingsRoute := static "settings"
-  }
+pageParser : Parser (Page -> a) a
+pageParser =
+    oneOf
+        [ format TimelineRoute (static "")
+        , format SearchRoute (static "search")
+        , format CreateAccountRoute (static "account" </> static "create")
+        , format FollowingListRoute (static "following")
+        , format ProfileRoute (static "profile" </> string)
+        , format SettingsRoute (static "settings")
+        ]
 
 
-sitemap : Router Sitemap
-sitemap =
-  router [ routes.a, routes.b, routes.c, routes.d, routes.e, routes.f ]
+toPath : Page -> String
+toPath page =
+    case page of
+        TimelineRoute ->
+            "#"
 
+        SearchRoute ->
+            "#search"
 
-route : Sitemap -> String
-route r =
-  let
-    route =
-      case r of
-        TimelineRoute () ->
-          reverse routes.a []
+        CreateAccountRoute ->
+            "#account/create"
 
-        SearchRoute () ->
-          reverse routes.b []
-
-        CreateAccountRoute () ->
-          reverse routes.c []
-
-        FollowingListRoute () ->
-          reverse routes.d []
+        FollowingListRoute ->
+            "#following"
 
         ProfileRoute hash ->
-          reverse routes.e [ hash ]
+            "#profile/" ++ hash
 
-        SettingsRoute () ->
-          reverse routes.f []
-  in
-    "#" ++ route
+        SettingsRoute ->
+            "#settings"
 
 
-match : String -> Maybe Sitemap
-match =
-  String.dropLeft 1 >> Route.match sitemap
+pathParser : Navigation.Location -> Result String Page
+pathParser location =
+    UrlParser.parse identity pageParser (String.dropLeft 1 location.hash)
+
+
+urlParser : Navigation.Parser (Result String Page)
+urlParser =
+    Navigation.makeParser pathParser
+
+
+static : String -> Parser a a
+static =
+    s

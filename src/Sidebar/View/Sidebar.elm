@@ -1,4 +1,4 @@
-module Sidebar.View.Sidebar (..) where
+module Sidebar.View.Sidebar exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (class)
@@ -7,67 +7,64 @@ import Msg as RootMsg exposing (Msg(MsgForRouter))
 import Model exposing (Model)
 import Publish.View.PublishProgress as PublishProgress
 import Download.View.DownloadProgress as DownloadProgress
-import Router.Routes exposing (Sitemap(..))
-import Router.Msg exposing (Msg(UpdatePath))
-import Router.Model exposing (Page(..))
+import Router.Routes exposing (Page(..))
+import Router.Msg exposing (Msg(Go))
 import Timeline.View.Avatar as Avatar
 import Account.Model as Account
 
 
-view : Signal.Address RootMsg.Msg -> Model -> Account.Model -> Html
-view address model userAccount =
-  let
-    classes =
-      { home = "", followList = "", search = "", settings = "" }
+view : Model -> Account.Model -> Html RootMsg.Msg
+view model userAccount =
+    let
+        classes =
+            { home = "", followList = "", search = "", settings = "" }
 
-    activeClass =
-      case model.router.page of
-        Timeline ->
-          { classes | home = "active" }
+        activeClass =
+            case model.router.page of
+                TimelineRoute ->
+                    { classes | home = "active" }
 
-        FollowingList ->
-          { classes | followList = "active" }
+                FollowingListRoute ->
+                    { classes | followList = "active" }
 
-        Search ->
-          { classes | search = "active" }
+                SearchRoute ->
+                    { classes | search = "active" }
 
-        Settings ->
-          { classes | settings = "active" }
+                SettingsRoute ->
+                    { classes | settings = "active" }
 
-        _ ->
-          classes
-  in
-    div
-      [ class "sidebar" ]
-      [ div
-          [ class "sidebar-items blue darken-4" ]
-          [ button
-              [ class "sidebar-button sidebar-avatar"
-              , onClick address (MsgForRouter <| UpdatePath <| ProfileRoute userAccount.head.hash)
-              ]
-              [ Avatar.view userAccount.head ]
-          , button
-              [ class <| "sidebar-button material-icons " ++ activeClass.home
-              , onClick address (MsgForRouter <| UpdatePath <| TimelineRoute ())
-              ]
-              [ text "home" ]
-          , button
-              [ class <| "sidebar-button material-icons " ++ activeClass.followList
-              , onClick address (MsgForRouter <| UpdatePath <| FollowingListRoute ())
-              ]
-              [ text "group" ]
-          , button
-              [ class <| "sidebar-button material-icons " ++ activeClass.search
-              , onClick address (MsgForRouter <| UpdatePath <| SearchRoute ())
-              ]
-              [ text "search" ]
-          , button
-              [ class <| "sidebar-button material-icons " ++ activeClass.settings
-              , onClick address (MsgForRouter <| UpdatePath <| SettingsRoute ())
-              ]
-              [ text "settings" ]
-          , div [ class "sidebar-space" ] []
-          , PublishProgress.view address model.publish
-          , DownloadProgress.view address model.download
-          ]
-      ]
+                _ ->
+                    classes
+    in
+        div [ class "sidebar" ]
+            [ div [ class "sidebar-items blue darken-4" ]
+                [ button
+                    [ class "sidebar-button sidebar-avatar"
+                    , onClick (MsgForRouter <| Go <| ProfileRoute userAccount.head.hash)
+                    ]
+                    [ Avatar.view userAccount.head ]
+                , button
+                    [ class <| "sidebar-button material-icons " ++ activeClass.home
+                    , onClick (MsgForRouter <| Go TimelineRoute)
+                    ]
+                    [ text "home" ]
+                , button
+                    [ class <| "sidebar-button material-icons " ++ activeClass.followList
+                    , onClick (MsgForRouter <| Go FollowingListRoute)
+                    ]
+                    [ text "group" ]
+                , button
+                    [ class <| "sidebar-button material-icons " ++ activeClass.search
+                    , onClick (MsgForRouter <| Go SearchRoute)
+                    ]
+                    [ text "search" ]
+                , button
+                    [ class <| "sidebar-button material-icons " ++ activeClass.settings
+                    , onClick (MsgForRouter <| Go SettingsRoute)
+                    ]
+                    [ text "settings" ]
+                , div [ class "sidebar-space" ] []
+                , PublishProgress.view model.publish
+                , DownloadProgress.view model.download
+                ]
+            ]

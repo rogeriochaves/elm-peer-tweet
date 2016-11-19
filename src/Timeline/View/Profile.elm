@@ -1,4 +1,4 @@
-module Timeline.View.Profile (..) where
+module Timeline.View.Profile exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (class, type', id, value, for)
@@ -12,33 +12,30 @@ import Timeline.View.Feed as Feed
 import Timeline.View.Avatar as Avatar
 
 
-view : Signal.Address RootMsg.Msg -> Model -> Account.Model -> Account.Model -> Html
-view address model userAccount account =
-  div
-    []
-    [ div
-        [ class "card white profile" ]
-        [ div
-          [ class "card-content"]
-          [ Avatar.view account.head
-          , span [ class "card-title" ] [ text account.head.n ]
-          , followButton address model userAccount account
-          , p [] [ text <| "@" ++ account.head.hash ]
-          ]
+view : Model -> Account.Model -> Account.Model -> Html RootMsg.Msg
+view model userAccount account =
+    div []
+        [ div [ class "card white profile" ]
+            [ div [ class "card-content" ]
+                [ Avatar.view account.head
+                , span [ class "card-title" ] [ text account.head.n ]
+                , followButton model userAccount account
+                , p [] [ text <| "@" ++ account.head.hash ]
+                ]
+            ]
+        , Feed.view model account
         ]
-    , Feed.view address model account
-    ]
 
 
-followButton : Signal.Address RootMsg.Msg -> Model -> Account.Model -> Account.Model -> Html
-followButton address model userAccount account =
-  if userAccount.head.hash == account.head.hash then
-    div [] []
-  else if isFollowing model account.head.hash then
-    button [ class "btn small blue disabled secondary-content" ] [ text "Following" ]
-  else
-    button
-      [ class "btn small blue secondary-content"
-      , onClick address (MsgForAccounts <| AddFollowerRequest { account = userAccount, hash = account.head.hash })
-      ]
-      [ text "Follow" ]
+followButton : Model -> Account.Model -> Account.Model -> Html RootMsg.Msg
+followButton model userAccount account =
+    if userAccount.head.hash == account.head.hash then
+        div [] []
+    else if isFollowing model account.head.hash then
+        button [ class "btn small blue disabled secondary-content" ] [ text "Following" ]
+    else
+        button
+            [ class "btn small blue secondary-content"
+            , onClick (MsgForAccounts <| AddFollowerRequest { account = userAccount, hash = account.head.hash })
+            ]
+            [ text "Follow" ]

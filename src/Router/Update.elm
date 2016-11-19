@@ -1,31 +1,16 @@
-module Router.Update (..) where
+module Router.Update exposing (..)
 
-import Router.Msg as Router exposing (Msg(..))
-import Router.Model exposing (Model, Page(..), routeToPage, pathToPage)
 import Msg as RootMsg exposing (Msg(..))
-import History
+import Router.Routes exposing (Page(TimelineRoute), toPath)
+import Navigation exposing (Location)
+import Model as RootModel
 
 
-update : RootMsg.Msg -> Model -> Model
-update msg model =
-  case msg of
-    MsgForRouter routerMsg ->
-      updateRouter routerMsg model
+update : Result String Page -> RootModel.Model -> ( RootModel.Model, Cmd RootMsg.Msg )
+update result model =
+    case result of
+        Err _ ->
+            ( model, Navigation.modifyUrl (toPath model.router.page) )
 
-    _ ->
-      model
-
-
-updateRouter : Router.Msg -> Model -> Model
-updateRouter msg model =
-  case msg of
-    PathChange path ->
-      { page = pathToPage path }
-
-    UpdatePath route ->
-      model
-
-
-routeInput : Signal RootMsg.Msg
-routeInput =
-  Signal.map (MsgForRouter << PathChange) History.hash
+        Ok page ->
+            ( { model | router = { page = page } }, Cmd.none )

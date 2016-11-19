@@ -1,12 +1,12 @@
-module Search.Model (Model, initialModel) where
+module Search.Model exposing (Model, initialModel)
 
 
 type alias Model =
-  { query : String
-  }
+    { query : String
+    }
 
 
 initialModel : Model
 initialModel =
-  { query = ""
-  }
+    { query = ""
+    }

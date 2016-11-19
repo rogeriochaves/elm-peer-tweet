@@ -8,26 +8,14 @@ import { hash } from './Api/Account';
 import { setup } from './Ports';
 import { getLocalStorage, openLinksInBrowser } from './Utils/Utils.js';
 
-const path = window.location.hash || "#/";
 const accounts = getLocalStorage().accounts;
 
 const initialPorts =
-  { path: path
-  , userHash: hash()
-  , getStorage: accounts ? JSON.parse(accounts) : null
-  , accountStream: null
-  , publishHeadStream: null
-  , publishTweetStream: null
-  , publishFollowBlockStream: null
-  , downloadErrorStream: null
-  , downloadHeadStream: null
-  , downloadTweetStream: null
-  , downloadFollowBlockStream: null
-  , createdKeysStream: null
-  , doneLoginStream: null
+  { userHash: hash()
+  , accounts: accounts ? JSON.parse(accounts) : null
   };
 
-const App = Elm.embed(Elm.Main, document.getElementById('main'), initialPorts);
+const App = Elm.Main.embed(document.getElementById('main'), initialPorts);
 
 setup(App.ports);
 

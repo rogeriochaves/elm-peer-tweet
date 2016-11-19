@@ -1,101 +1,63 @@
-module Download.Ports (..) where
+port module Download.Ports exposing (..)
 
 import Account.Model as Account exposing (Hash, Head, Tweet, HeadHash, TweetHash)
 import Msg as RootMsg exposing (..)
-import Download.Msg exposing (..)
-import Ports exposing (jsMailbox)
-import Utils.Utils exposing (isJust, filterEmpty)
 import Download.Msg exposing (..)
 import Time exposing (every, second)
 import Account.Msg exposing (TweetIdentifier, TweetData, FollowBlockIdentifier, FollowBlockData)
 
 
 type alias Error =
-  ( Hash, String )
+    ( Hash, String )
 
 
-requestDownload : Signal RootMsg.Msg
+requestDownload : Sub RootMsg.Msg
 requestDownload =
-  (every <| 30 * second)
-    |> Signal.map (always <| MsgForDownload BeginDownload)
+    MsgForDownload BeginDownload
+        |> always
+        |> every (30 * second)
 
 
-port downloadHeadStream : Signal (Maybe Head)
-port downloadErrorStream : Signal (Maybe Error)
-port requestDownloadHead : Signal (Maybe HeadHash)
-port requestDownloadHead =
-  let
-    getRequest msg =
-      case msg of
-        MsgForDownload (DownloadHead hash) ->
-          Just hash
-
-        _ ->
-          Nothing
-  in
-    Signal.map getRequest jsMailbox.signal
-      |> filterEmpty
+port downloadHeadStream : (Maybe Head -> msg) -> Sub msg
 
 
-downloadErrorInput : Signal RootMsg.Msg
+port downloadErrorStream : (Maybe Error -> msg) -> Sub msg
+
+
+port requestDownloadHead : HeadHash -> Cmd msg
+
+
+downloadErrorInput : Sub RootMsg.Msg
 downloadErrorInput =
-  let
-    msg ( hash, errorMessage ) =
-      MsgForDownload <| ErrorDownload hash errorMessage
-  in
-    Signal.map
-      (Maybe.map msg >> Maybe.withDefault NoOp)
-      downloadErrorStream
+    let
+        msg ( hash, errorMessage ) =
+            MsgForDownload <| ErrorDownload hash errorMessage
+    in
+        downloadErrorStream (Maybe.map msg >> Maybe.withDefault NoOp)
 
 
-downloadHeadInput : Signal RootMsg.Msg
+downloadHeadInput : Sub RootMsg.Msg
 downloadHeadInput =
-  Signal.map
-    (Maybe.map (MsgForDownload << DoneDownloadHead) >> Maybe.withDefault NoOp)
-    downloadHeadStream
+    downloadHeadStream (Maybe.map (MsgForDownload << DoneDownloadHead) >> Maybe.withDefault NoOp)
 
 
-port downloadTweetStream : Signal (Maybe TweetData)
-port requestDownloadTweet : Signal (Maybe TweetIdentifier)
-port requestDownloadTweet =
-  let
-    getRequest msg =
-      case msg of
-        MsgForDownload (DownloadTweet payload) ->
-          Just payload
-
-        _ ->
-          Nothing
-  in
-    Signal.map getRequest jsMailbox.signal
-      |> filterEmpty
+port downloadTweetStream : (Maybe TweetData -> msg) -> Sub msg
 
 
-downloadTweetInput : Signal RootMsg.Msg
+port requestDownloadTweet : TweetIdentifier -> Cmd msg
+
+
+downloadTweetInput : Sub RootMsg.Msg
 downloadTweetInput =
-  Signal.map
-    (Maybe.map (MsgForDownload << DoneDownloadTweet) >> Maybe.withDefault NoOp)
-    downloadTweetStream
+    downloadTweetStream (Maybe.map (MsgForDownload << DoneDownloadTweet) >> Maybe.withDefault NoOp)
 
 
-port downloadFollowBlockStream : Signal (Maybe FollowBlockData)
-port requestDownloadFollowBlock : Signal (Maybe FollowBlockIdentifier)
-port requestDownloadFollowBlock =
-  let
-    getRequest msg =
-      case msg of
-        MsgForDownload (DownloadFollowBlock payload) ->
-          Just payload
-
-        _ ->
-          Nothing
-  in
-    Signal.map getRequest jsMailbox.signal
-      |> filterEmpty
+port downloadFollowBlockStream : (Maybe FollowBlockData -> msg) -> Sub msg
 
 
-downloadFollowBlockInput : Signal RootMsg.Msg
+port requestDownloadFollowBlock : FollowBlockIdentifier -> Cmd msg
+
+
+downloadFollowBlockInput : Sub RootMsg.Msg
 downloadFollowBlockInput =
-  Signal.map
-    (Maybe.map (MsgForDownload << DoneDownloadFollowBlock) >> Maybe.withDefault NoOp)
-    downloadFollowBlockStream
+    downloadFollowBlockStream (Maybe.map (MsgForDownload << DoneDownloadFollowBlock) >> Maybe.withDefault NoOp)

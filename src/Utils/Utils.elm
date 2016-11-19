@@ -1,37 +1,34 @@
-module Utils.Utils (..) where
+module Utils.Utils exposing (..)
 
 import Json.Decode as Json
-import Signal
 import Html exposing (Attribute)
 import Html.Events exposing (on, keyCode)
+import Task exposing (perform, succeed)
 
 
 isJust : Maybe a -> Bool
 isJust a =
-  case a of
-    Just _ ->
-      True
+    case a of
+        Just _ ->
+            True
 
-    Nothing ->
-      False
-
-
-filterEmpty : Signal (Maybe a) -> Signal (Maybe a)
-filterEmpty =
-  Signal.filter isJust Nothing
+        Nothing ->
+            False
 
 
-onEnter : Signal.Address a -> a -> Attribute
-onEnter address value =
-  on
-    "keydown"
-    (Json.customDecoder keyCode is13)
-    (\_ -> Signal.message address value)
+onEnter : msg -> msg -> Attribute msg
+onEnter fail success =
+    on "keyup" <| Json.map (is13 fail success) keyCode
 
 
-is13 : Int -> Result String ()
-is13 code =
-  if code == 13 then
-    Ok ()
-  else
-    Err "not the right key code"
+is13 : msg -> msg -> Int -> msg
+is13 fail success code =
+    if code == 13 then
+        success
+    else
+        fail
+
+
+nextMsg : msg -> Cmd msg
+nextMsg msg =
+    perform identity identity (succeed msg)

@@ -1,4 +1,4 @@
-module NewTweet.View.NewTweet (..) where
+module NewTweet.View.NewTweet exposing (..)
 
 import Html exposing (Html, div, textarea, text, button)
 import Html.Attributes exposing (class, value)
@@ -10,29 +10,27 @@ import Model exposing (Model)
 import Account.Model as Account
 import String exposing (length)
 import Utils.Utils exposing (onEnter)
+import Json.Decode as Json
 
 
-view : Signal.Address RootMsg.Msg -> Model -> Account.Model -> Html
-view address model account =
-  let
-    tweetMsg =
-      MsgForAccounts <| AddTweetRequest { account = account, text = model.newTweet.text }
-  in
-    div
-      [ class "container" ]
-      [ textarea
-          [ class "materialize-textarea new-tweet"
-          , on "input" targetValue (Signal.message address << MsgForNewTweet << Update)
-          , onEnter address tweetMsg
-          , value model.newTweet.text
-          ]
-          []
-      , div
-          [ class "new-tweet-actions" ]
-          [ div [ class "characters-left grey-text" ] [ text <| toString <| 140 - (length model.newTweet.text) ]
-          , button
-              [ class "btn small", onClick address tweetMsg ]
-              [ text "Tweet"
-              ]
-          ]
-      ]
+view : Model -> Account.Model -> Html RootMsg.Msg
+view model account =
+    let
+        tweetMsg =
+            MsgForAccounts <| AddTweetRequest { account = account, text = model.newTweet.text }
+    in
+        div [ class "container" ]
+            [ textarea
+                [ class "materialize-textarea new-tweet"
+                , on "input" (Json.map (MsgForNewTweet << Update) targetValue)
+                , onEnter NoOp tweetMsg
+                , value model.newTweet.text
+                ]
+                []
+            , div [ class "new-tweet-actions" ]
+                [ div [ class "characters-left grey-text" ] [ text <| toString <| 140 - (length model.newTweet.text) ]
+                , button [ class "btn small", onClick tweetMsg ]
+                    [ text "Tweet"
+                    ]
+                ]
+            ]

@@ -1,4 +1,4 @@
-module View (..) where
+module View exposing (..)
 
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (class)
@@ -14,76 +14,74 @@ import Msg exposing (Msg)
 import Model exposing (Model)
 import Accounts.Model exposing (getUserAccount, findAccount)
 import Account.Model as Account
-import Router.Model exposing (Page(..))
+import Router.Routes exposing (Page(..))
 
 
-view : Signal.Address Msg -> Model -> Html
-view address model =
-  let
-    userHash =
-      model.authentication.hash
+view : Model -> Html Msg
+view model =
+    let
+        userHash =
+            model.authentication.hash
 
-    userAccount =
-      getUserAccount model
-  in
-    case ( userHash, userAccount ) of
-      ( Just hash, Just account ) ->
-        loggedInView address model account
+        userAccount =
+            getUserAccount model
+    in
+        case ( userHash, userAccount ) of
+            ( Just hash, Just account ) ->
+                loggedInView model account
 
-      _ ->
-        loggedOutView address model
-
-
-loggedInView : Signal.Address Msg -> Model -> Account.Model -> Html
-loggedInView address model account =
-  div
-    [ class "flexbox-container" ]
-    [ Sidebar.view address model account
-    , div [ class "flexbox-contents" ] [ contentView address model account ]
-    ]
+            _ ->
+                loggedOutView model
 
 
-contentView : Signal.Address Msg -> Model -> Account.Model -> Html
-contentView address model userAccount =
-  case model.router.page of
-    Timeline ->
-      Timeline.view address model userAccount
-
-    Search ->
-      SearchView.view address model userAccount
-
-    FollowingList ->
-      FollowingListView.view address model userAccount
-
-    Profile hash ->
-      findAccount model.accounts (Just hash)
-        |> Maybe.map (Profile.view address model userAccount)
-        |> Maybe.withDefault notFound
-
-    Settings ->
-      SettingsView.view address model userAccount
-
-    _ ->
-      notFound
+loggedInView : Model -> Account.Model -> Html Msg
+loggedInView model account =
+    div [ class "flexbox-container" ]
+        [ Sidebar.view model account
+        , div [ class "flexbox-contents" ] [ contentView model account ]
+        ]
 
 
-notFound : Html
+contentView : Model -> Account.Model -> Html Msg
+contentView model userAccount =
+    case model.router.page of
+        TimelineRoute ->
+            Timeline.view model userAccount
+
+        SearchRoute ->
+            SearchView.view model userAccount
+
+        FollowingListRoute ->
+            FollowingListView.view model userAccount
+
+        ProfileRoute hash ->
+            findAccount model.accounts (Just hash)
+                |> Maybe.map (Profile.view model userAccount)
+                |> Maybe.withDefault notFound
+
+        SettingsRoute ->
+            SettingsView.view model userAccount
+
+        _ ->
+            notFound
+
+
+notFound : Html a
 notFound =
-  div
-    []
-    [ text "NotFound" ]
+    div []
+        [ text "NotFound" ]
 
 
-loggedOutView : Signal.Address Msg -> Model -> Html
-loggedOutView address model =
-  loggedOutContentView address model
+loggedOutView : Model -> Html Msg
+loggedOutView model =
+    loggedOutContentView model
 
 
-loggedOutContentView : Signal.Address Msg -> Model -> Html
-loggedOutContentView address model =
-  case model.router.page of
-    CreateAccount ->
-      SignUp.view address model
+loggedOutContentView : Model -> Html Msg
+loggedOutContentView model =
+    case model.router.page of
+        CreateAccountRoute ->
+            SignUp.view model
 
-    _ ->
-      Login.view address model
+        _ ->
+            Login.view model

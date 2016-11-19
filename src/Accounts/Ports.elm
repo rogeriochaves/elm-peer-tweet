@@ -1,45 +1,23 @@
-module Accounts.Ports (..) where
+port module Accounts.Ports exposing (..)
 
 import Account.Model as Account
-import Msg exposing (..)
 import Accounts.Msg exposing (..)
-import Ports exposing (jsMailbox)
-import Utils.Utils exposing (isJust, filterEmpty)
+import Accounts.Model as Accounts
+import Msg as RootMsg exposing (Msg(MsgForAccounts, NoOp))
 
 
-port accountStream : Signal (Maybe Account.Model)
-port requestAddTweet : Signal (Maybe AddTweetRequestPayload)
-port requestAddTweet =
-  let
-    getRequest msg =
-      case msg of
-        MsgForAccounts (AddTweetRequest req) ->
-          Just req
-
-        _ ->
-          Nothing
-  in
-    Signal.map getRequest jsMailbox.signal
-      |> filterEmpty
+port accountStream : (Maybe Account.Model -> msg) -> Sub msg
 
 
-port requestAddFollower : Signal (Maybe AddFollowerRequestPayload)
-port requestAddFollower =
-  let
-    getRequest msg =
-      case msg of
-        MsgForAccounts (AddFollowerRequest req) ->
-          Just req
-
-        _ ->
-          Nothing
-  in
-    Signal.map getRequest jsMailbox.signal
-      |> filterEmpty
+port requestAddTweet : AddTweetRequestPayload -> Cmd msg
 
 
-accountInput : Signal Msg.Msg
+port requestAddFollower : AddFollowerRequestPayload -> Cmd msg
+
+
+accountInput : Sub RootMsg.Msg
 accountInput =
-  Signal.map
-    (Maybe.map (MsgForAccounts << UpdateUserAccount) >> Maybe.withDefault Msg.NoOp)
-    accountStream
+    accountStream (Maybe.map (MsgForAccounts << UpdateUserAccount) >> Maybe.withDefault NoOp)
+
+
+port setStorage : Accounts.Model -> Cmd msg

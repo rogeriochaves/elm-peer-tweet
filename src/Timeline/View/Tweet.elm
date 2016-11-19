@@ -1,4 +1,4 @@
-module Timeline.View.Tweet (..) where
+module Timeline.View.Tweet exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (class)
@@ -8,27 +8,22 @@ import Time exposing (Time)
 import DateTime.View.TimeDifference exposing (formatTimeDifference)
 import Timeline.View.Avatar as Avatar
 import Msg as RootMsg exposing (Msg(MsgForRouter))
-import Router.Msg exposing (Msg(UpdatePath))
-import Router.Routes exposing (Sitemap(..))
+import Router.Msg exposing (Msg(Go))
+import Router.Routes exposing (Page(..))
 
 
-view : Signal.Address RootMsg.Msg -> Time -> { head: Head, tweet: Tweet } -> Html
-view address timestamp { head, tweet } =
-  li
-    [ class "collection-item tweet" ]
-    [ Avatar.view head
-    , div
-        [ class "tweet-info" ]
-        [ a
-          [ class "title link", onClick address (MsgForRouter <| UpdatePath <| ProfileRoute head.hash) ]
-          [ text head.n ]
-        , span
-            [ class "secondary-content" ]
-            [ text <| formatTimeDifference timestamp <| toFloat tweet.d
-            ]
-        , p
-            []
-            [ text tweet.t
+view : Time -> { head : Head, tweet : Tweet } -> Html RootMsg.Msg
+view timestamp { head, tweet } =
+    li [ class "collection-item tweet" ]
+        [ Avatar.view head
+        , div [ class "tweet-info" ]
+            [ a [ class "title link", onClick (MsgForRouter <| Go <| ProfileRoute head.hash) ]
+                [ text head.n ]
+            , span [ class "secondary-content" ]
+                [ text <| formatTimeDifference timestamp tweet.d
+                ]
+            , p []
+                [ text tweet.t
+                ]
             ]
         ]
-    ]

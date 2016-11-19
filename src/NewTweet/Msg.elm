@@ -1,4 +1,5 @@
-module NewTweet.Msg where
+module NewTweet.Msg exposing (..)
+
 
 type Msg
     = Update String

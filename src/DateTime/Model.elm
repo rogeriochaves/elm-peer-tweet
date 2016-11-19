@@ -1,14 +1,14 @@
-module DateTime.Model (Model, initialModel) where
+module DateTime.Model exposing (Model, initialModel)
 
 import Time exposing (Time)
 
 
 type alias Model =
-  { timestamp : Time
-  }
+    { timestamp : Time
+    }
 
 
 initialModel : Model
 initialModel =
-  { timestamp = 0
-  }
+    { timestamp = 0
+    }

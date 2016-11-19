@@ -1,71 +1,44 @@
-module Main (main) where
+port module Main exposing (main)
 
 import View exposing (view)
-import Model exposing (Model, initialModel)
+import Model exposing (Model, Flags, initialModel)
 import Msg exposing (Msg)
-import StartApp
-import Html exposing (Html)
 import Update exposing (update)
-import Task exposing (Task)
-import Effects exposing (Never)
-import Ports exposing (jsMailbox)
-import Router.Update exposing (routeInput)
 import Accounts.Ports exposing (accountInput)
 import Publish.Ports exposing (requestPublish, publishHeadInput, publishTweetInput, publishFollowBlockInput)
 import Download.Ports exposing (requestDownload, downloadErrorInput, downloadHeadInput, downloadTweetInput, downloadFollowBlockInput)
 import DateTime.Signals exposing (updateDateTime)
 import Authentication.Ports exposing (createdKeysInput, doneLoginInput)
-import Accounts.Model as Accounts
+import Navigation
+import Router.Update as Router
+import Router.Routes exposing (urlParser)
 
 
--- App starting
-
-
-inputs : List (Signal Msg)
+inputs : Sub Msg
 inputs =
-  [ routeInput
-  , requestPublish
-  , accountInput
-  , publishHeadInput
-  , publishTweetInput
-  , publishFollowBlockInput
-  , requestDownload
-  , downloadErrorInput
-  , downloadHeadInput
-  , downloadTweetInput
-  , downloadFollowBlockInput
-  , updateDateTime
-  , createdKeysInput
-  , doneLoginInput
-  ]
+    Sub.batch
+        [ requestPublish
+        , accountInput
+        , publishHeadInput
+        , publishTweetInput
+        , publishFollowBlockInput
+        , requestDownload
+        , downloadErrorInput
+        , downloadHeadInput
+        , downloadTweetInput
+        , downloadFollowBlockInput
+        , updateDateTime
+        , createdKeysInput
+        , doneLoginInput
+        ]
 
 
-app : StartApp.App Model
-app =
-  StartApp.start
-    { init = initialModel path userHash getStorage
-    , update = update jsMailbox.address
-    , view = view
-    , inputs = inputs
-    }
-
-
-main : Signal Html
+main : Program (Flags)
 main =
-  app.html
-
-
-port tasks : Signal (Task.Task Never ())
-port tasks =
-  app.tasks
-
-
-port path : String
-port userHash : Maybe String
-
-
-port getStorage : Maybe Accounts.Model
-
-port setStorage : Signal Accounts.Model
-port setStorage =
-  Signal.map .accounts app.model
+    Navigation.programWithFlags urlParser
+        { init = initialModel
+        , view = view
+        , update = update
+        , urlUpdate = Router.update
+        , subscriptions = always inputs
+        }

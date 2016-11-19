@@ -1,54 +1,28 @@
-module Authentication.Ports (..) where
+port module Authentication.Ports exposing (..)
 
 import Account.Model as Account exposing (HeadHash)
-import Msg exposing (Msg(MsgForAuthentication, NoOp))
+import Msg as RootMsg exposing (Msg(MsgForAuthentication, NoOp))
 import Authentication.Msg exposing (Msg(CreateKeys, DoneCreateKeys, Login, DoneLogin))
 import Authentication.Model exposing (Keys)
-import Ports exposing (jsMailbox)
-import Utils.Utils exposing (isJust, filterEmpty)
 
 
-port createdKeysStream : Signal (Maybe { hash : HeadHash, keys : Keys })
-port requestCreateKeys : Signal (Maybe ())
-port requestCreateKeys =
-  let
-    getRequest msg =
-      case msg of
-        MsgForAuthentication CreateKeys ->
-          Just ()
-
-        _ ->
-          Nothing
-  in
-    Signal.map getRequest jsMailbox.signal
-      |> filterEmpty
+port createdKeysStream : (Maybe { hash : HeadHash, keys : Keys } -> msg) -> Sub msg
 
 
-createdKeysInput : Signal Msg.Msg
+port requestCreateKeys : () -> Cmd msg
+
+
+createdKeysInput : Sub RootMsg.Msg
 createdKeysInput =
-  Signal.map
-    (Maybe.map (MsgForAuthentication << DoneCreateKeys) >> Maybe.withDefault NoOp)
-    createdKeysStream
+    createdKeysStream (Maybe.map (MsgForAuthentication << DoneCreateKeys) >> Maybe.withDefault NoOp)
 
 
-port doneLoginStream : Signal (Maybe HeadHash)
-port requestLogin : Signal (Maybe Keys)
-port requestLogin =
-  let
-    getRequest msg =
-      case msg of
-        MsgForAuthentication (Login keys) ->
-          Just keys
-
-        _ ->
-          Nothing
-  in
-    Signal.map getRequest jsMailbox.signal
-      |> filterEmpty
+port doneLoginStream : (Maybe HeadHash -> msg) -> Sub msg
 
 
-doneLoginInput : Signal Msg.Msg
+port requestLogin : Keys -> Cmd msg
+
+
+doneLoginInput : Sub RootMsg.Msg
 doneLoginInput =
-  Signal.map
-    (Maybe.map (MsgForAuthentication << DoneLogin) >> Maybe.withDefault NoOp)
-    doneLoginStream
+    doneLoginStream (Maybe.map (MsgForAuthentication << DoneLogin) >> Maybe.withDefault NoOp)

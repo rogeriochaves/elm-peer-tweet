@@ -7,13 +7,17 @@ import { getLocalStorage } from './Utils/Utils.js';
 
 const pipePort = (ports) => (input, transform, output, errorOutput = null) =>
   ports[input].subscribe((data) => {
-    transform(data, (err, result) => {
-      if (err && errorOutput)
-        ports[errorOutput].send(err);
+    try {
+      transform(data, (err, result) => {
+        if (err && errorOutput)
+          ports[errorOutput].send([data.headHash ? data.headHash : data, err]);
 
-      if (!err)
-        ports[output].send(result);
-    });
+        if (!err)
+          ports[output].send(result);
+      });
+    } catch (err) {
+      if (errorOutput) ports[errorOutput].send([data.headHash ? data.headHash : data, err.message]);
+    }
   });
 
 const addTweet = ({account, text}, resolve) =>

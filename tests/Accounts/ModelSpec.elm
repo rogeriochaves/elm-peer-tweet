@@ -2,6 +2,8 @@ module Accounts.ModelSpec exposing (..)
 
 import Accounts.Model exposing (Model, timeline)
 import Account.Model as Account exposing (initialModel, Tweet, FollowBlock)
+import Test exposing (..)
+import Expect exposing (..)
 import ElmTestBDDStyle exposing (..)
 
 
@@ -73,6 +75,6 @@ tests =
                         , { head = userAccount.head, tweet = tweet1 }
                         ]
                 in
-                    expect (timeline accounts userAccount) toBe expectedTimeline
+                    expect (timeline accounts userAccount) to equal expectedTimeline
             ]
         ]

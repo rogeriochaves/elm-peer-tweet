@@ -35,10 +35,9 @@ inputs =
 
 main : Program Flags
 main =
-    Navigation.programWithFlags urlParser
+    Navigation.programWithFlags Go
         { init = initialModel
         , view = view
         , update = update
-        , urlUpdate = Router.update
         , subscriptions = always inputs
         }

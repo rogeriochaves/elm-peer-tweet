@@ -1,8 +1,7 @@
 module Router.Routes exposing (..)
 
 import Account.Model exposing (HeadHash)
-import String
-import UrlParser exposing (Parser, (</>), format, oneOf, s, string)
+import UrlParser exposing (Parser, (</>), map, oneOf, s, string, parseHash)
 import Navigation
 
 
@@ -18,12 +17,12 @@ type Page
 pageParser : Parser (Page -> a) a
 pageParser =
     oneOf
-        [ format TimelineRoute (static "")
-        , format SearchRoute (static "search")
-        , format CreateAccountRoute (static "account" </> static "create")
-        , format FollowingListRoute (static "following")
-        , format ProfileRoute (static "profile" </> string)
-        , format SettingsRoute (static "settings")
+        [ map TimelineRoute (static "")
+        , map SearchRoute (static "search")
+        , map CreateAccountRoute (static "account" </> static "create")
+        , map FollowingListRoute (static "following")
+        , map ProfileRoute (static "profile" </> string)
+        , map SettingsRoute (static "settings")
         ]
 
 
@@ -49,14 +48,9 @@ toPath page =
             "#settings"
 
 
-pathParser : Navigation.Location -> Result String Page
+pathParser : Navigation.Location -> Maybe Page
 pathParser location =
-    UrlParser.parse identity pageParser (String.dropLeft 1 location.hash)
-
-
-urlParser : Navigation.Parser (Result String Page)
-urlParser =
-    Navigation.makeParser pathParser
+    parseHash pageParser location
 
 
 static : String -> Parser a a

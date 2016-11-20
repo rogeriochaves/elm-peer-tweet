@@ -3,6 +3,8 @@ module Account.UpdateSpec exposing (..)
 import Account.Update exposing (update)
 import Account.Model exposing (initialModel)
 import Account.Msg exposing (..)
+import Test exposing (..)
+import Expect exposing (..)
 import ElmTestBDDStyle exposing (..)
 
 
@@ -21,7 +23,7 @@ tests =
                     msg =
                         AddTweet tweet
                 in
-                    expect (update msg model) toBe { initialModel | tweets = tweet :: initialModel.tweets }
+                    expect (update msg model) to equal { initialModel | tweets = tweet :: initialModel.tweets }
             ]
         , describe "account update"
             [ it "updates the account if the head timestamp is greater than current account" <|
@@ -38,7 +40,7 @@ tests =
                     msg =
                         Update nextModel
                 in
-                    expect (update msg model) toBe nextModel
+                    expect (update msg model) to equal nextModel
             , it "does not update the account if the head timestamp is smaller than current account" <|
                 let
                     initialHead =
@@ -53,7 +55,7 @@ tests =
                     msg =
                         Update nextModel
                 in
-                    expect (update msg model) toBe model
+                    expect (update msg model) to equal model
             ]
         , describe "head update"
             [ it "updates the head if the head timestamp is greater than current account" <|
@@ -70,7 +72,7 @@ tests =
                     msg =
                         UpdateHead nextModel.head
                 in
-                    expect (update msg model) toBe nextModel
+                    expect (update msg model) to equal nextModel
             , it "does not update the head if the head timestamp is smaller than current account" <|
                 let
                     initialHead =
@@ -85,6 +87,6 @@ tests =
                     msg =
                         UpdateHead nextModel.head
                 in
-                    expect (update msg model) toBe model
+                    expect (update msg model) to equal model
             ]
         ]

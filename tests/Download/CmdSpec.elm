@@ -2,6 +2,8 @@ module Download.CmdSpec exposing (..)
 
 import Download.Cmd exposing (cmds)
 import Download.Msg as Download exposing (..)
+import Test exposing (..)
+import Expect exposing (..)
 import ElmTestBDDStyle exposing (..)
 import Msg as RootMsg exposing (..)
 import Accounts.Model as Accounts
@@ -19,7 +21,7 @@ tests =
     describe "Download.Cmd"
         [ it "starts downloading head using the requestDownloadHead port" <|
             expect (cmds (MsgForDownload <| DownloadHead "foo") model)
-                toBe
-            <|
-                requestDownloadHead "foo"
+                to
+                equal
+                (requestDownloadHead "foo")
         ]

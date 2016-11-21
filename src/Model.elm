@@ -11,6 +11,7 @@ import Search.Model as Search
 import Download.Cmd as DownloadCmd
 import Authentication.Model as Authentication
 import Settings.Model as Settings
+import Router.Routes exposing (Page(TimelineRoute), pathParser)
 import Navigation
 
 
@@ -40,8 +41,16 @@ initialModel { userHash, accounts } location =
         authentication =
             Authentication.initialModel userHash
 
+        page =
+            case pathParser location of
+                Nothing ->
+                    TimelineRoute
+
+                Just page ->
+                    page
+
         model =
-            { router = Router.initialModel location
+            { router = Router.initialModel page
             , accounts = modelAccounts
             , newTweet = NewTweet.initialModel
             , publish = Publish.initialModel

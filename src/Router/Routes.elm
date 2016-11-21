@@ -49,8 +49,8 @@ toPath page =
 
 
 pathParser : Navigation.Location -> Maybe Page
-pathParser location =
-    parseHash pageParser location
+pathParser =
+    parseHash pageParser
 
 
 static : String -> Parser a a

@@ -1,15 +1,14 @@
 module Router.Model exposing (..)
 
 import Router.Routes exposing (Page(..))
-import Navigation
 
 
 type alias Model =
-    { history : List Navigation.Location
+    { page : Page
     }
 
 
-initialModel : Navigation.Location -> Model
-initialModel location =
-    { history = [ location ]
+initialModel : Page -> Model
+initialModel page =
+    { page = page
     }

@@ -11,7 +11,6 @@
     "test": "npm run test-elm && npm run test-js",
     "test-js": "mocha --compilers js:babel-core/register tests/*.js tests/**/*.js",
     "test-elm": "elm-test",
-    "patch-elm-test": "echo 'document={};window={};' | cat - out/test.js > /tmp/out && mv /tmp/out out/test.js",
     "package": "electron-packager dist --platform=all --arch=x64 --out out/ --version 0.36.0 --overwrite",
     "install": "elm package install -y",
     "rebuild-for-electron": "electron-rebuild ed25519-supercop"

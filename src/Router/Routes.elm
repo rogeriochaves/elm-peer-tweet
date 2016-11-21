@@ -49,8 +49,11 @@ toPath page =
 
 
 pathParser : Navigation.Location -> Maybe Page
-pathParser =
-    parseHash pageParser
+pathParser location =
+    if location.hash == "" then
+        Just TimelineRoute
+    else
+        parseHash pageParser location
 
 
 static : String -> Parser a a

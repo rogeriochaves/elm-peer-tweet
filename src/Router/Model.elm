@@ -10,4 +10,5 @@ type alias Model =
 
 initialModel : Page -> Model
 initialModel page =
-    { page = page }
+    { page = page
+    }

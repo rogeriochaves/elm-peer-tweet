@@ -74,7 +74,7 @@ publishFirstFollowBlockCmd : Accounts.Model -> Account.Head -> Cmd RootMsg.Msg
 publishFirstFollowBlockCmd accounts head =
     let
         foundFollowBlock =
-            findAccount accounts (Just head.hash) `andThen` firstFollowBlock
+            findAccount accounts (Just head.hash) |> andThen firstFollowBlock
     in
         case foundFollowBlock of
             Just followBlock ->
@@ -91,7 +91,7 @@ nextItemMsg listKey msgFn headHash accounts item =
             nextHash (Just item)
 
         foundItem =
-            findAccount accounts (Just headHash) `andThen` (\account -> findItem (listKey account) hash)
+            findAccount accounts (Just headHash) |> andThen (\account -> findItem (listKey account) hash)
     in
         foundItem
             |> Maybe.map (nextMsg << msgFn)

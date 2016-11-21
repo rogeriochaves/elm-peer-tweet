@@ -101,4 +101,4 @@ getError model hash =
                 _ ->
                     Nothing
     in
-        findDownloadingItem model hash `andThen` (toRecord >> .status >> errorMessage)
+        findDownloadingItem model hash |> andThen (toRecord >> .status >> errorMessage)

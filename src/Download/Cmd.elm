@@ -89,7 +89,7 @@ nextDownloadCmd nextListKey msgFn headHash accounts followBlockHash =
     let
         nextItem =
             findAccount accounts (Just headHash)
-                |> Maybe.map (\account -> followBlockHash `andThen` nextHashToDownload (nextListKey account))
+                |> Maybe.map (\account -> followBlockHash |> andThen (nextHashToDownload (nextListKey account)))
                 |> Maybe.withDefault followBlockHash
     in
         nextItem

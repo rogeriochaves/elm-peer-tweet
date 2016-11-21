@@ -74,7 +74,7 @@ initialModel =
 
 nextHash : Maybe { a | next : List Hash } -> Maybe Hash
 nextHash hash =
-    hash `andThen` (List.head << .next)
+    hash |> andThen (List.head << .next)
 
 
 findItem : List { a | hash : Hash } -> Maybe Hash -> Maybe { a | hash : Hash }
@@ -102,7 +102,7 @@ nextHashToDownload list hash =
                 Just hash
 
             Just item ->
-                next `andThen` (nextHashToDownload list)
+                next |> andThen (nextHashToDownload list)
 
 
 addTweet : Model -> Tweet -> Model

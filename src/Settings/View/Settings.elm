@@ -2,7 +2,7 @@ module Settings.View.Settings exposing (..)
 
 import Html exposing (..)
 import Model exposing (Model)
-import Html.Attributes exposing (class, type', value, href, target)
+import Html.Attributes exposing (class, type_, value, href, target)
 import Html.Events exposing (on, targetValue, onClick)
 import Account.Model as Account
 import Topbar.View.Topbar as Topbar
@@ -24,7 +24,7 @@ avatarField model userAccount =
     div [ class "container settings" ]
         [ div [ class "input-field" ]
             [ input
-                [ type' "text"
+                [ type_ "text"
                 , value model.settings.avatar
                 , on "input" (Json.map (MsgForSettings << UpdateAvatar) targetValue)
                 ]

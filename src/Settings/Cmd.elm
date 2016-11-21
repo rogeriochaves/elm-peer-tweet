@@ -16,7 +16,7 @@ cmds msg model =
 
         updateAccountCmd userAccount =
             succeed (MsgForAccounts <| UpdateUserAccount <| updatedUser userAccount userAccount.head)
-                |> perform identity identity
+                |> perform identity
     in
         case msg of
             MsgForSettings SaveSettings ->

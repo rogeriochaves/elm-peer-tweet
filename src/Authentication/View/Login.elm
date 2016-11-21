@@ -1,7 +1,7 @@
 module Authentication.View.Login exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (value, class, type', href)
+import Html.Attributes exposing (value, class, type_, href)
 import Html.Events exposing (onClick, on, targetValue)
 import Msg as RootMsg exposing (Msg(MsgForSearch, MsgForDownload))
 import Model exposing (Model)
@@ -89,7 +89,7 @@ loginContainer { authentication } =
     div [ class "login-container" ]
         [ div [ class "input-field" ]
             [ input
-                [ type' "text"
+                [ type_ "text"
                 , value authentication.keys.publicKey
                 , on "input" (Json.map (MsgForAuthentication << UpdatePublicKey) targetValue)
                 ]
@@ -99,7 +99,7 @@ loginContainer { authentication } =
             ]
         , div [ class "input-field" ]
             [ input
-                [ type' "text"
+                [ type_ "text"
                 , value authentication.keys.secretKey
                 , on "input" (Json.map (MsgForAuthentication << UpdateSecretKey) targetValue)
                 ]

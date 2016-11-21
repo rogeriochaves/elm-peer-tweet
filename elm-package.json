@@ -5,20 +5,19 @@
     "license": "BSD3",
     "source-directories": [
         "src",
-        "test",
-        "vendor/rogeriochaves/signal-concat-map/src"
+        "tests"
     ],
     "exposed-modules": [],
     "native-modules": true,
     "dependencies": {
-        "avh4/elm-testable": "3.0.0 <= v < 4.0.0",
-        "elm-community/elm-test": "1.1.0 <= v < 2.0.0",
-        "elm-community/list-extra": "2.0.0 <= v < 3.0.0",
-        "elm-lang/core": "4.0.1 <= v < 5.0.0",
-        "elm-lang/html": "1.0.0 <= v < 2.0.0",
-        "elm-lang/navigation": "1.0.0 <= v < 2.0.0",
-        "evancz/url-parser": "1.0.0 <= v < 2.0.0",
-        "rogeriochaves/elm-test-bdd-style": "4.0.0 <= v < 5.0.0"
+        "elm-community/elm-test": "3.0.0 <= v < 4.0.0",
+        "elm-community/list-extra": "4.0.0 <= v < 5.0.0",
+        "elm-lang/core": "5.0.0 <= v < 6.0.0",
+        "elm-lang/html": "2.0.0 <= v < 3.0.0",
+        "elm-lang/navigation": "2.0.1 <= v < 3.0.0",
+        "evancz/url-parser": "2.0.1 <= v < 3.0.0",
+        "rogeriochaves/elm-test-bdd-style": "6.0.1 <= v < 7.0.0",
+        "rtfeldman/node-test-runner": "3.0.0 <= v < 4.0.0"
     },
-    "elm-version": "0.17.0 <= v < 0.18.0"
+    "elm-version": "0.18.0 <= v < 0.19.0"
 }

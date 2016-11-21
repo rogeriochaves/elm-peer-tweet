@@ -1,7 +1,7 @@
 module FollowingList.View.FollowingList exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (class, type', id, value, for)
+import Html.Attributes exposing (class, type_, id, value, for)
 import Msg as RootMsg
 import Model exposing (Model)
 import Account.Model as Account exposing (HeadHash, followList)

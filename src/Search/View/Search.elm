@@ -1,7 +1,7 @@
 module Search.View.Search exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (class, type', id, value, for, placeholder)
+import Html.Attributes exposing (class, type_, id, value, for, placeholder)
 import Html.Events exposing (onClick, on, targetValue, keyCode)
 import Msg as RootMsg exposing (Msg(MsgForSearch, MsgForDownload, NoOp))
 import Download.Msg exposing (Msg(DownloadHead))
@@ -44,7 +44,7 @@ searchBar model =
             [ div [ class "input-field" ]
                 [ input
                     [ on "input" (Json.map (MsgForSearch << Update) targetValue)
-                    , type' "search"
+                    , type_ "search"
                     , id "search"
                     , value model.search.query
                     , onEnter NoOp (MsgForDownload <| DownloadHead model.search.query)

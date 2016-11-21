@@ -11,7 +11,8 @@ import Search.Model as Search
 import Download.Cmd as DownloadCmd
 import Authentication.Model as Authentication
 import Settings.Model as Settings
-import Router.Routes exposing (Page(TimelineRoute))
+import Router.Routes exposing (Page(TimelineRoute), pathParser)
+import Navigation
 
 
 type alias Model =
@@ -31,8 +32,8 @@ type alias Flags =
     { userHash : Maybe String, accounts : Maybe Accounts.Model }
 
 
-initialModel : Flags -> Result String Page -> ( Model, Cmd Msg )
-initialModel { userHash, accounts } initialRoute =
+initialModel : Flags -> Navigation.Location -> ( Model, Cmd Msg )
+initialModel { userHash, accounts } location =
     let
         modelAccounts =
             Maybe.withDefault Accounts.initialModel accounts
@@ -41,11 +42,11 @@ initialModel { userHash, accounts } initialRoute =
             Authentication.initialModel userHash
 
         page =
-            case initialRoute of
-                Err _ ->
+            case pathParser location of
+                Nothing ->
                     TimelineRoute
 
-                Ok page ->
+                Just page ->
                     page
 
         model =

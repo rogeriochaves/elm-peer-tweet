@@ -31,4 +31,4 @@ is13 fail success code =
 
 nextMsg : msg -> Cmd msg
 nextMsg msg =
-    perform identity identity (succeed msg)
+    perform identity (succeed msg)

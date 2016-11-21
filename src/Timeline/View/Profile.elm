@@ -1,7 +1,7 @@
 module Timeline.View.Profile exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (class, type', id, value, for)
+import Html.Attributes exposing (class, type_, id, value, for)
 import Html.Events exposing (onClick)
 import Msg as RootMsg exposing (Msg(MsgForSearch, MsgForDownload, MsgForAccounts))
 import Accounts.Msg exposing (Msg(AddFollowerRequest))

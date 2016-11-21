@@ -3,6 +3,8 @@ module Account.UpdateSpec exposing (..)
 import Account.Update exposing (update)
 import Account.Model exposing (initialModel)
 import Account.Msg exposing (..)
+import Test exposing (..)
+import Expect exposing (..)
 import ElmTestBDDStyle exposing (..)
 
 
@@ -10,8 +12,8 @@ tests : Test
 tests =
     describe "Account.Update"
         [ describe "downloaded account"
-            [ it "adds new tweets to account"
-                <| let
+            [ it "adds new tweets to account" <|
+                let
                     tweet =
                         { hash = "foo", d = 1, t = "bar", next = [] }
 
@@ -20,12 +22,12 @@ tests =
 
                     msg =
                         AddTweet tweet
-                   in
-                    expect (update msg model) toBe { initialModel | tweets = tweet :: initialModel.tweets }
+                in
+                    expect (update msg model) to equal { initialModel | tweets = tweet :: initialModel.tweets }
             ]
         , describe "account update"
-            [ it "updates the account if the head timestamp is greater than current account"
-                <| let
+            [ it "updates the account if the head timestamp is greater than current account" <|
+                let
                     initialHead =
                         initialModel.head
 
@@ -37,10 +39,10 @@ tests =
 
                     msg =
                         Update nextModel
-                   in
-                    expect (update msg model) toBe nextModel
-            , it "does not update the account if the head timestamp is smaller than current account"
-                <| let
+                in
+                    expect (update msg model) to equal nextModel
+            , it "does not update the account if the head timestamp is smaller than current account" <|
+                let
                     initialHead =
                         initialModel.head
 
@@ -52,12 +54,12 @@ tests =
 
                     msg =
                         Update nextModel
-                   in
-                    expect (update msg model) toBe model
+                in
+                    expect (update msg model) to equal model
             ]
         , describe "head update"
-            [ it "updates the head if the head timestamp is greater than current account"
-                <| let
+            [ it "updates the head if the head timestamp is greater than current account" <|
+                let
                     initialHead =
                         initialModel.head
 
@@ -69,10 +71,10 @@ tests =
 
                     msg =
                         UpdateHead nextModel.head
-                   in
-                    expect (update msg model) toBe nextModel
-            , it "does not update the head if the head timestamp is smaller than current account"
-                <| let
+                in
+                    expect (update msg model) to equal nextModel
+            , it "does not update the head if the head timestamp is smaller than current account" <|
+                let
                     initialHead =
                         initialModel.head
 
@@ -84,7 +86,7 @@ tests =
 
                     msg =
                         UpdateHead nextModel.head
-                   in
-                    expect (update msg model) toBe model
+                in
+                    expect (update msg model) to equal model
             ]
         ]

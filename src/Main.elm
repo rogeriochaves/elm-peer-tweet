@@ -2,7 +2,7 @@ port module Main exposing (main)
 
 import View exposing (view)
 import Model exposing (Model, Flags, initialModel)
-import Msg exposing (Msg)
+import Msg as RootMsg exposing (Msg(MsgForRouter))
 import Update exposing (update)
 import Accounts.Ports exposing (accountInput)
 import Publish.Ports exposing (requestPublish, publishHeadInput, publishTweetInput, publishFollowBlockInput)
@@ -10,11 +10,10 @@ import Download.Ports exposing (requestDownload, downloadErrorInput, downloadHea
 import DateTime.Signals exposing (updateDateTime)
 import Authentication.Ports exposing (createdKeysInput, doneLoginInput)
 import Navigation
-import Router.Update as Router
-import Router.Routes exposing (urlParser)
+import Router.Msg exposing (Msg(UrlChange))
 
 
-inputs : Sub Msg
+inputs : Sub RootMsg.Msg
 inputs =
     Sub.batch
         [ requestPublish
@@ -33,12 +32,11 @@ inputs =
         ]
 
 
-main : Program (Flags)
+main : Program Flags Model RootMsg.Msg
 main =
-    Navigation.programWithFlags urlParser
+    Navigation.programWithFlags (MsgForRouter << UrlChange)
         { init = initialModel
         , view = view
         , update = update
-        , urlUpdate = Router.update
         , subscriptions = always inputs
         }

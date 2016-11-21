@@ -3,9 +3,9 @@
 import 'materialize-css/bin/materialize.css';
 import 'materialize-css/bin/materialize.js';
 import './Stylesheets/Main.scss';
-import Elm from './Main';
-import { hash } from './Api/Account';
-import { setup } from './Ports';
+import Elm from './Main.elm';
+import { hash } from './Api/Account.js';
+import { setup } from './Ports.js';
 import { getLocalStorage, openLinksInBrowser } from './Utils/Utils.js';
 
 const accounts = getLocalStorage().accounts;

@@ -9,23 +9,12 @@ var options = {
     libraryTarget: 'commonjs2'
   },
 
-  resolve: {
-    extensions: ['', '.js', '.elm'],
-    alias: {
-      'Api': __dirname + '/src/Api'
-    },
-    packageMains: ['webpack', 'browser', 'web', 'browserify', ['jam', 'main'], 'main']
-  },
-
   module: {
     loaders: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel',
-        query: {
-          presets: ['es2015']
-        }
+        loader: 'babel'
       },
       {
         test: /\.html$/,
